@@ -65,7 +65,6 @@
   <header class="border-b border-slate-800/80 bg-[#0b0f19]/90 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       
-      <!-- Brand Logo & Header Inline Toast Notification -->
       <div class="flex items-center gap-4">
         <div class="flex items-center gap-2.5 cursor-pointer" id="brand-home-btn">
           <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-600/30 text-white font-bold flex-shrink-0">
@@ -79,7 +78,6 @@
               <h1 class="text-sm sm:text-base font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">
                 RAFF STORY STUDIO
               </h1>
-              <!-- Header Inline Toast Notification -->
               <div id="app-toast-inline" class="hidden items-center text-xs font-semibold px-2.5 py-0.5 rounded-md bg-indigo-950/90 border border-indigo-500/40 text-indigo-200 animate-pulse shadow-sm">
                 <span id="toast-text">Mesej sistem</span>
               </div>
@@ -95,7 +93,6 @@
           <span class="text-[11px] text-slate-300">Gemini 3.1 Flash Image Active</span>
         </div>
 
-        <!-- Refresh App Button -->
         <button id="btn-refresh-app" title="Refresh Aplikasi" class="p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700 flex items-center gap-1 text-xs font-semibold">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
           <span class="hidden sm:inline">Refresh</span>
@@ -131,10 +128,8 @@
 
   <main class="flex-1 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-    <!-- TOP ROW: Idea Cerita Button & Panel Switcher Buttons (Left) alongside Scene Cards Feed Header (Right) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       
-      <!-- LEFT COL (5 Cols): Idea Cerita Button & Panel Switcher Buttons placed directly below it -->
       <div class="lg:col-span-5 space-y-3">
         <button 
           id="btn-open-story-idea-modal"
@@ -155,7 +150,6 @@
           <svg class="w-5 h-5 text-indigo-400 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </button>
 
-        <!-- Panel Switcher Buttons placed directly below idea cerita -->
         <div class="flex items-center gap-2">
           <button id="btn-focus-story" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs tracking-wide transition bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-indigo-500/50 flex items-center justify-center gap-2 shadow-sm">
             <span>Story Panel</span>
@@ -166,7 +160,6 @@
         </div>
       </div>
 
-      <!-- RIGHT COL (7 Cols): Scene Cards Feed Header (Placed on the far right) -->
       <div class="lg:col-span-7 space-y-4">
         <div class="glass-card p-4 rounded-2xl border border-slate-800 flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -188,11 +181,9 @@
     <section id="results-wrapper" class="space-y-6">
       <div id="main-panels-grid" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        <!-- LEFT PANE: STORY MASTER SHEETS (Width: 5 Cols) -->
         <div id="pane-story-container" class="lg:col-span-5 space-y-6 transition-all duration-300">
           <div class="space-y-6">
             
-            <!-- Story Overview Card -->
             <div class="glass-card border border-slate-800/80 rounded-3xl p-5 space-y-4">
               <div class="flex flex-col gap-2 border-b border-slate-800/80 pb-3">
                 <p class="text-[10px] font-bold uppercase tracking-widest text-indigo-400">STORY OVERVIEW</p>
@@ -220,7 +211,6 @@
               </div>
             </div>
 
-            <!-- Characters Master Sheet -->
             <div class="space-y-3">
               <div class="flex items-center justify-between">
                 <h3 class="text-sm font-bold text-white flex items-center gap-2">
@@ -232,7 +222,6 @@
               <div id="characters-container" class="space-y-4"></div>
             </div>
 
-            <!-- Outfit System -->
             <div class="space-y-3">
               <div class="flex items-center justify-between">
                 <h3 class="text-sm font-bold text-white">Outfit System</h3>
@@ -241,7 +230,6 @@
               <div id="outfits-container" class="space-y-4"></div>
             </div>
 
-            <!-- Location Master Sheet -->
             <div class="space-y-3">
               <div class="flex items-center justify-between">
                 <h3 class="text-sm font-bold text-white">Locations Master Sheet</h3>
@@ -250,7 +238,6 @@
               <div id="locations-container" class="space-y-4"></div>
             </div>
 
-            <!-- Props System -->
             <div id="props-wrapper" class="space-y-3 hidden">
               <h3 class="text-sm font-bold text-white">Important Props</h3>
               <div id="props-container" class="space-y-3"></div>
@@ -259,7 +246,6 @@
           </div>
         </div>
 
-        <!-- RIGHT PANE: PRODUCTION SCENE CARDS (Width: 7 Cols) -->
         <div id="pane-scenes-container" class="lg:col-span-7 space-y-4 transition-all duration-300">
           <div id="scenes-list-container" class="space-y-5">
             <div class="glass-card border border-slate-800/80 rounded-3xl p-8 text-center space-y-3">
@@ -276,7 +262,6 @@
     </section>
   </main>
 
-  <!-- Story Idea Modal -->
   <div id="modal-story-idea" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-7 space-y-5 shadow-2xl relative flex flex-col max-h-[90vh]">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -306,7 +291,6 @@
           ></textarea>
         </div>
 
-        <!-- Advance Image Analysis Tool -->
         <div class="bg-[#090d16] border border-indigo-500/30 rounded-2xl p-4 space-y-3 relative overflow-hidden shadow-inner">
           <div class="absolute top-0 right-0 bg-gradient-to-l from-indigo-600 to-violet-600 text-white text-[9px] font-extrabold px-3 py-1 rounded-bl-xl shadow-lg">ADVANCE AI</div>
           <div class="flex items-center gap-2">
@@ -347,7 +331,6 @@
           </div>
         </div>
 
-        <!-- UGC / Sales Product Image Upload Feature -->
         <div class="bg-[#090d16] border border-slate-800 rounded-2xl p-4 space-y-2.5">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
@@ -471,7 +454,6 @@
     </div>
   </div>
 
-  <!-- Google Flow Popup Modal -->
   <div id="modal-google-flow" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-4xl w-full p-6 sm:p-7 space-y-5 shadow-2xl relative flex flex-col max-h-[90vh]">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -521,7 +503,6 @@
     </div>
   </div>
 
-  <!-- Image Popup Modal -->
   <div id="modal-image-preview" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-4xl w-full p-6 space-y-4 shadow-2xl relative flex flex-col max-h-[90vh]">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -540,7 +521,6 @@
     </div>
   </div>
 
-  <!-- Character Analysis Result Modal -->
   <div id="modal-character-analysis" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative flex flex-col max-h-[90vh]">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -553,7 +533,6 @@
     </div>
   </div>
 
-  <!-- Settings Modal -->
   <div id="modal-settings" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-md w-full p-7 space-y-5 shadow-2xl">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -612,7 +591,7 @@
       aspectRatio: "9:16",
       languageDialect: "Bahasa Melayu Standard",
       productionPlan: null,
-      focusedPanel: "both", // 'both', 'story', 'scenes'
+      focusedPanel: "both",
       characterImages: {},
       characterGeneratedImages: {},
       characterSheets: {},
@@ -628,7 +607,7 @@
       sceneImages: {},
       sceneSpecs: {},
       sceneSelections: {},
-      sceneEditSupportImages: {}, // Support image for scene specification edits
+      sceneEditSupportImages: {},
       user: null
     };
 
@@ -804,7 +783,6 @@
       }
     }
 
-    // --- AI MODEL FALLBACK SYSTEM ---
     async function executeTextWithFallback(contentsArray, functionType, requireJson = false) {
       const isAnalysis = functionType === 'analysis';
       const models = isAnalysis ? ['Gemini', 'OpenAI Vision', 'Claude Vision'] : ['Gemini Flash', 'OpenAI', 'Claude'];
@@ -835,12 +813,10 @@
             if (!rawText || rawText.trim() === "") throw new Error("Respons AI kosong atau tidak sah.");
             
             if (requireJson) {
-              // Validasi format JSON. Jika rosak/tidak wujud, trigger error untuk fallback.
               safeParseJSON(rawText); 
             }
             return rawText;
           } else {
-            // Logik untuk skip fallback provider yang tiada API key / konfigurasi setup
             throw new Error(`Provider ${modelName} tidak dikonfigurasi.`);
           }
         } catch (err) {
@@ -1064,7 +1040,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
             if (!part || !part.inlineData?.data) throw new Error("Gagal menghasilkan output imej sah.");
             return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
           } else {
-             // Melompat ke model seterusnya sekiranya API tidak tersedia.
              throw new Error(`Provider ${modelName} tidak dikonfigurasi.`);
           }
         } catch (err) {
@@ -1084,7 +1059,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       document.getElementById('view-theme').textContent = `${ov.theme || "-"} • Struktur: ${ov.structure_type || "Dynamic"}`;
       document.getElementById('view-summary').textContent = ov.story_summary || "-";
 
-      // Characters Master Sheet
       const charContainer = document.getElementById('characters-container');
       const chars = data.characters || [];
       document.getElementById('char-total-pill').textContent = chars.length;
@@ -1119,7 +1093,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
               ${activeImg ? `<span class="text-[9px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 font-mono font-bold">TERSEDIA</span>` : ''}
             </div>
             <div class="flex flex-col items-center gap-3">
-              <!-- Kotak Imej dengan butang upload di tengah-tengah -->
               <div class="w-full h-36 rounded-xl bg-slate-950 border-2 border-dashed ${activeImg ? 'border-indigo-500/80' : 'border-slate-700/80'} flex flex-col items-center justify-center overflow-hidden relative group">
                 ${activeImg ? `<img src="${activeImg}" alt="${c.name}" class="w-full h-full object-cover"><button type="button" class="btn-remove-char-img absolute top-2 right-2 w-5 h-5 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center shadow">&times;</button>` : ''}
                 <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs flex flex-col items-center justify-center gap-2 ${activeImg ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'} transition">
@@ -1131,7 +1104,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
                 </div>
               </div>
 
-              <!-- Baris Butang Di Bawah Imej: Jana Imej, Analisis & Jana Sheet -->
               <div class="flex flex-wrap items-center justify-center gap-2 w-full">
                 <button type="button" class="btn-generate-char text-xs px-3 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold transition flex items-center gap-1 flex-1 justify-center shadow" data-char-id="${charId}">
                   <span class="gen-spinner hidden w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
@@ -1269,7 +1241,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         charContainer.appendChild(card);
       });
 
-      // Outfit System
       const outfitsContainer = document.getElementById('outfits-container');
       outfitsContainer.innerHTML = "";
       (data.outfits || []).forEach(o => {
@@ -1421,7 +1392,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         outfitsContainer.appendChild(el);
       });
 
-      // Location Master Sheet
       const locContainer = document.getElementById('locations-container');
       locContainer.innerHTML = "";
       (data.locations || []).forEach(l => {
@@ -1573,7 +1543,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         locContainer.appendChild(el);
       });
 
-      // Props System
       const propsWrapper = document.getElementById('props-wrapper');
       const propsContainer = document.getElementById('props-container');
       if (data.props && data.props.length > 0) {
@@ -1731,7 +1700,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         propsWrapper.classList.add('hidden');
       }
 
-      // Scenes
       const scenesList = document.getElementById('scenes-list-container');
       const scenesCountBadge = document.getElementById('tab-scenes-count');
       const scenes = data.scenes || [];
@@ -1771,7 +1739,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         if (!sel.chars) sel.chars = sceneCharsList.length > 0 ? [...sceneCharsList] : [];
         if (!sel.outfits) sel.outfits = sceneOutfitsList.length > 0 ? [...sceneOutfitsList] : [];
 
-        // Structured JSON Prompt format requested by user
         const structuredSceneJson = {
           "raff_studio_version": "V1",
           "project": {
@@ -1942,10 +1909,8 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
               <span class="text-[11px] font-bold text-indigo-300 uppercase tracking-wider">Rujukan Scene Dinamik (Multi-Karakter & Lokasi Sesuai Scene)</span>
             </div>
 
-            <!-- Dynamic Reference Dropdowns & Multi-Character Controls -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#070b14] p-3 rounded-xl border border-slate-800 text-[11px]">
               
-              <!-- Karakter & Pakaian -->
               <div class="space-y-2">
                 <div class="flex items-center justify-between">
                   <span class="text-[10px] font-bold text-slate-400 uppercase">Karakter Terlibat</span>
@@ -1963,7 +1928,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
                 </div>
               </div>
 
-              <!-- Pakaian Terlibat -->
               <div class="space-y-2">
                 <div class="flex items-center justify-between">
                   <span class="text-[10px] font-bold text-slate-400 uppercase">Pakaian (Outfit) Terlibat</span>
@@ -1979,7 +1943,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
                 </div>
               </div>
 
-              <!-- Lokasi Dropdown -->
               <div class="space-y-1">
                 <span class="text-[10px] font-bold text-slate-400 uppercase">Lokasi Scene</span>
                 <select class="scene-dropdown-loc w-full bg-[#0b101f] border border-slate-800 rounded-lg p-2 text-xs text-indigo-200 font-bold">
@@ -1987,7 +1950,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
                 </select>
               </div>
 
-              <!-- Prop Dropdown -->
               <div class="space-y-1">
                 <span class="text-[10px] font-bold text-slate-400 uppercase">Prop Utama</span>
                 <select class="scene-dropdown-prop w-full bg-[#0b101f] border border-slate-800 rounded-lg p-2 text-xs text-indigo-200 font-bold">
@@ -1998,7 +1960,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
 
             </div>
 
-            <!-- Panel Edit Spesifikasi Pantas dengan Sokongan Upload Imej -->
             <div class="edit-spec-panel hidden bg-[#070a13] p-3.5 rounded-xl border border-indigo-900/60 space-y-3">
               <div class="flex items-center justify-between text-xs font-bold text-indigo-300">
                 <span>Edit Spesifikasi & Muat Naik Imej Sokongan</span>
@@ -2042,7 +2003,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
                 <textarea class="spec-instruction-input w-full bg-[#0b101f] border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 outline-none focus:border-indigo-500" rows="3" placeholder="Taip arahan perubahan prompt scene...">${sc.video_prompt}</textarea>
               </div>
               
-              <!-- Upload Sokongan Imej -->
               <div class="flex items-center justify-between bg-[#0b101f] p-2 rounded-xl border border-slate-800 text-xs">
                 <div class="flex items-center gap-2 truncate">
                   <span class="text-indigo-400">🖼️</span>
@@ -2062,15 +2022,12 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
               </div>
             </div>
 
-            <!-- Scene Image Box with Transparent Overlay Icon Layer -->
             <div class="w-full rounded-xl overflow-hidden bg-[#070912] border border-slate-800/80 min-h-[180px] flex items-center justify-center relative group">
-              <!-- Loading Indicator Overlay -->
               <div class="scene-loading-indicator absolute inset-0 bg-slate-950/85 backdrop-blur-sm z-30 flex flex-col items-center justify-center gap-2.5 hidden">
                 <div class="w-8 h-8 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
                 <span class="text-[11px] font-bold text-indigo-300 tracking-wider">Menjana Imej Scene...</span>
               </div>
 
-              <!-- Floating Transparent Overlay Icon Buttons Layer -->
               <div class="absolute top-2 right-2 flex items-center gap-1.5 z-20 bg-slate-950/70 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-700/50 shadow-lg opacity-85 group-hover:opacity-100 transition">
                 ${existingSceneImg ? `
                   <button type="button" class="btn-view-scene-img text-indigo-300 hover:text-indigo-200 p-1 transition" title="Papar Imej (View)">
@@ -2921,7 +2878,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         showToast("Tetapan disimpan.");
       });
 
-      // Setup Advanced Image Analysis Tool
       let advImageBase64 = null;
       let lastAdvAnalysis = null;
       
