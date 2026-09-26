@@ -789,33 +789,64 @@
     }
 
     async function executeTextWithFallback(contentsArray, functionType, requireJson = false) {
-      try {
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${GEMINI_API_KEY}`;
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: contentsArray,
-            generationConfig: { responseModalities: ['TEXT'] }
-          })
-        });
-        
-        if (!response.ok) {
-          const errText = await response.text();
-          throw new Error(`HTTP Error ${response.status}: ${errText}`);
-        }
-        
-        const result = await response.json();
-        const rawText = result.candidates?.[0]?.content?.parts?.find(p => p.text)?.text;
-        if (!rawText || rawText.trim() === "") throw new Error("Respons AI kosong atau tidak sah.");
-        
-        if (requireJson) {
-          safeParseJSON(rawText); 
-        }
-        return rawText;
-      } catch (err) {
-        console.error("[AI Execution Error]:", err.message);
-        throw new Error(`Gagal memproses AI: ${err.message}`);
+  try {
+    const response = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: contentsArray, isImageGeneration: false })
+    });
+    
+    if (!response.ok) {
+      const errData = await response.json();
+      throw new Error(errData.error || `HTTP Error ${response.status}`);
+    }
+    
+    const result = await response.json();
+    const rawText = result.candidates?.[0]?.content?.parts?.find(p => p.text)?.text;
+    if (!rawText || rawText.trim() === "") throw new Error("Respons AI kosong atau tidak sah.");
+    
+    if (requireJson) {
+      safeParseJSON(rawText); 
+    }
+    return rawText;
+  } catch (err) {
+    console.error("[AI Execution Error]:", err.message);
+    throw new Error(`Gagal memproses AI: ${err.message}`);
+  }
+}
+
+async function callNanoBananaImage(promptText, aspectRatio = "1:1", referenceImage = null) {
+  try {
+    const parts = [{ text: promptText }];
+    if (referenceImage) {
+      const base64 = referenceImage.split(',')[1];
+      const mimeType = referenceImage.match(/data:([^;]+);/)?.[1] || "image/jpeg";
+      parts.push({ inlineData: { mimeType, data: base64 } });
+    }
+
+    const response = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        contents: [{ role: 'user', parts: parts }], 
+        isImageGeneration: true 
+      })
+    });
+
+    if (!response.ok) {
+      const errData = await response.json();
+      throw new Error(errData.error || `API error ${response.status}`);
+    }
+
+    const result = await response.json();
+    const part = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+    if (!part || !part.inlineData?.data) throw new Error("Gagal menghasilkan output imej sah.");
+    return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+  } catch (err) {
+    console.error("[Image Generation Error]:", err.message);
+    throw new Error(`Gagal menjana imej: ${err.message}`);
+  }
+}
       }
     }
 
