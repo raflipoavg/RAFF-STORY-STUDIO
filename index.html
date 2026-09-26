@@ -10,7 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Supabase JS Client UMD -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -109,7 +111,7 @@
           <span class="hidden sm:inline">Refresh</span>
         </button>
 
-        <button id="btn-open-settings" title="Advanced Settings & Supabase Config" class="p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+        <button id="btn-open-settings" title="Advanced Settings & API Config" class="p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -177,10 +179,6 @@
             <h3 class="text-base font-extrabold text-white">Scene Cards Feed</h3>
           </div>
           <div class="flex items-center gap-2">
-            <button id="btn-open-google-flow-modal" class="px-3 py-1.5 rounded-xl bg-violet-600/20 hover:bg-violet-600/30 text-violet-300 border border-violet-500/40 font-bold text-xs flex items-center gap-1.5 transition shadow-sm" title="Google Flow Export">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-              <span>Google Flow</span>
-            </button>
             <span id="tab-scenes-count" class="px-3 py-1.5 rounded-xl bg-indigo-950 text-indigo-300 border border-indigo-800 font-mono text-xs font-bold shadow-sm">0 Scenes</span>
           </div>
         </div>
@@ -481,55 +479,6 @@
     </div>
   </div>
 
-  <div id="modal-google-flow" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-4xl w-full p-6 sm:p-7 space-y-5 shadow-2xl relative flex flex-col max-h-[90vh]">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-violet-600/20 text-violet-400 flex items-center justify-center font-bold">⚡</div>
-          <h3 class="text-base font-bold text-white">Google Flow Export Engine</h3>
-        </div>
-        <button id="btn-close-google-flow-modal" class="text-slate-400 hover:text-white text-2xl leading-none p-1">&times;</button>
-      </div>
-
-      <div class="space-y-6 overflow-y-auto pr-1 flex-1">
-        <div class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-900/50 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div class="space-y-1 text-center sm:text-left">
-            <h4 class="text-base font-extrabold text-white">Production Plan & Prompt Google Flow</h4>
-            <p class="text-xs text-slate-300">Salin prompt JSON lengkap bagi setiap scene atau gunakan fail JSON berstruktur penuh.</p>
-          </div>
-          <div class="flex items-center gap-2">
-            <button id="btn-copy-full-json" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider transition shadow flex items-center gap-2">
-              <span>COPY JSON</span>
-            </button>
-            <a href="https://flow.google.com" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs uppercase tracking-wider transition border border-slate-700 flex items-center gap-1.5">
-              <span>GOOGLE FLOW</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="glass-card border border-slate-800 rounded-2xl p-4 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Master Negative Prompt</span>
-            <button id="btn-copy-negative-all" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold py-1">Salin</button>
-          </div>
-          <p id="view-negative-prompt" class="text-xs font-mono text-slate-300 bg-[#080b14] p-3 rounded-xl border border-slate-800 leading-relaxed overflow-x-auto"></p>
-        </div>
-
-        <div class="space-y-3">
-          <h4 class="text-xs font-bold text-white uppercase tracking-wider">Scene-by-Scene Prompt Dispatch</h4>
-          <div id="flow-scenes-prompts" class="space-y-3"></div>
-        </div>
-
-        <div class="space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Google Flow Valid Production JSON</span>
-          </div>
-          <pre id="json-output-viewer" class="w-full max-h-64 overflow-auto bg-[#070913] border border-slate-800 rounded-2xl p-4 text-xs font-mono text-indigo-300 select-all"></pre>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div id="modal-image-preview" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-4xl w-full p-6 space-y-4 shadow-2xl relative flex flex-col max-h-[90vh]">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -560,13 +509,13 @@
     </div>
   </div>
 
-  <!-- Settings Modal (Supabase Configuration) -->
+  <!-- Settings Modal (Supabase & Gemini API Configuration) -->
   <div id="modal-settings" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-md w-full p-7 space-y-5 shadow-2xl">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <div>
-          <h3 class="text-base font-bold text-white">Supabase Configuration & Settings</h3>
-          <p class="text-xs text-slate-400">Konfigurasi Cloud & Enjin AI</p>
+          <h3 class="text-base font-bold text-white">Supabase & API Configuration</h3>
+          <p class="text-xs text-slate-400">Konfigurasi Cloud & Kunci Gemini AI</p>
         </div>
         <button id="btn-close-settings-modal" class="text-slate-400 hover:text-white text-xl leading-none p-1">&times;</button>
       </div>
@@ -579,6 +528,11 @@
         <div>
           <label class="block font-semibold text-slate-300 mb-1">Supabase Anon Key</label>
           <input type="password" id="cfg-supabase-key" placeholder="eyJ..." class="w-full bg-[#080b14] border border-slate-800 rounded-xl px-3 py-2 text-slate-200 font-mono">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Gemini API Key</label>
+          <input type="password" id="cfg-gemini-key" placeholder="AIzaSy..." class="w-full bg-[#080b14] border border-slate-800 rounded-xl px-3 py-2 text-slate-200 font-mono">
+          <p class="text-[10px] text-slate-500 mt-1">Diperlukan untuk penjanaan imej dan analisis cerita di Vercel.</p>
         </div>
 
         <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800">
@@ -602,16 +556,17 @@
 
       <div class="pt-3 border-t border-slate-800 flex justify-end gap-2">
         <button id="btn-save-settings-modal" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider transition">
-          Simpan Tetapan & Sambung Supabase
+          Simpan Tetapan
         </button>
       </div>
     </div>
   </div>
 
   <script>
-    // --- SUPABASE CONFIGURATION ---
+    // --- SUPABASE & GEMINI API CONFIGURATION ---
     let SUPABASE_URL = localStorage.getItem('raff_supabase_url') || "";
     let SUPABASE_ANON_KEY = localStorage.getItem('raff_supabase_key') || "";
+    let GEMINI_API_KEY = localStorage.getItem('raff_gemini_api_key') || "";
     let supabaseClient = null;
 
     function initSupabaseClient() {
@@ -630,8 +585,8 @@
 
     initSupabaseClient();
 
-    const STORAGE_KEY = 'raff_story_studio_state_v61';
-    const SETTINGS_KEY = 'raff_story_studio_config_v61';
+    const STORAGE_KEY = 'raff_story_studio_state_v62';
+    const SETTINGS_KEY = 'raff_story_studio_config_v62';
     const CURRENT_PROJ_ID_KEY = 'raff_current_project_id';
 
     let state = {
@@ -689,7 +644,6 @@
       }, 2500);
     }
 
-    // --- SUPABASE COMPATIBILITY WRAPPER FOR saveState() ---
     let autoSaveTimer = null;
     function saveState() {
       try {
@@ -722,10 +676,8 @@
           sceneEditSupportImages: state.sceneEditSupportImages,
           updated_at: new Date().toISOString()
         };
-        // Temporary draft fallback in localStorage
         localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
 
-        // Trigger debounced auto-save to Supabase if client is ready
         if (autoSaveTimer) clearTimeout(autoSaveTimer);
         autoSaveTimer = setTimeout(() => {
           saveProjectToSupabase(false);
@@ -822,7 +774,6 @@
                 return;
               }
             } else {
-              // Load latest project for user
               const { data, error } = await supabaseClient
                 .from('projects')
                 .select('*')
@@ -838,7 +789,6 @@
           }
         }
 
-        // Fallback to local draft if Supabase session/project not loaded
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
           const parsed = JSON.parse(saved);
@@ -1023,15 +973,16 @@
 
     async function executeTextWithFallback(contentsArray, functionType, requireJson = false) {
       const isAnalysis = functionType === 'analysis';
-      const models = isAnalysis ? ['Gemini', 'OpenAI Vision', 'Claude Vision'] : ['Gemini Flash', 'OpenAI', 'Claude'];
+      const models = ['Gemini', 'OpenAI', 'Claude'];
       
       for (let i = 0; i < models.length; i++) {
         const modelName = models[i];
         try {
           if (i > 0) showToast(`Model utama gagal. Mencuba alternatif... (${modelName})`);
           
-          if (modelName.includes('Gemini')) {
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent`;
+          if (modelName === 'Gemini') {
+            const apiKey = GEMINI_API_KEY || "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`;
             const response = await fetch(apiUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -1240,51 +1191,37 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
     }
 
     async function callNanoBananaImage(promptText, aspectRatio = "1:1", referenceImage = null) {
-      const models = ['Nano Banana', 'Imagen', 'Flux'];
+      const apiKey = GEMINI_API_KEY || "";
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`;
       
-      for (let i = 0; i < models.length; i++) {
-        const modelName = models[i];
-        try {
-          if (i > 0) showToast(`Model utama gagal. Mencuba alternatif... (${modelName})`);
-          
-          if (modelName === 'Nano Banana') {
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent`;
-            const parts = [{ text: promptText }];
-            if (referenceImage) {
-              const base64 = referenceImage.split(',')[1];
-              const mimeType = referenceImage.match(/data:([^;]+);/)?.[1] || "image/jpeg";
-              parts.push({ inlineData: { mimeType, data: base64 } });
-            }
-
-            const response = await fetch(apiUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                contents: [{ role: 'user', parts: parts }],
-                generationConfig: {
-                  responseModalities: ['IMAGE'],
-                  imageConfig: { aspectRatio: aspectRatio }
-                }
-              })
-            });
-
-            if (!response.ok) {
-              const errText = await response.text();
-              throw new Error(`API error ${response.status}: ${errText}`);
-            }
-
-            const result = await response.json();
-            const part = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
-            if (!part || !part.inlineData?.data) throw new Error("Gagal menghasilkan output imej sah.");
-            return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
-          } else {
-             throw new Error(`Provider ${modelName} tidak dikonfigurasi.`);
-          }
-        } catch (err) {
-          console.warn(`[Fallback Image Router] ${modelName} gagal:`, err.message);
-          if (i === models.length - 1) throw new Error(`Semua model alternatif gagal. Ralat akhir: ${err.message}`);
-        }
+      const parts = [{ text: promptText }];
+      if (referenceImage) {
+        const base64 = referenceImage.split(',')[1];
+        const mimeType = referenceImage.match(/data:([^;]+);/)?.[1] || "image/jpeg";
+        parts.push({ inlineData: { mimeType, data: base64 } });
       }
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: parts }],
+          generationConfig: {
+            responseModalities: ['IMAGE'],
+            imageConfig: { aspectRatio: aspectRatio }
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`API error ${response.status}: ${errText}`);
+      }
+
+      const result = await response.json();
+      const part = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+      if (!part || !part.inlineData?.data) throw new Error("Gagal menghasilkan output imej sah.");
+      return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
     }
 
     function renderFullProductionPlan(data) {
@@ -2358,45 +2295,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
 
         scenesList.appendChild(card);
       });
-
-      const masterNegative = scenes[0]?.negative_prompt || "looking at camera, direct eye contact with lens, camera glare, no face change, inconsistent outfit, no watermark, blurry";
-      document.getElementById('view-negative-prompt').textContent = masterNegative;
-
-      const flowContainer = document.getElementById('flow-scenes-prompts');
-      flowContainer.innerHTML = "";
-      scenes.forEach(sc => {
-        const sel = state.sceneSelections[sc.scene_id] || {};
-        const sceneJsonPromptObj = {
-          scene_id: sc.scene_id,
-          title: sc.title,
-          duration: sc.duration,
-          characters: sel.chars || sc.characters,
-          outfit_ids: sel.outfits || sc.outfit_ids,
-          location_id: sel.loc || sc.location_id,
-          dialogue: sc.dialogue || "",
-          camera_shot: sc.shot || "Medium Shot",
-          lighting: sc.lighting || "Cinematic Lighting",
-          video_prompt: sc.video_prompt + ". Characters looking directly at each other, never looking into camera lens.",
-          negative_prompt: sc.negative_prompt || masterNegative
-        };
-        const sceneJsonString = JSON.stringify(sceneJsonPromptObj, null, 2);
-
-        const item = document.createElement('div');
-        item.className = "p-4 rounded-2xl bg-[#090d16]/80 border border-slate-800 space-y-2 text-xs";
-        item.innerHTML = `
-          <div class="flex items-center justify-between">
-            <span class="font-mono font-bold text-indigo-400">${sc.scene_id} (${sc.duration}s) - JSON Prompt</span>
-            <button class="text-xs text-indigo-400 hover:text-white px-3 py-1 rounded bg-slate-800 copy-flow-btn">Salin JSON Scene</button>
-          </div>
-          <pre class="font-mono text-xs text-slate-300 bg-[#070a13] p-3.5 rounded-xl border border-slate-800 select-all leading-relaxed overflow-x-auto max-h-48">${sceneJsonString}</pre>
-        `;
-        item.querySelector('.copy-flow-btn').addEventListener('click', () => {
-          copyTextToClipboard(sceneJsonString, `JSON Prompt ${sc.scene_id} disalin!`);
-        });
-        flowContainer.appendChild(item);
-      });
-
-      document.getElementById('json-output-viewer').textContent = JSON.stringify(data, null, 2);
     }
 
     function openImageModal(title, dataUrl) {
@@ -2874,6 +2772,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
     window.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('cfg-supabase-url').value = SUPABASE_URL;
       document.getElementById('cfg-supabase-key').value = SUPABASE_ANON_KEY;
+      document.getElementById('cfg-gemini-key').value = GEMINI_API_KEY;
 
       await loadState();
 
@@ -2883,14 +2782,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       });
       document.getElementById('btn-close-story-idea-modal').addEventListener('click', () => {
         storyIdeaModal.classList.add('hidden');
-      });
-
-      const googleFlowModal = document.getElementById('modal-google-flow');
-      document.getElementById('btn-open-google-flow-modal').addEventListener('click', () => {
-        googleFlowModal.classList.remove('hidden');
-      });
-      document.getElementById('btn-close-google-flow-modal').addEventListener('click', () => {
-        googleFlowModal.classList.add('hidden');
       });
 
       const projectsModal = document.getElementById('modal-projects');
@@ -3001,14 +2892,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         window.location.reload();
       });
 
-      document.getElementById('btn-copy-negative-all').addEventListener('click', () => {
-        copyTextToClipboard(document.getElementById('view-negative-prompt').textContent, "Negative prompt disalin!");
-      });
-
-      document.getElementById('btn-copy-full-json').addEventListener('click', () => {
-        copyTextToClipboard(document.getElementById('json-output-viewer').textContent, "Full Production JSON disalin!");
-      });
-
       document.getElementById('btn-close-image-modal').addEventListener('click', () => {
         document.getElementById('modal-image-preview').classList.add('hidden');
       });
@@ -3035,7 +2918,6 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
           const { error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google' });
           if (error) throw error;
         } catch (err) {
-          // Fallback demo login jika OAuth belum diset di Supabase dashboard
           const mock = { name: "Raff Creator", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" };
           state.user = mock;
           applyUserUI(mock);
@@ -3062,8 +2944,11 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       document.getElementById('btn-save-settings-modal').addEventListener('click', () => {
         SUPABASE_URL = document.getElementById('cfg-supabase-url').value.trim();
         SUPABASE_ANON_KEY = document.getElementById('cfg-supabase-key').value.trim();
+        GEMINI_API_KEY = document.getElementById('cfg-gemini-key').value.trim();
+
         localStorage.setItem('raff_supabase_url', SUPABASE_URL);
         localStorage.setItem('raff_supabase_key', SUPABASE_ANON_KEY);
+        localStorage.setItem('raff_gemini_api_key', GEMINI_API_KEY);
 
         settings.storyLang = document.getElementById('cfg-story-lang').value;
         settings.promptLang = document.getElementById('cfg-prompt-lang').value;
@@ -3071,7 +2956,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
 
         initSupabaseClient();
         settingsModal.classList.add('hidden');
-        showToast("Tetapan Supabase & AI disimpan.");
+        showToast("Tetapan Supabase & Gemini API disimpan.");
       });
 
       let advImageBase64 = null;
@@ -3165,7 +3050,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
           const storyInput = document.getElementById('story-text-input');
           const currentText = storyInput.value.trim();
           
-          const promptAdd = `[Idea dari Imej]: ${lastAdvAnalysis.cadangan_cerita}\n[Konsep]: ${lastAdvAnalysis.konsep}\n[Pencahayaan]: ${lastAdvAnalysis.pencahayaan}`;
+          const promptAdd = `[Idea dari Imej]: ${lastAdvAnalysis.cadangan_cerita}\n[Konsep]: ${lastAdvAnalysis.konsep}\n[Pencahayaan]: ${lastAddAnalysis.pencahayaan}`;
           storyInput.value = currentText ? currentText + "\n\n" + promptAdd : promptAdd;
           
           state.story_input = storyInput.value;
