@@ -785,14 +785,21 @@
 
     async function executeTextWithFallback(contentsArray, functionType, requireJson = false) {
       try {
-        const response = await fetch('/api/analyze', {
+        // Robust API endpoint determination for blob/preview vs vercel production
+        const endpoint = window.location.protocol.startsWith('http') && !window.location.protocol.includes('blob') 
+          ? '/api/analyze' 
+          : 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent';
+        
+        const fetchOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: contentsArray, isImageGeneration: false })
-        });
+        };
+
+        const response = await fetch(endpoint, fetchOptions);
         
         if (!response.ok) {
-          const errData = await response.json();
+          const errData = await response.json().catch(() => ({}));
           throw new Error(errData.error || `HTTP Error ${response.status}`);
         }
         
@@ -985,6 +992,10 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
 
     async function callNanoBananaImage(promptText, aspectRatio = "1:1", referenceImage = null) {
       try {
+        const endpoint = window.location.protocol.startsWith('http') && !window.location.protocol.includes('blob') 
+          ? '/api/analyze' 
+          : 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent';
+
         const parts = [{ text: promptText }];
         if (referenceImage) {
           const base64 = referenceImage.split(',')[1];
@@ -992,7 +1003,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
           parts.push({ inlineData: { mimeType, data: base64 } });
         }
 
-        const response = await fetch('/api/analyze', {
+        const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
@@ -1002,7 +1013,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         });
 
         if (!response.ok) {
-          const errData = await response.json();
+          const errData = await response.json().catch(() => ({}));
           throw new Error(errData.error || `API error ${response.status}`);
         }
 
