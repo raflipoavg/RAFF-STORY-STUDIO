@@ -1,0 +1,3194 @@
+<!DOCTYPE html>
+<html lang="ms" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAFF STORY STUDIO — Universal AI Storyboard & Video Production Planner</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070a12;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    body {
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+</head>
+<body class="bg-[#070a12] text-slate-100 min-h-screen font-sans antialiased selection:bg-indigo-500 selection:text-white flex flex-col">
+
+  <header class="border-b border-slate-800/80 bg-[#0b0f19]/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2.5 cursor-pointer" id="brand-home-btn">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-600/30 text-white font-bold flex-shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <polygon points="23 7 16 12 23 17 23 7"></polygon>
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2.5">
+              <h1 class="text-sm sm:text-base font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">
+                RAFF STORY STUDIO
+              </h1>
+              <div id="app-toast-inline" class="hidden items-center text-xs font-semibold px-2.5 py-0.5 rounded-md bg-indigo-950/90 border border-indigo-500/40 text-indigo-200 animate-pulse shadow-sm">
+                <span id="toast-text">Mesej sistem</span>
+              </div>
+            </div>
+            <p class="text-[10px] text-slate-400 font-medium tracking-wider">Universal AI Storyboard & Video Production Planner (Supabase Powered)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-slate-900 border border-slate-800 text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-[11px] text-slate-300" id="sync-status-badge">Supabase Connected</span>
+        </div>
+
+        <button id="btn-save-project" title="Simpan ke Cloud" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 transition shadow">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+          <span class="hidden sm:inline">Save</span>
+        </button>
+
+        <button id="btn-open-projects-modal" title="Buka Projek" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center gap-1.5 transition border border-slate-700">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+          <span class="hidden sm:inline">Projek Saya</span>
+        </button>
+
+        <button id="btn-refresh-app" title="Refresh Aplikasi" class="p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700 flex items-center gap-1 text-xs font-semibold">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+          <span class="hidden sm:inline">Refresh</span>
+        </button>
+
+        <button id="btn-open-settings" title="Advanced Settings & Supabase Config" class="p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+        </button>
+
+        <div id="auth-container">
+          <button id="btn-google-login" class="flex items-center gap-2 text-xs font-semibold px-3.5 py-2 rounded-xl bg-white text-slate-950 hover:bg-slate-100 transition shadow-sm">
+            <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span>Supabase Login</span>
+          </button>
+
+          <div id="user-profile-badge" class="hidden flex items-center gap-2 bg-slate-900 border border-slate-800 pl-1.5 pr-3 py-1 rounded-full">
+            <img id="user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-6 h-6 rounded-full border border-indigo-400">
+            <span id="user-name" class="text-xs font-semibold text-slate-200">User</span>
+            <button id="btn-logout" title="Log keluar" class="text-slate-400 hover:text-rose-400 text-xs ml-1 font-bold">×</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <div class="lg:col-span-5 space-y-3">
+        <button 
+          id="btn-open-story-idea-modal"
+          class="w-full py-4 px-5 rounded-2xl glass-card border border-indigo-500/40 hover:border-indigo-500 transition flex items-center justify-between shadow-xl shadow-indigo-600/10 group text-left"
+        >
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold group-hover:bg-indigo-600 group-hover:text-white transition">
+              ✍️
+            </div>
+            <div>
+              <h4 class="text-sm font-extrabold text-white flex items-center gap-2">
+                <span>Idea Cerita & AI Analysis</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              </h4>
+              <p id="story-preview-summary-text" class="text-xs text-slate-400 truncate max-w-[280px]">Klik untuk buka & masukkan idea cerita...</p>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-indigo-400 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+
+        <div class="flex items-center gap-2">
+          <button id="btn-focus-story" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs tracking-wide transition bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-indigo-500/50 flex items-center justify-center gap-2 shadow-sm">
+            <span>Story Panel</span>
+          </button>
+          <button id="btn-focus-scenes" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs tracking-wide transition bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-indigo-500/50 flex items-center justify-center gap-2 shadow-sm">
+            <span>Scene Panel</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 space-y-4">
+        <div class="glass-card p-4 rounded-2xl border border-slate-800 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 class="text-base font-extrabold text-white">Scene Cards Feed</h3>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btn-open-google-flow-modal" class="px-3 py-1.5 rounded-xl bg-violet-600/20 hover:bg-violet-600/30 text-violet-300 border border-violet-500/40 font-bold text-xs flex items-center gap-1.5 transition shadow-sm" title="Google Flow Export">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              <span>Google Flow</span>
+            </button>
+            <span id="tab-scenes-count" class="px-3 py-1.5 rounded-xl bg-indigo-950 text-indigo-300 border border-indigo-800 font-mono text-xs font-bold shadow-sm">0 Scenes</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <section id="results-wrapper" class="space-y-6">
+      <div id="main-panels-grid" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <div id="pane-story-container" class="lg:col-span-5 space-y-6 transition-all duration-300">
+          <div class="space-y-6">
+            
+            <div class="glass-card border border-slate-800/80 rounded-3xl p-5 space-y-4">
+              <div class="flex flex-col gap-2 border-b border-slate-800/80 pb-3">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-indigo-400">STORY OVERVIEW</p>
+                <h2 id="view-title" class="text-xl font-extrabold text-white">Nama Cerita</h2>
+                <div class="flex flex-wrap gap-2 text-xs">
+                  <span id="view-genre" class="px-3 py-1 rounded-full bg-slate-800/90 text-slate-300 font-medium">Genre: -</span>
+                  <span id="view-mood" class="px-3 py-1 rounded-full bg-slate-800/90 text-slate-300 font-medium">Mood: -</span>
+                  <span id="view-total-duration" class="px-3 py-1 rounded-full bg-indigo-950/80 text-indigo-300 font-bold border border-indigo-800/60">Total Duration: 0 sec</span>
+                </div>
+              </div>
+
+              <div class="space-y-3 text-xs">
+                <div class="bg-[#090d16]/70 p-3.5 rounded-xl border border-slate-800/80 space-y-1">
+                  <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Logline</h4>
+                  <p id="view-logline" class="text-slate-200 leading-relaxed italic">-</p>
+                </div>
+                <div class="bg-[#090d16]/70 p-3.5 rounded-xl border border-slate-800/80 space-y-1">
+                  <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Theme & Structure</h4>
+                  <p id="view-theme" class="text-slate-200 leading-relaxed">-</p>
+                </div>
+                <div class="bg-[#090d16]/70 p-4 rounded-xl border border-slate-800/80 space-y-1">
+                  <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Story Summary</h4>
+                  <p id="view-summary" class="text-xs text-slate-300 leading-relaxed whitespace-pre-line">-</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                  <span>Characters Master Sheet</span>
+                  <span id="char-total-pill" class="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-semibold">0</span>
+                </h3>
+                <span class="text-[10px] text-amber-400 font-medium">★ CHAR_XX Strict Identity Lock</span>
+              </div>
+              <div id="characters-container" class="space-y-4"></div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-bold text-white">Outfit System</h3>
+                <span class="text-[10px] text-indigo-400 font-medium">★ OUTFIT_XX Continuity</span>
+              </div>
+              <div id="outfits-container" class="space-y-4"></div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-bold text-white">Locations Master Sheet</h3>
+                <span class="text-[10px] text-indigo-400 font-medium">★ LOC_XX Background Lock</span>
+              </div>
+              <div id="locations-container" class="space-y-4"></div>
+            </div>
+
+            <div id="props-wrapper" class="space-y-3 hidden">
+              <h3 class="text-sm font-bold text-white">Important Props</h3>
+              <div id="props-container" class="space-y-3"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <div id="pane-scenes-container" class="lg:col-span-7 space-y-4 transition-all duration-300">
+          <div id="scenes-list-container" class="space-y-5">
+            <div class="glass-card border border-slate-800/80 rounded-3xl p-8 text-center space-y-3">
+              <div class="w-12 h-12 rounded-2xl bg-indigo-950 border border-indigo-800/60 mx-auto flex items-center justify-center text-indigo-400">
+                🎬
+              </div>
+              <h4 class="text-sm font-bold text-white">Production Scene Cards Bersedia</h4>
+              <p class="text-xs text-slate-400 max-w-sm mx-auto">Sila masukkan idea cerita melalui butang <strong class="text-indigo-300">Idea Cerita & AI Analysis</strong> di atas dan tekan <strong class="text-indigo-300">ANALYZE STORY</strong>. Scene cards akan terisi secara automatik di sini.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal Projek Saya -->
+  <div id="modal-projects" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-xl w-full p-6 space-y-4 shadow-2xl relative flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-white">Projek Saya (Supabase Cloud)</h3>
+        <button id="btn-close-projects-modal" class="text-slate-400 hover:text-white text-2xl leading-none p-1">&times;</button>
+      </div>
+      <div class="flex items-center justify-between">
+        <button id="btn-new-project" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">+ Projek Baru</button>
+        <span class="text-xs text-slate-400" id="project-count-label">0 Projek</span>
+      </div>
+      <div id="projects-list-container" class="flex-1 overflow-auto space-y-2 pr-1 min-h-[250px]">
+        <p class="text-xs text-slate-400 text-center py-8">Memuatkan senarai projek...</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-story-idea" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-7 space-y-5 shadow-2xl relative flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-bold">✍️</div>
+          <div>
+            <h3 class="text-base font-bold text-white">Idea Cerita & Parameter Produksi</h3>
+            <p class="text-xs text-slate-400">Masukkan idea ringkas dan tetapkan gaya visual</p>
+          </div>
+        </div>
+        <button id="btn-close-story-idea-modal" class="text-slate-400 hover:text-white text-2xl leading-none p-1">&times;</button>
+      </div>
+
+      <div class="space-y-4 overflow-y-auto pr-1 flex-1">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label for="story-text-input" class="text-xs font-bold text-slate-200">Idea Cerita / Skrip Jualan</label>
+            <button id="btn-load-sample" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold transition py-1">
+              + Isi Contoh Umum
+            </button>
+          </div>
+          <textarea 
+            id="story-text-input" 
+            rows="4"
+            placeholder="Taip idea cerita anda di sini...&#10;Contoh: Seorang lelaki pulang ke kampung selepas lama bekerja di bandar dan bertemu semula dengan ibunya."
+            class="w-full bg-[#0a0e1a]/90 border border-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-2xl p-4 text-slate-100 placeholder-slate-500 text-sm leading-relaxed resize-y transition outline-none"
+          ></textarea>
+        </div>
+
+        <div class="bg-[#090d16] border border-indigo-500/30 rounded-2xl p-4 space-y-3 relative overflow-hidden shadow-inner">
+          <div class="absolute top-0 right-0 bg-gradient-to-l from-indigo-600 to-violet-600 text-white text-[9px] font-extrabold px-3 py-1 rounded-bl-xl shadow-lg">ADVANCE AI</div>
+          <div class="flex items-center gap-2">
+            <span class="text-indigo-400 text-sm">🧠</span>
+            <label class="text-xs font-bold text-slate-200">Analisis Visual (Konsep, Gaya & Idea)</label>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-relaxed">Muat naik gambar rujukan (moodboard/konsep) untuk AI menganalisis pencahayaan, gaya, dan mencadangkan idea cerita secara automatik.</p>
+          
+          <div class="flex flex-col sm:flex-row gap-3 pt-1">
+             <div class="w-full sm:w-20 h-20 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center overflow-hidden relative shrink-0 group">
+               <img id="adv-img-preview" src="" alt="Advance Ref" class="w-full h-full object-cover hidden">
+               <span id="adv-img-placeholder" class="text-[9px] text-slate-500 text-center px-1">Gambar<br>Rujukan</span>
+               <button type="button" id="btn-remove-adv-img" class="absolute top-1 right-1 w-4 h-4 rounded-full bg-rose-600/90 text-white text-[10px] flex items-center justify-center hidden hover:bg-rose-500 transition">&times;</button>
+             </div>
+             <div class="flex-1 flex flex-col gap-2 justify-center">
+               <label class="cursor-pointer px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-[11px] transition flex items-center justify-center gap-2">
+                 <span>Pilih Gambar Rujukan</span>
+                 <input type="file" id="adv-image-input" accept="image/*" class="hidden">
+               </label>
+               <button type="button" id="btn-analyze-adv-img" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                 <span id="adv-analyze-text">Analisis Gambar Ini</span>
+                 <span id="adv-analyze-spinner" class="hidden w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+               </button>
+             </div>
+          </div>
+
+          <div id="adv-analysis-result" class="hidden bg-[#070b14] border border-indigo-900/50 rounded-xl p-3 text-[11px] text-slate-300 space-y-2 mt-2">
+            <div class="space-y-1.5">
+              <p><strong class="text-indigo-300">Konsep:</strong> <span id="res-konsep">-</span></p>
+              <p><strong class="text-indigo-300">Gaya Visual:</strong> <span id="res-style">-</span></p>
+              <p><strong class="text-indigo-300">Pencahayaan:</strong> <span id="res-lighting">-</span></p>
+              <p><strong class="text-indigo-300">Cadangan Cerita:</strong> <span id="res-story">-</span></p>
+              <button type="button" id="btn-apply-adv-story" class="mt-3 w-full py-2 bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 rounded-xl font-bold text-[10px] transition uppercase tracking-wider flex items-center justify-center gap-1.5">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                Guna Cadangan Cerita Ini
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-[#090d16] border border-slate-800 rounded-2xl p-4 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-indigo-400 text-sm">📦</span>
+              <label class="text-xs font-bold text-slate-200">Upload Produk untuk Video UGC / Jualan (Pilihan)</label>
+            </div>
+            <span id="product-img-status" class="text-[10px] text-slate-400 font-mono">Tiada produk</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-relaxed">Muat naik imej produk anda agar AI mengubah sistem data menjadi struktur Video UGC / Jualan profesional yang lengkap dengan Hook, Body & CTA.</p>
+          <div class="flex items-center gap-3 pt-1">
+            <div class="w-16 h-16 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center overflow-hidden relative group flex-shrink-0">
+              <img id="product-img-preview" src="" alt="Produk" class="w-full h-full object-cover hidden">
+              <div id="product-img-placeholder" class="text-[10px] text-slate-500 text-center px-1">Produk</div>
+              <button type="button" id="btn-remove-product-img" class="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] flex items-center justify-center shadow hidden">&times;</button>
+            </div>
+            <label class="cursor-pointer px-4 py-2.5 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 font-bold text-xs transition flex items-center gap-2">
+              <span>Pilih Gambar Produk</span>
+              <input type="file" id="product-image-input" accept="image/*" class="hidden">
+            </label>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Genre</label>
+            <select id="param-genre" class="w-full bg-[#0a0e1a] border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none transition">
+              <option value="Auto">Auto (AI Tentukan)</option>
+              <option value="Drama">Drama</option>
+              <option value="Short Film">Short Film</option>
+              <option value="Comedy">Comedy</option>
+              <option value="Romance">Romance</option>
+              <option value="Action">Action</option>
+              <option value="Horror">Horror</option>
+              <option value="Thriller">Thriller</option>
+              <option value="Family">Family</option>
+              <option value="Adventure">Adventure</option>
+              <option value="UGC Sales">UGC Sales Video</option>
+              <option value="Custom">Custom</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Style</label>
+            <select id="param-style" class="w-full bg-[#0a0e1a] border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none transition">
+              <optgroup label="Realism">
+                <option value="Realistic">Realistic</option>
+                <option value="Cinematic" selected>Cinematic</option>
+                <option value="Documentary">Documentary</option>
+              </optgroup>
+              <optgroup label="Animation 3D">
+                <option value="3D Pixar Style">3D Pixar / Disney Style</option>
+                <option value="3D Dreamworks">3D Dreamworks Style</option>
+                <option value="3D Low Poly">3D Low Poly Art</option>
+              </optgroup>
+              <optgroup label="Animation 2D & Anime">
+                <option value="Studio Ghibli">Studio Ghibli Anime</option>
+                <option value="90s Retro Anime">90s Retro Anime</option>
+                <option value="Modern Anime">Modern Shonen Anime</option>
+                <option value="Western Cartoon">Western 2D Cartoon</option>
+                <option value="Flat Vector Art">Flat Vector Animation</option>
+              </optgroup>
+              <option value="Custom">Custom</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Target</label>
+            <select id="param-target" class="w-full bg-[#0a0e1a] border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none transition">
+              <option value="Short Film" selected>Short Film</option>
+              <option value="TikTok">TikTok Story</option>
+              <option value="YouTube">YouTube Video</option>
+              <option value="Social Media">Social Media</option>
+              <option value="Advertisement">Advertisement Story</option>
+              <option value="UGC Video">UGC Video / Sales</option>
+              <option value="Custom">Custom</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Aspect Ratio</label>
+            <select id="param-aspect" class="w-full bg-[#0a0e1a] border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none transition">
+              <option value="9:16" selected>9:16 (Vertical / TikTok / Reels)</option>
+              <option value="16:9">16:9 (Horizontal / Cinematic)</option>
+              <option value="1:1">1:1 (Square)</option>
+            </select>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Bahasa & Loghat (Dialog)</label>
+            <select id="param-language-dialect" class="w-full bg-[#0a0e1a] border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none transition">
+              <option value="Bahasa Melayu Standard" selected>Bahasa Melayu Standard</option>
+              <option value="Bahasa Inggeris (English)">Bahasa Inggeris (English)</option>
+              <option value="Manglish (Malaysian English)">Manglish (Malaysian English)</option>
+              <option value="Bahasa Rojak (Campur)">Bahasa Rojak (Campur)</option>
+              <option value="Loghat Sabah">Loghat Sabah</option>
+              <option value="Loghat Sarawak">Loghat Sarawak</option>
+              <option value="Loghat Kelantan">Loghat Kelantan</option>
+              <option value="Loghat Terengganu">Loghat Terengganu</option>
+              <option value="Loghat Utara (Kedah/Penang/Perlis)">Loghat Utara (Kedah/Penang/Perlis)</option>
+              <option value="Loghat Perak">Loghat Perak</option>
+              <option value="Loghat Negeri Sembilan">Loghat Negeri Sembilan</option>
+              <option value="Loghat Pahang">Loghat Pahang</option>
+              <option value="Loghat Johor">Loghat Johor</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-800">
+        <button 
+          id="btn-analyze-story"
+          class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-extrabold text-sm tracking-widest uppercase shadow-xl shadow-indigo-600/30 active:scale-[0.99] transition flex items-center justify-center gap-3"
+        >
+          <span id="analyze-btn-caption">ANALYZE STORY</span>
+          <svg id="analyze-spinner" class="hidden w-5 h-5 animate-spin text-white flex-shrink-0" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-google-flow" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-4xl w-full p-6 sm:p-7 space-y-5 shadow-2xl relative flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-violet-600/20 text-violet-400 flex items-center justify-center font-bold">⚡</div>
+          <h3 class="text-base font-bold text-white">Google Flow Export Engine</h3>
+        </div>
+        <button id="btn-close-google-flow-modal" class="text-slate-400 hover:text-white text-2xl leading-none p-1">&times;</button>
+      </div>
+
+      <div class="space-y-6 overflow-y-auto pr-1 flex-1">
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-900/50 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="space-y-1 text-center sm:text-left">
+            <h4 class="text-base font-extrabold text-white">Production Plan & Prompt Google Flow</h4>
+            <p class="text-xs text-slate-300">Salin prompt JSON lengkap bagi setiap scene atau gunakan fail JSON berstruktur penuh.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btn-copy-full-json" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider transition shadow flex items-center gap-2">
+              <span>COPY JSON</span>
+            </button>
+            <a href="https://flow.google.com" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs uppercase tracking-wider transition border border-slate-700 flex items-center gap-1.5">
+              <span>GOOGLE FLOW</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="glass-card border border-slate-800 rounded-2xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Master Negative Prompt</span>
+            <button id="btn-copy-negative-all" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold py-1">Salin</button>
+          </div>
+          <p id="view-negative-prompt" class="text-xs font-mono text-slate-300 bg-[#080b14] p-3 rounded-xl border border-slate-800 leading-relaxed overflow-x-auto"></p>
+        </div>
+
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider">Scene-by-Scene Prompt Dispatch</h4>
+          <div id="flow-scenes-prompts" class="space-y-3"></div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Google Flow Valid Production JSON</span>
+          </div>
+          <pre id="json-output-viewer" class="w-full max-h-64 overflow-auto bg-[#070913] border border-slate-800 rounded-2xl p-4 text-xs font-mono text-indigo-300 select-all"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-image-preview" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-4xl w-full p-6 space-y-4 shadow-2xl relative flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 id="preview-modal-title" class="text-base font-bold text-white truncate">Papar Imej Sheet</h3>
+        <button id="btn-close-image-modal" class="text-slate-400 hover:text-white text-2xl leading-none p-1">&times;</button>
+      </div>
+      <div class="flex-1 overflow-auto flex items-center justify-center bg-slate-950 rounded-2xl p-2 border border-slate-800 min-h-[300px]">
+        <img id="preview-modal-img" src="" alt="Sheet Preview" class="max-w-full max-h-[70vh] object-contain rounded-xl">
+      </div>
+      <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+        <button id="btn-modal-download" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span>Download</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-character-analysis" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 id="analysis-modal-title" class="text-base font-bold text-white">Analisis Karakter AI</h3>
+        <button id="btn-close-analysis-modal" class="text-slate-400 hover:text-white text-2xl leading-none p-1">&times;</button>
+      </div>
+      <div id="analysis-modal-content" class="flex-1 overflow-auto bg-[#080b14] p-4 rounded-2xl border border-slate-800 text-xs text-slate-200 space-y-3 leading-relaxed">
+        Menyiapkan analisis...
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal (Supabase Configuration) -->
+  <div id="modal-settings" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-md w-full p-7 space-y-5 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-base font-bold text-white">Supabase Configuration & Settings</h3>
+          <p class="text-xs text-slate-400">Konfigurasi Cloud & Enjin AI</p>
+        </div>
+        <button id="btn-close-settings-modal" class="text-slate-400 hover:text-white text-xl leading-none p-1">&times;</button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Supabase URL</label>
+          <input type="text" id="cfg-supabase-url" placeholder="https://xxx.supabase.co" class="w-full bg-[#080b14] border border-slate-800 rounded-xl px-3 py-2 text-slate-200 font-mono">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Supabase Anon Key</label>
+          <input type="password" id="cfg-supabase-key" placeholder="eyJ..." class="w-full bg-[#080b14] border border-slate-800 rounded-xl px-3 py-2 text-slate-200 font-mono">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Bahasa Cerita</label>
+            <select id="cfg-story-lang" class="w-full bg-[#080b14] border border-slate-800 rounded-xl px-3 py-2 text-slate-200">
+              <option value="Bahasa Melayu">Bahasa Melayu</option>
+              <option value="English">English</option>
+              <option value="Indonesian">Indonesian</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Bahasa Prompt Flow</label>
+            <select id="cfg-prompt-lang" class="w-full bg-[#080b14] border border-slate-800 rounded-xl px-3 py-2 text-slate-200">
+              <option value="English">English (Disyorkan)</option>
+              <option value="Bahasa Melayu">Bahasa Melayu</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end gap-2">
+        <button id="btn-save-settings-modal" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider transition">
+          Simpan Tetapan & Sambung Supabase
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- SUPABASE CONFIGURATION ---
+    let SUPABASE_URL = localStorage.getItem('raff_supabase_url') || "";
+    let SUPABASE_ANON_KEY = localStorage.getItem('raff_supabase_key') || "";
+    let supabaseClient = null;
+
+    function initSupabaseClient() {
+      if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+        try {
+          supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          document.getElementById('sync-status-badge').textContent = "Supabase Connected";
+          return true;
+        } catch (e) {
+          console.warn("Supabase init error:", e);
+        }
+      }
+      document.getElementById('sync-status-badge').textContent = "Supabase Offline / Not Configured";
+      return false;
+    }
+
+    initSupabaseClient();
+
+    const STORAGE_KEY = 'raff_story_studio_state_v61';
+    const SETTINGS_KEY = 'raff_story_studio_config_v61';
+    const CURRENT_PROJ_ID_KEY = 'raff_current_project_id';
+
+    let state = {
+      current_project_id: localStorage.getItem(CURRENT_PROJ_ID_KEY) || null,
+      project_name: "Draf Cerita Baru",
+      story_input: "",
+      product_image: null,
+      genre: "Auto",
+      style: "Cinematic",
+      target: "Short Film",
+      aspectRatio: "9:16",
+      languageDialect: "Bahasa Melayu Standard",
+      productionPlan: null,
+      focusedPanel: "both",
+      characterImages: {},
+      characterGeneratedImages: {},
+      characterSheets: {},
+      outfitImages: {},
+      outfitGeneratedImages: {},
+      outfitSheets: {},
+      locationImages: {},
+      locationGeneratedImages: {},
+      locationSheets: {},
+      propImages: {},
+      propGeneratedImages: {},
+      propSheets: {},
+      sceneImages: {},
+      sceneSpecs: {},
+      sceneSelections: {},
+      sceneEditSupportImages: {},
+      user: null
+    };
+
+    let settings = {
+      storyLang: "Bahasa Melayu",
+      promptLang: "English",
+      continuityLevel: "strict"
+    };
+
+    let toastTimeout = null;
+
+    function showToast(msg) {
+      const toast = document.getElementById('app-toast-inline');
+      if (!toast) return;
+      document.getElementById('toast-text').textContent = msg;
+      
+      toast.className = "flex items-center text-xs font-semibold px-2.5 py-0.5 rounded-md bg-indigo-950/90 border border-indigo-500/40 text-indigo-200 animate-pulse shadow-sm";
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('flex');
+        toast.classList.add('hidden');
+      }, 2500);
+    }
+
+    // --- SUPABASE COMPATIBILITY WRAPPER FOR saveState() ---
+    let autoSaveTimer = null;
+    function saveState() {
+      try {
+        const payload = {
+          project_name: state.project_name,
+          story_input: state.story_input,
+          product_image: state.product_image,
+          genre: state.genre,
+          style: state.style,
+          target: state.target,
+          aspectRatio: state.aspectRatio,
+          languageDialect: state.languageDialect,
+          productionPlan: state.productionPlan,
+          focusedPanel: state.focusedPanel,
+          characterImages: state.characterImages,
+          characterGeneratedImages: state.characterGeneratedImages,
+          characterSheets: state.characterSheets,
+          outfitImages: state.outfitImages,
+          outfitGeneratedImages: state.outfitGeneratedImages,
+          outfitSheets: state.outfitSheets,
+          locationImages: state.locationImages,
+          locationGeneratedImages: state.locationGeneratedImages,
+          locationSheets: state.locationSheets,
+          propImages: state.propImages,
+          propGeneratedImages: state.propGeneratedImages,
+          propSheets: state.propSheets,
+          sceneImages: state.sceneImages,
+          sceneSpecs: state.sceneSpecs,
+          sceneSelections: state.sceneSelections,
+          sceneEditSupportImages: state.sceneEditSupportImages,
+          updated_at: new Date().toISOString()
+        };
+        // Temporary draft fallback in localStorage
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+
+        // Trigger debounced auto-save to Supabase if client is ready
+        if (autoSaveTimer) clearTimeout(autoSaveTimer);
+        autoSaveTimer = setTimeout(() => {
+          saveProjectToSupabase(false);
+        }, 1500);
+      } catch (e) {
+        console.warn('Save state warning:', e);
+      }
+    }
+
+    async function saveProjectToSupabase(showSuccessToast = true) {
+      if (!supabaseClient) {
+        if (showSuccessToast) showToast("Sila konfigurasi Supabase URL & Key di Tetapan (⚙️).");
+        return;
+      }
+      try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) {
+          if (showSuccessToast) showToast("Sila login Supabase untuk menyimpan ke cloud.");
+          return;
+        }
+
+        const projectPayload = {
+          user_id: user.id,
+          project_name: state.project_name || "Projek Cerita Tanpa Nama",
+          project_data: {
+            story_input: state.story_input,
+            product_image: state.product_image,
+            genre: state.genre,
+            style: state.style,
+            target: state.target,
+            aspectRatio: state.aspectRatio,
+            languageDialect: state.languageDialect,
+            productionPlan: state.productionPlan,
+            focusedPanel: state.focusedPanel,
+            characterImages: state.characterImages,
+            characterGeneratedImages: state.characterGeneratedImages,
+            characterSheets: state.characterSheets,
+            outfitImages: state.outfitImages,
+            outfitGeneratedImages: state.outfitGeneratedImages,
+            outfitSheets: state.outfitSheets,
+            locationImages: state.locationImages,
+            locationGeneratedImages: state.locationGeneratedImages,
+            locationSheets: state.locationSheets,
+            propImages: state.propImages,
+            propGeneratedImages: state.propGeneratedImages,
+            propSheets: state.propSheets,
+            sceneImages: state.sceneImages,
+            sceneSpecs: state.sceneSpecs,
+            sceneSelections: state.sceneSelections,
+            sceneEditSupportImages: state.sceneEditSupportImages
+          },
+          updated_at: new Date().toISOString()
+        };
+
+        if (state.current_project_id) {
+          const { error } = await supabaseClient
+            .from('projects')
+            .update(projectPayload)
+            .eq('id', state.current_project_id);
+          if (error) throw error;
+        } else {
+          const { data, error } = await supabaseClient
+            .from('projects')
+            .insert([projectPayload])
+            .select();
+          if (error) throw error;
+          if (data && data[0]) {
+            state.current_project_id = data[0].id;
+            localStorage.setItem(CURRENT_PROJ_ID_KEY, state.current_project_id);
+          }
+        }
+        if (showSuccessToast) showToast("Project berjaya disimpan ke Supabase.");
+      } catch (err) {
+        console.error("Supabase Save Error:", err);
+        if (showSuccessToast) showToast("Gagal menyimpan project ke cloud: " + err.message);
+      }
+    }
+
+    async function loadState() {
+      try {
+        if (supabaseClient) {
+          const { data: { user } } = await supabaseClient.auth.getUser();
+          if (user) {
+            applyUserUI({ name: user.email?.split('@')[0] || 'User', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces' });
+            
+            if (state.current_project_id) {
+              const { data, error } = await supabaseClient
+                .from('projects')
+                .select('*')
+                .eq('id', state.current_project_id)
+                .single();
+              if (!error && data && data.project_data) {
+                restoreProjectData(data.project_data, data.project_name);
+                return;
+              }
+            } else {
+              // Load latest project for user
+              const { data, error } = await supabaseClient
+                .from('projects')
+                .select('*')
+                .order('updated_at', { ascending: false })
+                .limit(1);
+              if (!error && data && data.length > 0) {
+                state.current_project_id = data[0].id;
+                localStorage.setItem(CURRENT_PROJ_ID_KEY, state.current_project_id);
+                restoreProjectData(data[0].project_data, data[0].project_name);
+                return;
+              }
+            }
+          }
+        }
+
+        // Fallback to local draft if Supabase session/project not loaded
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          restoreProjectData(parsed, parsed.project_name || "Draf Cerita Baru");
+        }
+      } catch (err) {
+        console.error('Error restoring state:', err);
+      }
+    }
+
+    function restoreProjectData(pd, projName) {
+      if (!pd) return;
+      state.project_name = projName || pd.project_name || "Projek Cerita";
+      state.story_input = pd.story_input || "";
+      state.product_image = pd.product_image || null;
+      state.genre = pd.genre || "Auto";
+      state.style = pd.style || "Cinematic";
+      state.target = pd.target || "Short Film";
+      state.aspectRatio = pd.aspectRatio || "9:16";
+      state.languageDialect = pd.languageDialect || "Bahasa Melayu Standard";
+      state.productionPlan = pd.productionPlan || null;
+      state.focusedPanel = pd.focusedPanel || "both";
+      state.characterImages = pd.characterImages || {};
+      state.characterGeneratedImages = pd.characterGeneratedImages || {};
+      state.characterSheets = pd.characterSheets || {};
+      state.outfitImages = pd.outfitImages || {};
+      state.outfitGeneratedImages = pd.outfitGeneratedImages || {};
+      state.outfitSheets = pd.outfitSheets || {};
+      state.locationImages = pd.locationImages || {};
+      state.locationGeneratedImages = pd.locationGeneratedImages || {};
+      state.locationSheets = pd.locationSheets || {};
+      state.propImages = pd.propImages || {};
+      state.propGeneratedImages = pd.propGeneratedImages || {};
+      state.propSheets = pd.propSheets || {};
+      state.sceneImages = pd.sceneImages || {};
+      state.sceneSpecs = pd.sceneSpecs || {};
+      state.sceneSelections = pd.sceneSelections || {};
+      state.sceneEditSupportImages = pd.sceneEditSupportImages || {};
+
+      document.getElementById('story-text-input').value = state.story_input;
+      document.getElementById('param-genre').value = state.genre;
+      document.getElementById('param-style').value = state.style;
+      document.getElementById('param-target').value = state.target;
+      document.getElementById('param-aspect').value = state.aspectRatio;
+      if (document.getElementById('param-language-dialect')) {
+        document.getElementById('param-language-dialect').value = state.languageDialect;
+      }
+
+      if (state.product_image) {
+        const prevImg = document.getElementById('product-img-preview');
+        const ph = document.getElementById('product-img-placeholder');
+        const rmBtn = document.getElementById('btn-remove-product-img');
+        const statusEl = document.getElementById('product-img-status');
+        prevImg.src = state.product_image;
+        prevImg.classList.remove('hidden');
+        ph.classList.add('hidden');
+        rmBtn.classList.remove('hidden');
+        statusEl.textContent = "Produk dimuat naik";
+      }
+
+      updateStoryPreviewText();
+      if (state.productionPlan) {
+        renderFullProductionPlan(state.productionPlan);
+      }
+      applyPanelFocus(state.focusedPanel, false);
+    }
+
+    async function fetchUserProjects() {
+      if (!supabaseClient) {
+        showToast("Sila sambungkan Supabase di Tetapan.");
+        return;
+      }
+      const container = document.getElementById('projects-list-container');
+      container.innerHTML = `<p class="text-xs text-slate-400 text-center py-8">Memuatkan projek...</p>`;
+      
+      try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) {
+          container.innerHTML = `<p class="text-xs text-rose-400 text-center py-8">Sila log masuk terlebih dahulu.</p>`;
+          return;
+        }
+
+        const { data, error } = await supabaseClient
+          .from('projects')
+          .select('id, project_name, updated_at')
+          .order('updated_at', { ascending: false });
+
+        if (error) throw error;
+        document.getElementById('project-count-label').textContent = `${data.length} Projek`;
+
+        if (!data || data.length === 0) {
+          container.innerHTML = `<p class="text-xs text-slate-400 text-center py-8">Tiada projek disimpan dalam cloud.</p>`;
+          return;
+        }
+
+        container.innerHTML = "";
+        data.forEach(p => {
+          const item = document.createElement('div');
+          item.className = "bg-[#090d16] border border-slate-800 p-3.5 rounded-2xl flex items-center justify-between gap-3 text-xs";
+          item.innerHTML = `
+            <div class="min-w-0 flex-1">
+              <h4 class="font-bold text-white truncate">${p.project_name || 'Tanpa Tajuk'}</h4>
+              <p class="text-[10px] text-slate-400">Kemas kini: ${new Date(p.updated_at).toLocaleString()}</p>
+            </div>
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <button class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold btn-open-proj" data-id="${p.id}">Buka</button>
+              <button class="px-2 py-1.5 rounded-xl bg-rose-600/20 hover:bg-rose-600/40 text-rose-300 border border-rose-500/30 font-bold btn-del-proj" data-id="${p.id}">Padam</button>
+            </div>
+          `;
+
+          item.querySelector('.btn-open-proj').addEventListener('click', async () => {
+            state.current_project_id = p.id;
+            localStorage.setItem(CURRENT_PROJ_ID_KEY, p.id);
+            document.getElementById('modal-projects').classList.add('hidden');
+            await loadState();
+            showToast(`Projek "${p.project_name}" dibuka.`);
+          });
+
+          item.querySelector('.btn-del-proj').addEventListener('click', async () => {
+            if (confirm(`Padam projek "${p.project_name}"?`)) {
+              const { error: delErr } = await supabaseClient.from('projects').delete().eq('id', p.id);
+              if (delErr) {
+                showToast("Gagal memadam projek.");
+              } else {
+                if (state.current_project_id === p.id) {
+                  state.current_project_id = null;
+                  localStorage.removeItem(CURRENT_PROJ_ID_KEY);
+                }
+                showToast("Projek dipadam.");
+                fetchUserProjects();
+              }
+            }
+          });
+
+          container.appendChild(item);
+        });
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = `<p class="text-xs text-rose-400 text-center py-8">Ralat memuatkan senarai projek.</p>`;
+      }
+    }
+
+    function updateStoryPreviewText() {
+      const txt = state.story_input.trim();
+      const previewEl = document.getElementById('story-preview-summary-text');
+      if (previewEl) {
+        if (txt.length > 0) {
+          previewEl.textContent = txt.length > 50 ? txt.substring(0, 50) + '...' : txt;
+          previewEl.classList.remove('text-slate-400');
+          previewEl.classList.add('text-indigo-200');
+        } else {
+          previewEl.textContent = "Klik untuk buka & masukkan idea cerita...";
+          previewEl.classList.remove('text-indigo-200');
+          previewEl.classList.add('text-slate-400');
+        }
+      }
+    }
+
+    function safeParseJSON(rawText) {
+      if (!rawText) throw new Error("Teks kosong daripada model AI.");
+      let cleanText = rawText.trim();
+      if (cleanText.startsWith("```json")) {
+        cleanText = cleanText.replace(/^```json/, "").replace(/```$/, "").trim();
+      } else if (cleanText.startsWith("```")) {
+        cleanText = cleanText.replace(/^```/, "").replace(/```$/, "").trim();
+      }
+
+      try {
+        return JSON.parse(cleanText);
+      } catch (e1) {
+        try {
+          let repaired = cleanText
+            .replace(/,\s*}/g, '}')
+            .replace(/,\s*]/g, ']')
+            .replace(/[\u0000-\u001F]+/g, " ");
+          return JSON.parse(repaired);
+        } catch (e2) {
+          throw new Error("Gagal mengurai struktur JSON daripada model AI.");
+        }
+      }
+    }
+
+    async function executeTextWithFallback(contentsArray, functionType, requireJson = false) {
+      const isAnalysis = functionType === 'analysis';
+      const models = isAnalysis ? ['Gemini', 'OpenAI Vision', 'Claude Vision'] : ['Gemini Flash', 'OpenAI', 'Claude'];
+      
+      for (let i = 0; i < models.length; i++) {
+        const modelName = models[i];
+        try {
+          if (i > 0) showToast(`Model utama gagal. Mencuba alternatif... (${modelName})`);
+          
+          if (modelName.includes('Gemini')) {
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent`;
+            const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: contentsArray,
+                generationConfig: { responseModalities: ['TEXT'] }
+              })
+            });
+            
+            if (!response.ok) {
+              const errText = await response.text();
+              throw new Error(`HTTP Error ${response.status}: ${errText}`);
+            }
+            
+            const result = await response.json();
+            const rawText = result.candidates?.[0]?.content?.parts?.find(p => p.text)?.text;
+            if (!rawText || rawText.trim() === "") throw new Error("Respons AI kosong atau tidak sah.");
+            
+            if (requireJson) {
+              safeParseJSON(rawText); 
+            }
+            return rawText;
+          } else {
+            throw new Error(`Provider ${modelName} tidak dikonfigurasi.`);
+          }
+        } catch (err) {
+          console.warn(`[AI Fallback System] ${modelName} gagal:`, err.message);
+          if (i === models.length - 1) {
+            throw new Error(`Semua model alternatif gagal. Ralat akhir: ${err.message}`);
+          }
+        }
+      }
+    }
+
+    async function analyzeStoryWithAI() {
+      const idea = state.story_input.trim();
+      if (!idea && !state.product_image) {
+        showToast("Sila masukkan idea cerita atau muat naik imej produk.");
+        document.getElementById('story-text-input').focus();
+        return;
+      }
+
+      setLoading(true);
+
+      const hasProduct = !!state.product_image;
+      const userQuery = `
+IDEA PENGGUNA / SKRIP JUALAN: "${idea || 'Video jualan produk UGC'}"
+ADA PRODUK UPLOAD: ${hasProduct ? 'YA (UGC Sales Video mode active)' : 'TIDAK'}
+PARAMETER: Genre: ${state.genre}, Style: ${state.style}, Target: ${state.target}, Aspect Ratio: ${state.aspectRatio}
+BAHASA / LOGHAT DIALOG: ${state.languageDialect}
+
+Sila jana JSON mengikut skema berikut. PENTING: 
+1. Setiap scene mestilah mempunyai tempoh (duration) antara 5 hingga 10 saat maksimum sahaja (duration <= 10).
+2. Di dalam video_prompt untuk setiap scene, pastikan watak-watak TIDAK MEMANDANG KE KAMERA (no direct eye contact with camera, characters look away from camera or towards each other), KECUALI jika ia adalah video UGC / jualan produk di mana host boleh mempersembahkan produk dengan mesra dan berinteraksi secara natural tanpa kamera glare.
+3. Pastikan pandangan sesama karakter TEPAT MEMANDANG SATU SAMA LAIN bila berbual atau berinteraksi.
+${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene menampilkan produk dengan jelas (menggunakan PROP_01 atau produk utama).' : ''}
+5. PASTIKAN skrip atau dialog yang ditulis (dalam field dialogue) mematuhi penggunaan ${state.languageDialect} sepenuhnya mengikut tatabahasa atau slanga yang tepat.
+
+{
+  "overview": {
+    "title": "Tajuk Projek Cerita / Jualan",
+    "genre": "${hasProduct ? 'UGC Sales' : state.genre}",
+    "theme": "Tema",
+    "mood": "Mood",
+    "logline": "Logline",
+    "story_summary": "Ringkasan penuh 100% tepat berdasarkan idea asal atau produk",
+    "structure_type": "Standard",
+    "total_duration_sec": 30
+  },
+  "characters": [
+    {
+      "character_id": "CHAR_01",
+      "name": "Host / Watak Utama",
+      "role": "Main",
+      "estimated_age": "25 tahun",
+      "gender": "Lelaki/Wanita",
+      "personality": "Ramah & Profesional",
+      "physical_description": "Fizikal wajah",
+      "hairstyle": "Rambut",
+      "skin_tone": "Kulit",
+      "body_proportion": "Tubuh",
+      "continuity_notes": "Strict identity lock CHAR_01"
+    }
+  ],
+  "outfits": [
+    {
+      "outfit_id": "OUTFIT_01",
+      "character_id": "CHAR_01",
+      "description": "Pakaian kasual kemas",
+      "top": "Baju",
+      "bottom": "Seluar",
+      "shoes": "Kasut",
+      "accessories": "Aksesori",
+      "color_palette": "Warna",
+      "material": "Bahan",
+      "style": "Kasual",
+      "continuity_notes": "Strict clothing continuity lock OUTFIT_01"
+    }
+  ],
+  "locations": [
+    {
+      "location_id": "LOC_01",
+      "name": "Studio / Ruang Tamu Moden",
+      "description": "Lokasi rakaman",
+      "environment": "Dalaman",
+      "architecture": "Moden",
+      "time_of_day": "Siang",
+      "weather": "Cerah",
+      "lighting": "Studio",
+      "important_objects": ["Meja"],
+      "continuity_notes": "Strict continuity lock LOC_01"
+    }
+  ],
+  "props": [
+    {
+      "prop_id": "PROP_01",
+      "name": "Produk Utama",
+      "description": "Barangan jualan utama"
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "SCENE_01",
+      "title": "Scene 1 - Hook",
+      "duration": 8,
+      "characters": ["CHAR_01"],
+      "outfit_ids": ["OUTFIT_01"],
+      "location_id": "LOC_01",
+      "time": "Siang",
+      "action": "Aksi pembukaan",
+      "dialogue": "Dialog hook",
+      "expression": "Senyum",
+      "camera": "50mm lens",
+      "shot": "Medium Shot",
+      "movement": "Static",
+      "lighting": "Soft light",
+      "environment": "Studio",
+      "sound": "BGM",
+      "visual_prompt": "Ultra realistic visual prompt referencing CHAR_01, OUTFIT_01, LOC_01, PROP_01",
+      "video_prompt": "Detailed English narrative paragraph for video generator strictly referencing CHAR_01, OUTFIT_01, LOC_01, and PROP_01.",
+      "negative_prompt": "camera glare, no face change, inconsistent outfit, no watermark, blurry"
+    }
+  ]
+}
+`;
+
+      try {
+        const contentsParts = [{ text: userQuery }];
+        if (state.product_image) {
+          const base64 = state.product_image.split(',')[1];
+          const mimeType = state.product_image.match(/data:([^;]+);/)?.[1] || "image/jpeg";
+          contentsParts.push({ inlineData: { mimeType, data: base64 } });
+        }
+
+        const rawText = await executeTextWithFallback([{ parts: contentsParts }], "text", true);
+
+        const parsedJson = safeParseJSON(rawText);
+        if (Array.isArray(parsedJson.scenes)) {
+          let cumulativeTime = 0;
+          let validScenes = [];
+
+          parsedJson.scenes.forEach(sc => {
+            let dur = Number(sc.duration) || 8;
+            if (dur > 10) dur = 10;
+            if (dur < 3) dur = 5;
+            
+            if (cumulativeTime + dur <= 30) {
+              sc.duration = dur;
+              validScenes.push(sc);
+              cumulativeTime += dur;
+            } else if (30 - cumulativeTime >= 3) {
+              sc.duration = 30 - cumulativeTime;
+              validScenes.push(sc);
+              cumulativeTime = 30;
+            }
+          });
+          
+          parsedJson.scenes = validScenes;
+          
+          const totalSeconds = parsedJson.scenes.reduce((sum, sc) => sum + (Number(sc.duration) || 8), 0);
+          if (parsedJson.overview) parsedJson.overview.total_duration_sec = totalSeconds;
+        }
+
+        state.productionPlan = parsedJson;
+        state.project_name = parsedJson.overview?.title || "Projek Cerita";
+        
+        if (state.product_image && parsedJson.props && parsedJson.props.length > 0) {
+          const propId = parsedJson.props[0].prop_id;
+          state.propGeneratedImages[propId] = state.product_image;
+        }
+
+        saveState();
+        renderFullProductionPlan(parsedJson);
+
+        applyPanelFocus('both');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        document.getElementById('modal-story-idea').classList.add('hidden');
+        showToast("Pelan produksi & scene cards berjaya dijana!");
+      } catch (err) {
+        console.error("Ralat Analisis AI:", err);
+        showToast("AI analysis failed: " + err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    async function callNanoBananaImage(promptText, aspectRatio = "1:1", referenceImage = null) {
+      const models = ['Nano Banana', 'Imagen', 'Flux'];
+      
+      for (let i = 0; i < models.length; i++) {
+        const modelName = models[i];
+        try {
+          if (i > 0) showToast(`Model utama gagal. Mencuba alternatif... (${modelName})`);
+          
+          if (modelName === 'Nano Banana') {
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent`;
+            const parts = [{ text: promptText }];
+            if (referenceImage) {
+              const base64 = referenceImage.split(',')[1];
+              const mimeType = referenceImage.match(/data:([^;]+);/)?.[1] || "image/jpeg";
+              parts.push({ inlineData: { mimeType, data: base64 } });
+            }
+
+            const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{ role: 'user', parts: parts }],
+                generationConfig: {
+                  responseModalities: ['IMAGE'],
+                  imageConfig: { aspectRatio: aspectRatio }
+                }
+              })
+            });
+
+            if (!response.ok) {
+              const errText = await response.text();
+              throw new Error(`API error ${response.status}: ${errText}`);
+            }
+
+            const result = await response.json();
+            const part = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+            if (!part || !part.inlineData?.data) throw new Error("Gagal menghasilkan output imej sah.");
+            return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+          } else {
+             throw new Error(`Provider ${modelName} tidak dikonfigurasi.`);
+          }
+        } catch (err) {
+          console.warn(`[Fallback Image Router] ${modelName} gagal:`, err.message);
+          if (i === models.length - 1) throw new Error(`Semua model alternatif gagal. Ralat akhir: ${err.message}`);
+        }
+      }
+    }
+
+    function renderFullProductionPlan(data) {
+      const ov = data.overview || {};
+      document.getElementById('view-title').textContent = ov.title || "Tanpa Tajuk";
+      document.getElementById('view-genre').textContent = `Genre: ${ov.genre || state.genre}`;
+      document.getElementById('view-mood').textContent = `Mood: ${ov.mood || "Cinematic"}`;
+      document.getElementById('view-total-duration').textContent = `Total Duration: ${ov.total_duration_sec || 0} sec`;
+      document.getElementById('view-logline').textContent = ov.logline || "-";
+      document.getElementById('view-theme').textContent = `${ov.theme || "-"} • Struktur: ${ov.structure_type || "Dynamic"}`;
+      document.getElementById('view-summary').textContent = ov.story_summary || "-";
+
+      const charContainer = document.getElementById('characters-container');
+      const chars = data.characters || [];
+      document.getElementById('char-total-pill').textContent = chars.length;
+      charContainer.innerHTML = "";
+
+      chars.forEach((c) => {
+        const charId = c.character_id;
+        const uploadedImg = state.characterImages[charId];
+        const generatedImg = state.characterGeneratedImages[charId];
+        const activeImg = generatedImg || uploadedImg;
+        const sheetImg = state.characterSheets[charId];
+
+        const card = document.createElement('div');
+        card.className = "bg-[#090d16]/80 border border-slate-800 rounded-2xl p-4 space-y-3";
+        card.innerHTML = `
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="text-xs font-mono font-bold text-indigo-400 bg-indigo-950/80 px-2.5 py-0.5 rounded border border-indigo-800/50 flex-shrink-0">${charId}</span>
+              <h4 class="text-xs sm:text-sm font-bold text-white truncate">${c.name}</h4>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" class="btn-refresh-char px-2.5 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 font-bold text-[10px] flex items-center gap-1 transition" title="Refresh Data & Imej Karakter">
+                <span>🔄 Refresh</span>
+              </button>
+              <span class="text-[11px] text-slate-400 flex-shrink-0">${c.role}</span>
+            </div>
+          </div>
+
+          <div class="bg-[#0b1020] p-3 rounded-xl border ${activeImg ? 'border-indigo-500/60 bg-indigo-950/20' : 'border-slate-800/90'} space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-indigo-400 text-[11px] font-bold uppercase tracking-wider">Rujukan Wajah ${charId} (${c.name})</span>
+              ${activeImg ? `<span class="text-[9px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 font-mono font-bold">TERSEDIA</span>` : ''}
+            </div>
+            <div class="flex flex-col items-center gap-3">
+              <div class="w-full h-36 rounded-xl bg-slate-950 border-2 border-dashed ${activeImg ? 'border-indigo-500/80' : 'border-slate-700/80'} flex flex-col items-center justify-center overflow-hidden relative group">
+                ${activeImg ? `<img src="${activeImg}" alt="${c.name}" class="w-full h-full object-cover"><button type="button" class="btn-remove-char-img absolute top-2 right-2 w-5 h-5 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center shadow">&times;</button>` : ''}
+                <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs flex flex-col items-center justify-center gap-2 ${activeImg ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'} transition">
+                  <label class="cursor-pointer px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5">
+                    <span>${activeImg ? 'Tukar Gambar' : 'Upload Gambar'}</span>
+                    <input type="file" accept="image/*" class="hidden img-ref-input" data-char-id="${charId}">
+                  </label>
+                  <span class="text-[10px] text-slate-300 font-medium">Format: PNG, JPG</span>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center justify-center gap-2 w-full">
+                <button type="button" class="btn-generate-char text-xs px-3 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold transition flex items-center gap-1 flex-1 justify-center shadow" data-char-id="${charId}">
+                  <span class="gen-spinner hidden w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  <span>Jana Imej</span>
+                </button>
+                <button type="button" class="btn-analyze-char text-xs px-3 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold transition flex items-center gap-1 flex-1 justify-center shadow" data-char-id="${charId}">
+                  <span class="analyze-spinner hidden w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  <span>Analisis</span>
+                </button>
+                <button type="button" class="btn-generate-char-sheet text-xs px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition flex items-center gap-1 flex-1 justify-center shadow" data-char-id="${charId}">
+                  <span class="sheet-spinner hidden w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  <span>Jana Sheet</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          ${sheetImg ? `
+            <div class="bg-[#0b1020] p-2.5 rounded-xl border border-indigo-500/80 space-y-1.5 relative group">
+              <div class="absolute top-2 right-2 flex items-center gap-1.5 z-20 bg-slate-950/80 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-800 shadow">
+                <button type="button" class="btn-view-sheet text-slate-300 hover:text-white transition" title="Papar Sheet" data-img="${sheetImg}" data-title="Multi-Angle Sheet (${charId})">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                </button>
+                <button type="button" class="btn-download-sheet text-indigo-400 hover:text-indigo-300 transition" title="Download Sheet" data-img="${sheetImg}" data-name="sheet_${charId}.png">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </button>
+                <button type="button" class="btn-remove-char-sheet text-rose-400 hover:text-rose-300 transition font-bold" title="Padam Sheet">&times;</button>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-indigo-300 font-bold uppercase text-[10px]">Multi-Angle Sheet (${charId})</span>
+              </div>
+              <div class="w-full rounded-lg overflow-hidden bg-slate-950 border border-slate-800 max-h-[140px] flex items-center justify-center cursor-pointer btn-view-sheet" data-img="${sheetImg}" data-title="Multi-Angle Sheet (${charId})">
+                <img src="${sheetImg}" class="w-full h-full object-contain">
+              </div>
+            </div>
+          ` : ''}
+
+          <div class="grid grid-cols-2 gap-2 text-[11px]">
+            <div class="bg-[#070b14] p-2 rounded-lg border border-slate-800/80">
+              <span class="text-slate-400 text-[9px] uppercase block font-semibold">Umur / Jantina:</span>
+              <span class="text-slate-200">${c.estimated_age} / ${c.gender}</span>
+            </div>
+            <div class="bg-[#070b14] p-2 rounded-lg border border-slate-800/80">
+              <span class="text-slate-400 text-[9px] uppercase block font-semibold">Tona Kulit:</span>
+              <span class="text-slate-200">${c.skin_tone}</span>
+            </div>
+          </div>
+          <p class="text-slate-200 text-[11px] bg-[#070b14] p-2.5 rounded-lg border border-slate-800">${c.physical_description}</p>
+        `;
+
+        const fileInput = card.querySelector('.img-ref-input');
+        if (fileInput) {
+          fileInput.addEventListener('change', (ev) => {
+            const file = ev.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (re) => {
+              state.characterImages[charId] = re.target.result;
+              saveState();
+              renderFullProductionPlan(state.productionPlan);
+              showToast(`Gambar dimuat naik untuk ${charId}.`);
+            };
+            reader.readAsDataURL(file);
+          });
+        }
+
+        const refreshCharBtn = card.querySelector('.btn-refresh-char');
+        if (refreshCharBtn) {
+          refreshCharBtn.addEventListener('click', async () => {
+            delete state.characterImages[charId];
+            delete state.characterGeneratedImages[charId];
+            delete state.characterSheets[charId];
+            saveState();
+            await generateCharacterAIImage(c, charId, null);
+            showToast(`Data & imej ${charId} direfresh!`);
+          });
+        }
+
+        const removeBtn = card.querySelector('.btn-remove-char-img');
+        if (removeBtn) {
+          removeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            delete state.characterImages[charId];
+            delete state.characterGeneratedImages[charId];
+            saveState();
+            renderFullProductionPlan(state.productionPlan);
+            showToast(`Gambar ${charId} dipadam.`);
+          });
+        }
+
+        const removeSheetBtn = card.querySelector('.btn-remove-char-sheet');
+        if (removeSheetBtn) {
+          removeSheetBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            delete state.characterSheets[charId];
+            saveState();
+            renderFullProductionPlan(state.productionPlan);
+            showToast(`Sheet ${charId} dipadam.`);
+          });
+        }
+
+        card.querySelectorAll('.btn-view-sheet').forEach(btn => {
+          btn.addEventListener('click', () => {
+            openImageModal(btn.getAttribute('data-title'), btn.getAttribute('data-img'));
+          });
+        });
+
+        card.querySelectorAll('.btn-download-sheet').forEach(btn => {
+          btn.addEventListener('click', () => {
+            downloadSingleImage(btn.getAttribute('data-img'), btn.getAttribute('data-name'));
+          });
+        });
+
+        const genBtn = card.querySelector('.btn-generate-char');
+        if (genBtn) {
+          genBtn.addEventListener('click', async () => {
+            await generateCharacterAIImage(c, charId, genBtn);
+          });
+        }
+
+        const analyzeBtn = card.querySelector('.btn-analyze-char');
+        if (analyzeBtn) {
+          analyzeBtn.addEventListener('click', async () => {
+            await analyzeCharacterImageWithAI(c, charId, analyzeBtn);
+          });
+        }
+
+        const genSheetBtn = card.querySelector('.btn-generate-char-sheet');
+        if (genSheetBtn) {
+          genSheetBtn.addEventListener('click', async () => {
+            await generateCharacterSheetImage(c, charId, genSheetBtn);
+          });
+        }
+
+        charContainer.appendChild(card);
+      });
+
+      const outfitsContainer = document.getElementById('outfits-container');
+      outfitsContainer.innerHTML = "";
+      (data.outfits || []).forEach(o => {
+        const outfitId = o.outfit_id;
+        const uploadedOutfitImg = state.outfitImages[outfitId];
+        const generatedOutfitImg = state.outfitGeneratedImages[outfitId];
+        const activeOutfitImg = generatedOutfitImg || uploadedOutfitImg;
+        const outfitSheetImg = state.outfitSheets[outfitId];
+
+        const el = document.createElement('div');
+        el.className = "bg-[#090d16]/80 border border-slate-800 rounded-2xl p-4 text-xs space-y-2.5";
+        el.innerHTML = `
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <span class="font-mono font-bold text-indigo-400 bg-indigo-950 px-2.5 py-0.5 rounded">${outfitId}</span>
+            <div class="flex items-center gap-2">
+              <button type="button" class="btn-refresh-outfit px-2.5 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 font-bold text-[10px] flex items-center gap-1 transition" title="Refresh Pakaian">
+                <span>🔄 Refresh</span>
+              </button>
+              <span class="text-slate-400 truncate max-w-[130px]">Watak: <strong class="text-slate-200">${o.character_id}</strong></span>
+            </div>
+          </div>
+          
+          <div class="bg-[#0b1020] p-3 rounded-xl border ${activeOutfitImg ? 'border-indigo-500/60' : 'border-slate-800'} space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-indigo-300 font-bold uppercase text-[10px]">Rujukan Pakaian ${outfitId}</span>
+              ${activeOutfitImg ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 font-mono">TERSEDIA</span>' : ''}
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-14 h-14 rounded-lg bg-slate-950 border border-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0 relative">
+                ${activeOutfitImg ? `<img src="${activeOutfitImg}" class="w-full h-full object-cover"><button type="button" class="btn-remove-outfit-img absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] flex items-center justify-center shadow">&times;</button>` : `<span class="text-[9px] text-slate-500">Tiada</span>`}
+              </div>
+              <div class="flex flex-wrap items-center gap-1.5 flex-1">
+                <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium inline-flex items-center gap-1 text-[11px]">
+                  <span>${activeOutfitImg ? 'Tukar' : 'Upload'}</span>
+                  <input type="file" accept="image/*" class="hidden outfit-ref-input" data-outfit-id="${outfitId}">
+                </label>
+                <button type="button" class="btn-generate-outfit px-2.5 py-1 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-bold transition flex items-center gap-1 text-[11px]" data-outfit-id="${outfitId}">
+                  <span class="gen-spinner hidden w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  <span>Jana Imej</span>
+                </button>
+                <button type="button" class="btn-generate-outfit-sheet px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition flex items-center gap-1 text-[11px]" data-outfit-id="${outfitId}">
+                  <span class="sheet-spinner hidden w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  <span>Jana Sheet</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          ${outfitSheetImg ? `
+            <div class="bg-[#0b1020] p-2.5 rounded-xl border border-indigo-500/80 space-y-1.5 relative group">
+              <div class="absolute top-2 right-2 flex items-center gap-1.5 z-20 bg-slate-950/80 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-800 shadow">
+                <button type="button" class="btn-view-sheet text-slate-300 hover:text-white transition" title="Papar Sheet" data-img="${outfitSheetImg}" data-title="Multi-Angle Sheet (${outfitId})">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                </button>
+                <button type="button" class="btn-download-sheet text-indigo-400 hover:text-indigo-300 transition" title="Download Sheet" data-img="${outfitSheetImg}" data-name="sheet_${outfitId}.png">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </button>
+                <button type="button" class="btn-remove-outfit-sheet text-rose-400 hover:text-rose-300 transition font-bold" title="Padam Sheet">&times;</button>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-indigo-300 font-bold uppercase text-[10px]">Multi-Angle Sheet (${outfitId})</span>
+              </div>
+              <div class="w-full rounded-lg overflow-hidden bg-slate-950 border border-slate-800 max-h-[140px] flex items-center justify-center cursor-pointer btn-view-sheet" data-img="${outfitSheetImg}" data-title="Multi-Angle Sheet (${outfitId})">
+                <img src="${outfitSheetImg}" class="w-full h-full object-contain">
+              </div>
+            </div>
+          ` : ''}
+
+          <p class="text-slate-200 font-medium">${o.description}</p>
+        `;
+
+        const outfitFileInput = el.querySelector('.outfit-ref-input');
+        if (outfitFileInput) {
+          outfitFileInput.addEventListener('change', (ev) => {
+            const file = ev.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (re) => {
+              state.outfitImages[outfitId] = re.target.result;
+              saveState();
+              renderFullProductionPlan(state.productionPlan);
+              showToast(`Gambar rujukan ${outfitId} dimuat naik.`);
+            };
+            reader.readAsDataURL(file);
+          });
+        }
+
+        const refreshOutfitBtn = el.querySelector('.btn-refresh-outfit');
+        if (refreshOutfitBtn) {
+          refreshOutfitBtn.addEventListener('click', async () => {
+            delete state.outfitImages[outfitId];
+            delete state.outfitGeneratedImages[outfitId];
+            delete state.outfitSheets[outfitId];
+            saveState();
+            await generateOutfitAIImage(o, outfitId, null);
+            showToast(`Data & imej ${outfitId} direfresh!`);
+          });
+        }
+
+        const removeOutfitBtn = el.querySelector('.btn-remove-outfit-img');
+        if (removeOutfitBtn) {
+          removeOutfitBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            delete state.outfitImages[outfitId];
+            delete state.outfitGeneratedImages[outfitId];
+            saveState();
+            renderFullProductionPlan(state.productionPlan);
+            showToast(`Gambar ${outfitId} dipadam.`);
+          });
+        }
+
+        const removeOutfitSheetBtn = el.querySelector('.btn-remove-outfit-sheet');
+        if (removeOutfitSheetBtn) {
+          removeOutfitSheetBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            delete state.outfitSheets[outfitId];
+            saveState();
+            renderFullProductionPlan(state.productionPlan);
+            showToast(`Sheet ${outfitId} dipadam.`);
+          });
+        }
+
+        el.querySelectorAll('.btn-view-sheet').forEach(btn => {
+          btn.addEventListener('click', () => {
+            openImageModal(btn.getAttribute('data-title'), btn.getAttribute('data-img'));
+          });
+        });
+
+        el.querySelectorAll('.btn-download-sheet').forEach(btn => {
+          btn.addEventListener('click', () => {
+            downloadSingleImage(btn.getAttribute('data-img'), btn.getAttribute('data-name'));
+          });
+        });
+
+        const genOutfitBtn = el.querySelector('.btn-generate-outfit');
+        if (genOutfitBtn) {
+          genOutfitBtn.addEventListener('click', async () => {
+            await generateOutfitAIImage(o, outfitId, genOutfitBtn);
+          });
+        }
+
+        const genOutfitSheetBtn = el.querySelector('.btn-generate-outfit-sheet');
+        if (genOutfitSheetBtn) {
+          genOutfitSheetBtn.addEventListener('click', async () => {
+            await generateOutfitSheetImage(o, outfitId, genOutfitSheetBtn);
+          });
+        }
+
+        outfitsContainer.appendChild(el);
+      });
+
+      const locContainer = document.getElementById('locations-container');
+      locContainer.innerHTML = "";
+      (data.locations || []).forEach(l => {
+        const locationId = l.location_id;
+        const uploadedLocImg = state.locationImages[locationId];
+        const generatedLocImg = state.locationGeneratedImages[locationId];
+        const activeLocImg = generatedLocImg || uploadedLocImg;
+        const locSheetImg = state.locationSheets[locationId];
+
+        const el = document.createElement('div');
+        el.className = "bg-[#090d16]/80 border border-slate-800 rounded-2xl p-4 text-xs space-y-2.5";
+        el.innerHTML = `
+          <div class="border-b border-slate-800 pb-2 flex items-center justify-between">
+            <span class="font-mono font-bold text-indigo-400">${locationId}</span>
+            <div class="flex items-center gap-2">
+              <button type="button" class="btn-refresh-loc px-2.5 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 font-bold text-[10px] flex items-center gap-1 transition" title="Refresh Lokasi">
+                <span>🔄 Refresh</span>
+              </button>
+              <span class="font-bold text-white truncate max-w-[140px]">${l.name}</span>
+            </div>
+          </div>
+
+          <div class="bg-[#0b1020] p-3 rounded-xl border ${activeLocImg ? 'border-indigo-500/60' : 'border-slate-800'} space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-indigo-300 font-bold uppercase text-[10px]">Rujukan ${locationId}</span>
+              ${activeLocImg ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 font-mono">TERSEDIA</span>' : ''}
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-14 h-14 rounded-lg bg-slate-950 border border-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0 relative">
+                ${activeLocImg ? `<img src="${activeLocImg}" class="w-full h-full object-cover"><button type="button" class="btn-remove-loc-img absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] flex items-center justify-center shadow">&times;</button>` : `<span class="text-[9px] text-slate-500">Tiada</span>`}
+              </div>
+              <div class="flex flex-wrap items-center gap-1.5 flex-1">
+                <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium inline-flex items-center gap-1 text-[11px]">
+                  <span>${activeLocImg ? 'Tukar' : 'Upload'}</span>
+                  <input type="file" accept="image/*" class="hidden loc-ref-input" data-location-id="${locationId}">
+                </label>
+                <button type="button" class="btn-generate-loc px-2.5 py-1 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-bold transition flex items-center gap-1 text-[11px]" data-location-id="${locationId}">
+                  <span class="gen-spinner hidden w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  <span>Jana Imej</span>
+                </button>
+                <button type="button" class="btn-generate-loc-sheet px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition flex items-center gap-1 text-[11px]" data-location-id="${locationId}">
+                  <span class="sheet-spinner hidden w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  <span>Jana Sheet</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          ${locSheetImg ? `
+            <div class="bg-[#0b1020] p-2.5 rounded-xl border border-indigo-500/80 space-y-1.5 relative group">
+              <div class="absolute top-2 right-2 flex items-center gap-1.5 z-20 bg-slate-950/80 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-800 shadow">
+                <button type="button" class="btn-view-sheet text-slate-300 hover:text-white transition" title="Papar Sheet" data-img="${locSheetImg}" data-title="Multi-Angle Sheet (${locationId})">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                </button>
+                <button type="button" class="btn-download-sheet text-indigo-400 hover:text-indigo-300 transition" title="Download Sheet" data-img="${locSheetImg}" data-name="sheet_${locationId}.png">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </button>
+                <button type="button" class="btn-remove-loc-sheet text-rose-400 hover:text-rose-300 transition font-bold" title="Padam Sheet">&times;</button>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-indigo-300 font-bold uppercase text-[10px]">Multi-Angle Sheet (${locationId})</span>
+              </div>
+              <div class="w-full rounded-lg overflow-hidden bg-slate-950 border border-slate-800 max-h-[140px] flex items-center justify-center cursor-pointer btn-view-sheet" data-img="${locSheetImg}" data-title="Multi-Angle Sheet (${locationId})">
+                <img src="${locSheetImg}" class="w-full h-full object-contain">
+              </div>
+            </div>
+          ` : ''}
+
+          <p class="text-slate-300 text-[11px]">${l.description}</p>
+        `;
+
+        const locFileInput = el.querySelector('.loc-ref-input');
+        if (locFileInput) {
+          locFileInput.addEventListener('change', (ev) => {
+            const file = ev.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (re) => {
+              state.locationImages[locationId] = re.target.result;
+              saveState();
+              renderFullProductionPlan(state.productionPlan);
+              showToast(`Gambar rujukan ${locationId} dimuat naik.`);
+            };
+            reader.readAsDataURL(file);
+          });
+        }
+
+        const refreshLocBtn = el.querySelector('.btn-refresh-loc');
+        if (refreshLocBtn) {
+          refreshLocBtn.addEventListener('click', async () => {
+            delete state.locationImages[locationId];
+            delete state.locationGeneratedImages[locationId];
+            delete state.locationSheets[locationId];
+            saveState();
+            await generateLocationAIImage(l, locationId, null);
+            showToast(`Data & imej ${locationId} direfresh!`);
+          });
+        }
+
+        const removeLocBtn = el.querySelector('.btn-remove-loc-img');
+        if (removeLocBtn) {
+          removeLocBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            delete state.locationImages[locationId];
+            delete state.locationGeneratedImages[locationId];
+            saveState();
+            renderFullProductionPlan(state.productionPlan);
+            showToast(`Gambar ${locationId} dipadam.`);
+          });
+        }
+
+        const removeLocSheetBtn = el.querySelector('.btn-remove-loc-sheet');
+        if (removeLocSheetBtn) {
+          removeLocSheetBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            delete state.locationSheets[locationId];
+            saveState();
+            renderFullProductionPlan(state.productionPlan);
+            showToast(`Sheet ${locationId} dipadam.`);
+          });
+        }
+
+        el.querySelectorAll('.btn-view-sheet').forEach(btn => {
+          btn.addEventListener('click', () => {
+            openImageModal(btn.getAttribute('data-title'), btn.getAttribute('data-img'));
+          });
+        });
+
+        el.querySelectorAll('.btn-download-sheet').forEach(btn => {
+          btn.addEventListener('click', () => {
+            downloadSingleImage(btn.getAttribute('data-img'), btn.getAttribute('data-name'));
+          });
+        });
+
+        const genLocBtn = el.querySelector('.btn-generate-loc');
+        if (genLocBtn) {
+          genLocBtn.addEventListener('click', async () => {
+            await generateLocationAIImage(l, locationId, genLocBtn);
+          });
+        }
+
+        const genLocSheetBtn = el.querySelector('.btn-generate-loc-sheet');
+        if (genLocSheetBtn) {
+          genLocSheetBtn.addEventListener('click', async () => {
+            await generateLocationSheetImage(l, locationId, genLocSheetBtn);
+          });
+        }
+
+        locContainer.appendChild(el);
+      });
+
+      const propsWrapper = document.getElementById('props-wrapper');
+      const propsContainer = document.getElementById('props-container');
+      if (data.props && data.props.length > 0) {
+        propsWrapper.classList.remove('hidden');
+        propsContainer.innerHTML = "";
+        data.props.forEach(p => {
+          const propId = p.prop_id;
+          const uploadedPropImg = state.propImages[propId];
+          const generatedPropImg = state.propGeneratedImages[propId];
+          const activePropImg = generatedPropImg || uploadedPropImg;
+          const propSheetImg = state.propSheets[propId];
+
+          const pel = document.createElement('div');
+          pel.className = "bg-[#090d16]/80 border border-slate-800 rounded-2xl p-4 text-xs space-y-2.5";
+          pel.innerHTML = `
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="font-mono font-bold text-indigo-400 bg-indigo-950 px-2.5 py-0.5 rounded flex-shrink-0">${propId}</span>
+                <strong class="text-white truncate">${p.name}</strong>
+              </div>
+              <button type="button" class="btn-refresh-prop px-2.5 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 font-bold text-[10px] flex items-center gap-1 transition" title="Refresh Prop">
+                <span>🔄 Refresh</span>
+              </button>
+            </div>
+
+            <div class="bg-[#0b1020] p-3 rounded-xl border ${activePropImg ? 'border-indigo-500/60' : 'border-slate-800'} space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-indigo-300 font-bold uppercase text-[10px]">Rujukan ${propId}</span>
+                ${activePropImg ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 font-mono">TERSEDIA</span>' : ''}
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-14 h-14 rounded-lg bg-slate-950 border border-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0 relative">
+                  ${activePropImg ? `<img src="${activePropImg}" class="w-full h-full object-cover"><button type="button" class="btn-remove-prop-img absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] flex items-center justify-center shadow">&times;</button>` : `<span class="text-[9px] text-slate-500">Tiada</span>`}
+                </div>
+                <div class="flex flex-wrap items-center gap-1.5 flex-1">
+                  <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium inline-flex items-center gap-1 text-[11px]">
+                    <span>${activePropImg ? 'Tukar' : 'Upload'}</span>
+                    <input type="file" accept="image/*" class="hidden prop-ref-input" data-prop-id="${propId}">
+                  </label>
+                  <button type="button" class="btn-generate-prop px-2.5 py-1 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-bold transition flex items-center gap-1 text-[11px]" data-prop-id="${propId}">
+                    <span class="gen-spinner hidden w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                    <span>Jana Imej</span>
+                  </button>
+                  <button type="button" class="btn-generate-prop-sheet px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition flex items-center gap-1 text-[11px]" data-prop-id="${propId}">
+                    <span class="sheet-spinner hidden w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                    <span>Jana Sheet</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            ${propSheetImg ? `
+              <div class="bg-[#0b1020] p-2.5 rounded-xl border border-indigo-500/80 space-y-1.5 relative group">
+                <div class="absolute top-2 right-2 flex items-center gap-1.5 z-20 bg-slate-950/80 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-800 shadow">
+                  <button type="button" class="btn-view-sheet text-slate-300 hover:text-white transition" title="Papar Sheet" data-img="${propSheetImg}" data-title="Multi-Angle Sheet (${propId})">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                  </button>
+                  <button type="button" class="btn-download-sheet text-indigo-400 hover:text-indigo-300 transition" title="Download Sheet" data-img="${propSheetImg}" data-name="sheet_${propId}.png">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                  </button>
+                  <button type="button" class="btn-remove-prop-sheet text-rose-400 hover:text-rose-300 transition font-bold" title="Padam Sheet">&times;</button>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-indigo-300 font-bold uppercase text-[10px]">Multi-Angle Sheet (${propId})</span>
+                </div>
+                <div class="w-full rounded-lg overflow-hidden bg-slate-950 border border-slate-800 max-h-[140px] flex items-center justify-center cursor-pointer btn-view-sheet" data-img="${propSheetImg}" data-title="Multi-Angle Sheet (${propId})">
+                  <img src="${propSheetImg}" class="w-full h-full object-contain">
+                </div>
+              </div>
+            ` : ''}
+
+            <p class="text-slate-300 text-[11px]">${p.description}</p>
+          `;
+
+          const propFileInput = pel.querySelector('.prop-ref-input');
+          if (propFileInput) {
+            propFileInput.addEventListener('change', (ev) => {
+              const file = ev.target.files[0];
+              if (!file) return;
+              const reader = new FileReader();
+              reader.onload = (re) => {
+                state.propImages[propId] = re.target.result;
+                saveState();
+                renderFullProductionPlan(state.productionPlan);
+                showToast(`Gambar rujukan ${propId} dimuat naik.`);
+              };
+              reader.readAsDataURL(file);
+            });
+          }
+
+          const refreshPropBtn = pel.querySelector('.btn-refresh-prop');
+          if (refreshPropBtn) {
+            refreshPropBtn.addEventListener('click', async () => {
+              delete state.propImages[propId];
+              delete state.propGeneratedImages[propId];
+              delete state.propSheets[propId];
+              saveState();
+              await generatePropAIImage(p, propId, null);
+              showToast(`Data & imej ${propId} direfresh!`);
+            });
+          }
+
+          const removePropBtn = pel.querySelector('.btn-remove-prop-img');
+          if (removePropBtn) {
+            removePropBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              delete state.propImages[propId];
+              delete state.propGeneratedImages[propId];
+              saveState();
+              renderFullProductionPlan(state.productionPlan);
+              showToast(`Gambar ${propId} dipadam.`);
+            });
+          }
+
+          const removePropSheetBtn = pel.querySelector('.btn-remove-prop-sheet');
+          if (removePropSheetBtn) {
+            removePropSheetBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              delete state.propSheets[propId];
+              saveState();
+              renderFullProductionPlan(state.productionPlan);
+              showToast(`Sheet ${propId} dipadam.`);
+            });
+          }
+
+          pel.querySelectorAll('.btn-view-sheet').forEach(btn => {
+            btn.addEventListener('click', () => {
+              openImageModal(btn.getAttribute('data-title'), btn.getAttribute('data-img'));
+            });
+          });
+
+          pel.querySelectorAll('.btn-download-sheet').forEach(btn => {
+            btn.addEventListener('click', () => {
+              downloadSingleImage(btn.getAttribute('data-img'), btn.getAttribute('data-name'));
+            });
+          });
+
+          const genPropBtn = pel.querySelector('.btn-generate-prop');
+          if (genPropBtn) {
+            genPropBtn.addEventListener('click', async () => {
+              await generatePropAIImage(p, propId, genPropBtn);
+            });
+          }
+
+          const genPropSheetBtn = pel.querySelector('.btn-generate-prop-sheet');
+          if (genPropSheetBtn) {
+            genPropSheetBtn.addEventListener('click', async () => {
+              await generatePropSheetSheet(p, propId, genPropSheetBtn);
+            });
+          }
+
+          propsContainer.appendChild(pel);
+        });
+      } else {
+        propsWrapper.classList.add('hidden');
+      }
+
+      const scenesList = document.getElementById('scenes-list-container');
+      const scenesCountBadge = document.getElementById('tab-scenes-count');
+      const scenes = data.scenes || [];
+      scenesCountBadge.textContent = `${scenes.length} Scenes`;
+      scenesList.innerHTML = "";
+
+      const allCharacters = (data.characters || []).map(c => ({ id: c.character_id, name: c.name }));
+      const allOutfits = (data.outfits || []).map(o => ({ id: o.outfit_id, char: o.character_id }));
+      const allLocations = (data.locations || []).map(l => ({ id: l.location_id, name: l.name }));
+      const allProps = (data.props || []).map(p => ({ id: p.prop_id, name: p.name }));
+
+      scenes.forEach((sc, idx) => {
+        let dur = Number(sc.duration) || 8;
+        if (dur > 10) dur = 10;
+        sc.duration = dur;
+
+        const card = document.createElement('div');
+        card.className = "glass-card border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4 transition-all";
+
+        const sceneId = sc.scene_id || `SCENE_${String(idx + 1).padStart(2, '0')}`;
+        const existingSceneImg = state.sceneImages[sceneId] || null;
+        const supportImg = state.sceneEditSupportImages[sceneId] || null;
+        
+        const sceneCharsList = sc.characters || [];
+        const sceneOutfitsList = sc.outfit_ids || [];
+        const sceneLocId = sc.location_id || "";
+
+        if (!state.sceneSelections[sceneId]) {
+          state.sceneSelections[sceneId] = {
+            chars: sceneCharsList.length > 0 ? [...sceneCharsList] : (allCharacters[0] ? [allCharacters[0].id] : []),
+            outfits: sceneOutfitsList.length > 0 ? [...sceneOutfitsList] : (allOutfits[0] ? [allOutfits[0].id] : []),
+            loc: sceneLocId || (allLocations[0] ? allLocations[0].id : ""),
+            prop: allProps[0] ? allProps[0].id : ""
+          };
+        }
+        const sel = state.sceneSelections[sceneId];
+        if (!sel.chars) sel.chars = sceneCharsList.length > 0 ? [...sceneCharsList] : [];
+        if (!sel.outfits) sel.outfits = sceneOutfitsList.length > 0 ? [...sceneOutfitsList] : [];
+
+        const structuredSceneJson = {
+          "raff_studio_version": "V1",
+          "project": {
+            "title": data.overview?.title || "Project",
+            "video_style": state.style || "realistic cinematic",
+            "aspect_ratio": state.aspectRatio || "9:16",
+            "language": "Bahasa Melayu"
+          },
+          "scene": {
+            "scene_id": sceneId,
+            "duration": `${sc.duration} seconds`,
+            "action": sc.action || "",
+            "environment": sc.environment || "Studio setting"
+          },
+          "character_lock": {
+            "enabled": true,
+            "reference_id": sel.chars[0] || "CHARACTER_01"
+          },
+          "product_lock": {
+            "enabled": true,
+            "reference_id": sel.prop || "PRODUCT_01"
+          },
+          "location_lock": {
+            "enabled": true,
+            "reference_id": sel.loc || "LOCATION_01"
+          },
+          "camera": {
+            "shot": sc.shot || "medium shot"
+          },
+          "dialogue": {
+            "enabled": !!sc.dialogue,
+            "text": sc.dialogue || ""
+          },
+          "negative_prompt": sc.negative_prompt || "looking at camera, direct eye contact with lens, camera glare, no face change, inconsistent outfit, no watermark, blurry"
+        };
+
+        const sceneJsonString = JSON.stringify(structuredSceneJson, null, 2);
+
+        card.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2.5">
+              <span class="px-2.5 py-1 rounded-xl bg-indigo-600 font-mono font-extrabold text-xs text-white shadow-md shadow-indigo-600/30">
+                ${sceneId}
+              </span>
+              <div>
+                <h4 class="text-sm sm:text-base font-extrabold text-white">${sc.title}</h4>
+                <p class="text-xs text-slate-400">Lokasi: <span class="text-indigo-300 font-medium">${sel.loc || 'LOC_01'}</span> • Masa: ${sc.time}</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-xl bg-slate-800 text-xs font-bold text-slate-200 border border-slate-700">
+              ⏱ ${sc.duration}s (Max 10s)
+            </span>
+          </div>
+
+          <div class="bg-[#0b0f1a] rounded-2xl border border-indigo-950/80 p-3.5 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
+              <span class="text-[11px] font-bold text-indigo-300 uppercase tracking-wider">Rujukan Scene Dinamik (Multi-Karakter & Lokasi Sesuai Scene)</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#070b14] p-3 rounded-xl border border-slate-800 text-[11px]">
+              
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-bold text-slate-400 uppercase">Karakter Terlibat</span>
+                  <button type="button" class="btn-add-scene-char text-[10px] text-indigo-400 hover:text-indigo-300 font-bold">+ Tambah Watak</button>
+                </div>
+                <div class="scene-chars-list-container space-y-1.5">
+                  ${sel.chars.map((charId, cIdx) => `
+                    <div class="flex items-center gap-2 bg-[#0b101f] p-1.5 rounded-lg border border-slate-800">
+                      <select class="scene-dropdown-char flex-1 bg-transparent border-none text-xs text-indigo-200 font-bold outline-none" data-index="${cIdx}">
+                        ${allCharacters.map(c => `<option value="${c.id}" ${charId === c.id ? 'selected' : ''}>${c.id}: ${c.name}</option>`).join('')}
+                      </select>
+                      ${sel.chars.length > 1 ? `<button type="button" class="btn-remove-scene-char text-rose-400 hover:text-rose-300 font-bold px-1.5 text-xs" data-index="${cIdx}">&times;</button>` : ''}
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-bold text-slate-400 uppercase">Pakaian (Outfit) Terlibat</span>
+                </div>
+                <div class="scene-outfits-list-container space-y-1.5">
+                  ${sel.outfits.map((outfitId, oIdx) => `
+                    <div class="flex items-center gap-2 bg-[#0b101f] p-1.5 rounded-lg border border-slate-800">
+                      <select class="scene-dropdown-outfit flex-1 bg-transparent border-none text-xs text-indigo-200 font-bold outline-none" data-index="${oIdx}">
+                        ${allOutfits.map(o => `<option value="${o.id}" ${outfitId === o.id ? 'selected' : ''}>${o.id} (Watak: ${o.char})</option>`).join('')}
+                      </select>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <span class="text-[10px] font-bold text-slate-400 uppercase">Lokasi Scene</span>
+                <select class="scene-dropdown-loc w-full bg-[#0b101f] border border-slate-800 rounded-lg p-2 text-xs text-indigo-200 font-bold">
+                  ${allLocations.map(l => `<option value="${l.id}" ${sel.loc === l.id ? 'selected' : ''}>${l.id}: ${l.name}</option>`).join('')}
+                </select>
+              </div>
+
+              <div class="space-y-1">
+                <span class="text-[10px] font-bold text-slate-400 uppercase">Prop Utama</span>
+                <select class="scene-dropdown-prop w-full bg-[#0b101f] border border-slate-800 rounded-lg p-2 text-xs text-indigo-200 font-bold">
+                  <option value="">(Tiada Prop Khas)</option>
+                  ${allProps.map(p => `<option value="${p.id}" ${sel.prop === p.id ? 'selected' : ''}>${p.id}: ${p.name}</option>`).join('')}
+                </select>
+              </div>
+
+            </div>
+
+            <div class="edit-spec-panel hidden bg-[#070a13] p-3.5 rounded-xl border border-indigo-900/60 space-y-3">
+              <div class="flex items-center justify-between text-xs font-bold text-indigo-300">
+                <span>Edit Spesifikasi & Muat Naik Imej Sokongan</span>
+                <button type="button" class="btn-close-edit-spec text-slate-400 hover:text-white">&times;</button>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-slate-400 uppercase">Angle / Shot Kamera</label>
+                  <select class="spec-shot-input w-full bg-[#0b101f] border border-slate-800 rounded-lg p-2 text-xs text-slate-200 outline-none focus:border-indigo-500">
+                    <option value="Medium Shot" ${sc.shot === 'Medium Shot' ? 'selected' : ''}>Medium Shot</option>
+                    <option value="Close Up" ${sc.shot === 'Close Up' ? 'selected' : ''}>Close Up</option>
+                    <option value="Wide Shot" ${sc.shot === 'Wide Shot' ? 'selected' : ''}>Wide Shot</option>
+                    <option value="Extreme Close Up" ${sc.shot === 'Extreme Close Up' ? 'selected' : ''}>Extreme Close Up</option>
+                    <option value="Low Angle" ${sc.shot === 'Low Angle' ? 'selected' : ''}>Low Angle</option>
+                    <option value="High Angle" ${sc.shot === 'High Angle' ? 'selected' : ''}>High Angle</option>
+                    <option value="Over the Shoulder" ${sc.shot === 'Over the Shoulder' ? 'selected' : ''}>Over the Shoulder</option>
+                    <option value="Drone Shot" ${sc.shot === 'Drone Shot' ? 'selected' : ''}>Drone Shot</option>
+                  </select>
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-slate-400 uppercase">Pencahayaan / Konsep</label>
+                  <select class="spec-lighting-input w-full bg-[#0b101f] border border-slate-800 rounded-lg p-2 text-xs text-slate-200 outline-none focus:border-indigo-500">
+                    <option value="Cinematic Lighting" ${sc.lighting === 'Cinematic Lighting' ? 'selected' : ''}>Cinematic Lighting</option>
+                    <option value="Natural Daylight" ${sc.lighting === 'Natural Daylight' ? 'selected' : ''}>Natural Daylight</option>
+                    <option value="Moody / Dramatic" ${sc.lighting === 'Moody / Dramatic' ? 'selected' : ''}>Moody / Dramatic</option>
+                    <option value="Cyberpunk / Neon" ${sc.lighting === 'Cyberpunk / Neon' ? 'selected' : ''}>Cyberpunk / Neon</option>
+                    <option value="Studio Soft Light" ${sc.lighting === 'Studio Soft Light' ? 'selected' : ''}>Studio Soft Light</option>
+                    <option value="Golden Hour" ${sc.lighting === 'Golden Hour' ? 'selected' : ''}>Golden Hour</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-[10px] font-bold text-slate-400 uppercase">Edit Dialog</label>
+                <textarea class="spec-dialogue-input w-full bg-[#0b101f] border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 outline-none focus:border-indigo-500" rows="2" placeholder="Taip dialog scene...">${sc.dialogue || ''}</textarea>
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-[10px] font-bold text-slate-400 uppercase">Video Prompt Asal</label>
+                <textarea class="spec-instruction-input w-full bg-[#0b101f] border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 outline-none focus:border-indigo-500" rows="3" placeholder="Taip arahan perubahan prompt scene...">${sc.video_prompt}</textarea>
+              </div>
+              
+              <div class="flex items-center justify-between bg-[#0b101f] p-2 rounded-xl border border-slate-800 text-xs">
+                <div class="flex items-center gap-2 truncate">
+                  <span class="text-indigo-400">🖼️</span>
+                  <span class="support-img-label text-slate-300 truncate">${supportImg ? 'Imej sokongan dimuat naik' : 'Tiada imej sokongan'}</span>
+                </div>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                  ${supportImg ? `<button type="button" class="btn-remove-support-img text-rose-400 font-bold px-2 py-1">Padam</button>` : ''}
+                  <label class="cursor-pointer px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 font-bold border border-indigo-500/40">
+                    <span>Upload Imej</span>
+                    <input type="file" accept="image/*" class="hidden support-img-input" data-scene-id="${sceneId}">
+                  </label>
+                </div>
+              </div>
+
+              <div class="flex justify-end gap-1.5 pt-1">
+                <button type="button" class="btn-apply-spec-regen px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold transition shadow">Simpan Prompt & Regenerate</button>
+              </div>
+            </div>
+
+            <div class="w-full rounded-xl overflow-hidden bg-[#070912] border border-slate-800/80 min-h-[180px] flex items-center justify-center relative group">
+              <div class="scene-loading-indicator absolute inset-0 bg-slate-950/85 backdrop-blur-sm z-30 flex flex-col items-center justify-center gap-2.5 hidden">
+                <div class="w-8 h-8 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                <span class="text-[11px] font-bold text-indigo-300 tracking-wider">Menjana Imej Scene...</span>
+              </div>
+
+              <div class="absolute top-2 right-2 flex items-center gap-1.5 z-20 bg-slate-950/70 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-700/50 shadow-lg opacity-85 group-hover:opacity-100 transition">
+                ${existingSceneImg ? `
+                  <button type="button" class="btn-view-scene-img text-indigo-300 hover:text-indigo-200 p-1 transition" title="Papar Imej (View)">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                  </button>
+                ` : ''}
+                <button type="button" class="btn-copy-json-prompt text-amber-300 hover:text-amber-200 p-1 transition" title="Copy JSON Prompt">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                </button>
+                <button type="button" class="btn-toggle-edit-spec text-slate-200 hover:text-indigo-300 p-1 transition" title="Edit Prompt & Upload Sokongan">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                </button>
+                ${existingSceneImg ? `
+                  <button type="button" class="btn-download-img text-emerald-300 hover:text-emerald-200 p-1 transition" title="Download Imej">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                  </button>
+                ` : ''}
+                <button type="button" class="btn-regen-scene-img text-violet-300 hover:text-violet-200 p-1 transition flex items-center gap-1" title="Jana Semula (Regenerate)">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                </button>
+              </div>
+
+              ${existingSceneImg ? `
+                <img src="${existingSceneImg}" class="w-full max-h-[380px] object-contain mx-auto cursor-pointer" onclick="openImageModal('${sceneId} - ${sc.title}', '${existingSceneImg}')">
+              ` : `
+                <div class="text-center p-4 space-y-1.5 cursor-pointer btn-regen-scene-img">
+                  <div class="w-10 h-10 rounded-xl bg-indigo-950/60 border border-indigo-800/40 mx-auto flex items-center justify-center text-indigo-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                  </div>
+                  <p class="text-xs text-slate-300 font-semibold">Imej scene belum dijana</p>
+                  <p class="text-[10px] text-slate-500 max-w-xs mx-auto">Klik ikon regenerate atau di sini untuk jana imej.</p>
+                </div>
+              `}
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="bg-[#090d16]/70 p-3.5 rounded-xl border border-slate-800/80 space-y-0.5">
+              <span class="font-bold uppercase tracking-wider text-slate-400 text-[9px]">Aksi</span>
+              <p class="text-slate-200 leading-relaxed text-xs">${sc.action}</p>
+            </div>
+            <div class="bg-[#090d16]/70 p-3.5 rounded-xl border border-slate-800/80 space-y-0.5">
+              <span class="font-bold uppercase tracking-wider text-slate-400 text-[9px]">Dialog</span>
+              <p class="scene-display-dialogue text-indigo-200 italic leading-relaxed text-xs">${sc.dialogue ? `"${sc.dialogue}"` : 'Tiada dialog.'}</p>
+            </div>
+          </div>
+        `;
+
+        card.querySelectorAll('.scene-dropdown-char').forEach((selEl, sIdx) => {
+          selEl.addEventListener('change', async (e) => {
+            sel.chars[sIdx] = e.target.value;
+            saveState();
+            await generateSceneImageFromAllSheets(sc, sceneId, card);
+          });
+        });
+
+        card.querySelectorAll('.scene-dropdown-outfit').forEach((selEl, oIdx) => {
+          selEl.addEventListener('change', async (e) => {
+            sel.outfits[oIdx] = e.target.value;
+            saveState();
+            await generateSceneImageFromAllSheets(sc, sceneId, card);
+          });
+        });
+
+        const locSel = card.querySelector('.scene-dropdown-loc');
+        if (locSel) {
+          locSel.addEventListener('change', async (e) => {
+            sel.loc = e.target.value;
+            saveState();
+            await generateSceneImageFromAllSheets(sc, sceneId, card);
+          });
+        }
+
+        const propSel = card.querySelector('.scene-dropdown-prop');
+        if (propSel) {
+          propSel.addEventListener('change', async (e) => {
+            sel.prop = e.target.value;
+            saveState();
+            await generateSceneImageFromAllSheets(sc, sceneId, card);
+          });
+        }
+
+        const addCharBtn = card.querySelector('.btn-add-scene-char');
+        if (addCharBtn) {
+          addCharBtn.addEventListener('click', () => {
+            const nextChar = allCharacters[sel.chars.length % allCharacters.length]?.id || "CHAR_01";
+            const nextOutfit = allOutfits[sel.outfits.length % allOutfits.length]?.id || "OUTFIT_01";
+            sel.chars.push(nextChar);
+            sel.outfits.push(nextOutfit);
+            saveState();
+            renderFullProductionPlan(state.productionPlan);
+          });
+        }
+
+        card.querySelectorAll('.btn-remove-scene-char').forEach(rmBtn => {
+          rmBtn.addEventListener('click', (e) => {
+            const indexToRemove = Number(e.target.getAttribute('data-index'));
+            sel.chars.splice(indexToRemove, 1);
+            if (sel.outfits.length > indexToRemove) sel.outfits.splice(indexToRemove, 1);
+            saveState();
+            renderFullProductionPlan(state.productionPlan);
+          });
+        });
+
+        card.querySelectorAll('.btn-regen-scene-img').forEach(regenBtn => {
+          regenBtn.addEventListener('click', async () => {
+            await generateSceneImageFromAllSheets(sc, sceneId, card);
+          });
+        });
+
+        const viewSceneImgBtn = card.querySelector('.btn-view-scene-img');
+        if (viewSceneImgBtn && existingSceneImg) {
+          viewSceneImgBtn.addEventListener('click', () => {
+            openImageModal(`${sceneId} - ${sc.title}`, existingSceneImg);
+          });
+        }
+
+        const copyJsonPromptBtn = card.querySelector('.btn-copy-json-prompt');
+        if (copyJsonPromptBtn) {
+          copyJsonPromptBtn.addEventListener('click', () => {
+            copyTextToClipboard(sceneJsonString, `JSON Prompt ${sceneId} disalin!`);
+          });
+        }
+
+        const toggleEditSpecBtn = card.querySelector('.btn-toggle-edit-spec');
+        const editSpecPanel = card.querySelector('.edit-spec-panel');
+        const closeEditSpecBtn = card.querySelector('.btn-close-edit-spec');
+        const applySpecRegenBtn = card.querySelector('.btn-apply-spec-regen');
+        const specInstructionInput = card.querySelector('.spec-instruction-input');
+        const specDialogueInput = card.querySelector('.spec-dialogue-input');
+        const specShotInput = card.querySelector('.spec-shot-input');
+        const specLightingInput = card.querySelector('.spec-lighting-input');
+        const supportImgInput = card.querySelector('.support-img-input');
+        const removeSupportImgBtn = card.querySelector('.btn-remove-support-img');
+
+        if (toggleEditSpecBtn && editSpecPanel) {
+          toggleEditSpecBtn.addEventListener('click', () => {
+            editSpecPanel.classList.toggle('hidden');
+          });
+        }
+
+        if (closeEditSpecBtn && editSpecPanel) {
+          closeEditSpecBtn.addEventListener('click', () => {
+            editSpecPanel.classList.add('hidden');
+          });
+        }
+
+        if (supportImgInput) {
+          supportImgInput.addEventListener('change', (ev) => {
+            const file = ev.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (re) => {
+              state.sceneEditSupportImages[sceneId] = re.target.result;
+              saveState();
+              renderFullProductionPlan(state.productionPlan);
+              showToast(`Imej sokongan dimuat naik untuk ${sceneId}.`);
+            };
+            reader.readAsDataURL(file);
+          });
+        }
+
+        if (removeSupportImgBtn) {
+          removeSupportImgBtn.addEventListener('click', () => {
+            delete state.sceneEditSupportImages[sceneId];
+            saveState();
+            renderFullProductionPlan(state.productionPlan);
+            showToast(`Imej sokongan dipadam.`);
+          });
+        }
+
+        if (applySpecRegenBtn && specInstructionInput) {
+          applySpecRegenBtn.addEventListener('click', async () => {
+            const newPrompt = specInstructionInput.value.trim();
+            const newDialogue = specDialogueInput ? specDialogueInput.value.trim() : sc.dialogue;
+            const newShot = specShotInput ? specShotInput.value : sc.shot;
+            const newLighting = specLightingInput ? specLightingInput.value : sc.lighting;
+
+            if (!newPrompt) {
+              showToast("Sila masukkan prompt scene.");
+              return;
+            }
+            editSpecPanel.classList.add('hidden');
+            
+            sc.video_prompt = newPrompt;
+            if (specDialogueInput) sc.dialogue = newDialogue;
+            if (specShotInput) sc.shot = newShot;
+            if (specLightingInput) sc.lighting = newLighting;
+
+            const dialogDisplay = card.querySelector('.scene-display-dialogue');
+            if (dialogDisplay) dialogDisplay.textContent = newDialogue ? `"${newDialogue}"` : 'Tiada dialog.';
+
+            await generateSceneImageFromAllSheets(sc, sceneId, card);
+          });
+        }
+
+        const dlBtn = card.querySelector('.btn-download-img');
+        if (dlBtn) {
+          dlBtn.addEventListener('click', () => downloadSceneImage(sceneId));
+        }
+
+        scenesList.appendChild(card);
+      });
+
+      const masterNegative = scenes[0]?.negative_prompt || "looking at camera, direct eye contact with lens, camera glare, no face change, inconsistent outfit, no watermark, blurry";
+      document.getElementById('view-negative-prompt').textContent = masterNegative;
+
+      const flowContainer = document.getElementById('flow-scenes-prompts');
+      flowContainer.innerHTML = "";
+      scenes.forEach(sc => {
+        const sel = state.sceneSelections[sc.scene_id] || {};
+        const sceneJsonPromptObj = {
+          scene_id: sc.scene_id,
+          title: sc.title,
+          duration: sc.duration,
+          characters: sel.chars || sc.characters,
+          outfit_ids: sel.outfits || sc.outfit_ids,
+          location_id: sel.loc || sc.location_id,
+          dialogue: sc.dialogue || "",
+          camera_shot: sc.shot || "Medium Shot",
+          lighting: sc.lighting || "Cinematic Lighting",
+          video_prompt: sc.video_prompt + ". Characters looking directly at each other, never looking into camera lens.",
+          negative_prompt: sc.negative_prompt || masterNegative
+        };
+        const sceneJsonString = JSON.stringify(sceneJsonPromptObj, null, 2);
+
+        const item = document.createElement('div');
+        item.className = "p-4 rounded-2xl bg-[#090d16]/80 border border-slate-800 space-y-2 text-xs";
+        item.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-mono font-bold text-indigo-400">${sc.scene_id} (${sc.duration}s) - JSON Prompt</span>
+            <button class="text-xs text-indigo-400 hover:text-white px-3 py-1 rounded bg-slate-800 copy-flow-btn">Salin JSON Scene</button>
+          </div>
+          <pre class="font-mono text-xs text-slate-300 bg-[#070a13] p-3.5 rounded-xl border border-slate-800 select-all leading-relaxed overflow-x-auto max-h-48">${sceneJsonString}</pre>
+        `;
+        item.querySelector('.copy-flow-btn').addEventListener('click', () => {
+          copyTextToClipboard(sceneJsonString, `JSON Prompt ${sc.scene_id} disalin!`);
+        });
+        flowContainer.appendChild(item);
+      });
+
+      document.getElementById('json-output-viewer').textContent = JSON.stringify(data, null, 2);
+    }
+
+    function openImageModal(title, dataUrl) {
+      document.getElementById('preview-modal-title').textContent = title;
+      document.getElementById('preview-modal-img').src = dataUrl;
+      const downloadBtn = document.getElementById('btn-modal-download');
+      downloadBtn.onclick = () => downloadSingleImage(dataUrl, `${title.toLowerCase().replace(/[^a-z0-9]/g, '_')}.png`);
+      document.getElementById('modal-image-preview').classList.remove('hidden');
+    }
+
+    function downloadSingleImage(dataUrl, filename) {
+      if (!dataUrl) return;
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Imej berjaya dimuat turun!");
+    }
+
+    function isAnimationStyle() {
+      const animStyles = ["Animation", "Anime", "Cartoon", "3D Pixar Style", "3D Dreamworks", "3D Low Poly", "Studio Ghibli", "90s Retro Anime", "Modern Anime", "Western Cartoon", "Flat Vector Art"];
+      return animStyles.includes(state.style);
+    }
+
+    async function generateCharacterAIImage(c, charId, triggerBtn) {
+      if (triggerBtn) {
+        triggerBtn.disabled = true;
+        const spinner = triggerBtn.querySelector('.gen-spinner');
+        if (spinner) spinner.classList.remove('hidden');
+      }
+      showToast(`Menjana rujukan wajah untuk ${charId}...`);
+      try {
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Animated character design of ` : `Professional cinematic character face portrait photography of `;
+        const suffix = isAnim ? `beautiful animated lighting, animated masterpiece artwork.` : `studio lighting, 8k.`;
+        const prompt = `${prefix}${charId} (${c.name}): ${c.physical_description}, hairstyle: ${c.hairstyle}, skin tone: ${c.skin_tone}, looking slightly away from camera profile view, ${suffix}`;
+        
+        const imageUrl = await callNanoBananaImage(prompt, "1:1");
+        state.characterGeneratedImages[charId] = imageUrl;
+        saveState();
+        renderFullProductionPlan(state.productionPlan);
+        showToast(`Rujukan wajah ${charId} berjaya dijana!`);
+      } catch (err) {
+        showToast("Ralat penjanaan imej: " + err.message);
+      } finally {
+        if (triggerBtn) {
+          triggerBtn.disabled = false;
+          const spinner = triggerBtn.querySelector('.gen-spinner');
+          if (spinner) spinner.classList.add('hidden');
+        }
+      }
+    }
+
+    async function analyzeCharacterImageWithAI(c, charId, triggerBtn) {
+      const activeImg = state.characterGeneratedImages[charId] || state.characterImages[charId];
+      if (!activeImg) {
+        showToast("Sila upload atau jana imej rujukan watak terlebih dahulu.");
+        return;
+      }
+      if (triggerBtn) {
+        triggerBtn.disabled = true;
+        const spinner = triggerBtn.querySelector('.analyze-spinner');
+        if (spinner) spinner.classList.remove('hidden');
+      }
+      showToast(`Menganalisis watak ${charId} & mengemas kini butiran...`);
+      try {
+        const base64Data = activeImg.split(',')[1];
+        const mimeType = activeImg.match(/data:([^;]+);/)?.[1] || "image/jpeg";
+        const contentsArray = [{
+          role: 'user',
+          parts: [
+            { text: `Analyze this character image for ${c.name} (${charId}). Return a JSON object with updated attributes: {"physical_description": "...", "hairstyle": "...", "skin_tone": "...", "analysis_summary": "..."}` },
+            { inlineData: { mimeType, data: base64Data } }
+          ]
+        }];
+
+        const rawText = await executeTextWithFallback(contentsArray, "analysis", true);
+        
+        let analysisObj = {};
+        try {
+          analysisObj = safeParseJSON(rawText);
+        } catch(e) {
+          analysisObj = { analysis_summary: rawText };
+        }
+
+        if (analysisObj.physical_description) c.physical_description = analysisObj.physical_description;
+        if (analysisObj.hairstyle) c.hairstyle = analysisObj.hairstyle;
+        if (analysisObj.skin_tone) c.skin_tone = analysisObj.skin_tone;
+        
+        saveState();
+        renderFullProductionPlan(state.productionPlan);
+
+        document.getElementById('analysis-modal-title').textContent = `Analisis AI: ${c.name} (${charId})`;
+        document.getElementById('analysis-modal-content').innerHTML = `
+          <p class="font-bold text-indigo-300">Butiran watak telah dikemas kini secara automatik berdasarkan analisis visual!</p>
+          <p class="whitespace-pre-line text-slate-300 mt-2">${analysisObj.analysis_summary || rawText}</p>
+        `;
+        document.getElementById('modal-character-analysis').classList.remove('hidden');
+        showToast("Analisis watak selesai & butiran dikemas kini!");
+      } catch (err) {
+        showToast("Ralat analisis: " + err.message);
+      } finally {
+        if (triggerBtn) {
+          triggerBtn.disabled = false;
+          const spinner = triggerBtn.querySelector('.analyze-spinner');
+          if (spinner) spinner.classList.add('hidden');
+        }
+      }
+    }
+
+    async function generateCharacterSheetImage(c, charId, triggerBtn) {
+      if (triggerBtn) {
+        triggerBtn.disabled = true;
+        const spinner = triggerBtn.querySelector('.sheet-spinner');
+        if (spinner) spinner.classList.add('hidden');
+      }
+      showToast(`Menjana multi-angle sheet untuk ${charId}...`);
+      try {
+        const refImg = state.characterGeneratedImages[charId] || state.characterImages[charId];
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Multi-angle animated character model sheet of ` : `Multi-angle character model sheet of `;
+        const suffix = isAnim ? `clean neutral background, animated masterpiece artwork.` : `studio lighting, clean white or neutral background, 8k.`;
+        const prompt = `${prefix}${charId} (${c.name}): ${c.physical_description}, showing front view, side view, and 3/4 view, consistent facial features and attire, ${suffix}`;
+        
+        const imageUrl = await callNanoBananaImage(prompt, "16:9", refImg);
+        state.characterSheets[charId] = imageUrl;
+        saveState();
+        renderFullProductionPlan(state.productionPlan);
+        showToast(`Multi-angle sheet ${charId} berjaya dijana!`);
+      } catch (err) {
+        showToast("Ralat sheet: " + err.message);
+      } finally {
+        if (triggerBtn) {
+          triggerBtn.disabled = false;
+          const spinner = triggerBtn.querySelector('.sheet-spinner');
+          if (spinner) spinner.classList.add('hidden');
+        }
+      }
+    }
+
+    async function generateOutfitAIImage(o, outfitId, triggerBtn) {
+      if (triggerBtn) {
+        triggerBtn.disabled = true;
+        const spinner = triggerBtn.querySelector('.gen-spinner');
+        if (spinner) spinner.classList.remove('hidden');
+      }
+      showToast(`Menjana rujukan pakaian ${outfitId}...`);
+      try {
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Animated fashion design concept art of outfit ` : `Professional fashion design reference photography of outfit `;
+        const suffix = isAnim ? `beautiful animated lighting, displayed cleanly, animated masterpiece artwork.` : `studio lighting, displayed cleanly on mannequin or hanger with neutral background, 8k.`;
+        const prompt = `${prefix}${outfitId}: ${o.description}, top: ${o.top}, bottom: ${o.bottom}, shoes: ${o.shoes}, style: ${o.style}, color palette: ${o.color_palette}, material: ${o.material}, ${suffix}`;
+        
+        const imageUrl = await callNanoBananaImage(prompt, "1:1");
+        state.outfitGeneratedImages[outfitId] = imageUrl;
+        saveState();
+        renderFullProductionPlan(state.productionPlan);
+        showToast(`Imej pakaian ${outfitId} berjaya dijana!`);
+      } catch (err) {
+        showToast("Ralat penjanaan imej pakaian: " + err.message);
+      } finally {
+        if (triggerBtn) {
+          triggerBtn.disabled = false;
+          const spinner = triggerBtn.querySelector('.gen-spinner');
+          if (spinner) spinner.classList.add('hidden');
+        }
+      }
+    }
+
+    async function generateOutfitSheetImage(o, outfitId, triggerBtn) {
+      if (triggerBtn) {
+        triggerBtn.disabled = true;
+        const spinner = triggerBtn.querySelector('.sheet-spinner');
+        if (spinner) spinner.classList.add('hidden');
+      }
+      showToast(`Menjana multi-angle outfit sheet ${outfitId}...`);
+      try {
+        const refImg = state.outfitGeneratedImages[outfitId] || state.outfitImages[outfitId];
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Multi-angle animated outfit reference sheet ` : `Multi-angle outfit reference sheet `;
+        const suffix = isAnim ? `clean background, animated masterpiece artwork.` : `studio lighting, clean background, 8k.`;
+        const prompt = `${prefix}${outfitId}: ${o.description}, top: ${o.top}, bottom: ${o.bottom}, shoes: ${o.shoes}, showing front, back, and detail close-up views of the clothing fabric and design, ${suffix}`;
+        
+        const imageUrl = await callNanoBananaImage(prompt, "16:9", refImg);
+        state.outfitSheets[outfitId] = imageUrl;
+        saveState();
+        renderFullProductionPlan(state.productionPlan);
+        showToast(`Outfit sheet ${outfitId} berjaya dijana!`);
+      } catch (err) {
+        showToast("Ralat sheet: " + err.message);
+      } finally {
+        if (triggerBtn) {
+          triggerBtn.disabled = false;
+          const spinner = triggerBtn.querySelector('.sheet-spinner');
+          if (spinner) spinner.classList.add('hidden');
+        }
+      }
+    }
+
+    async function generateLocationAIImage(l, locationId, triggerBtn) {
+      if (triggerBtn) {
+        triggerBtn.disabled = true;
+        const spinner = triggerBtn.querySelector('.gen-spinner');
+        if (spinner) spinner.classList.add('hidden');
+      }
+      showToast(`Menjana imej lokasi untuk ${locationId}...`);
+      try {
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Beautiful animated background environment art of location ` : `Cinematic wide angle set design photography of location `;
+        const suffix = isAnim ? `animated masterpiece artwork.` : `8k.`;
+        const prompt = `${prefix}${locationId} (${l.name}): ${l.description}, time of day: ${l.time_of_day}, lighting: ${l.lighting}, ${suffix}`;
+        
+        const imageUrl = await callNanoBananaImage(prompt, "16:9");
+        state.locationGeneratedImages[locationId] = imageUrl;
+        saveState();
+        renderFullProductionPlan(state.productionPlan);
+        showToast(`Imej lokasi ${locationId} berjaya dijana!`);
+      } catch (err) {
+        showToast("Ralat penjanaan imej lokasi: " + err.message);
+      } finally {
+        if (triggerBtn) {
+          triggerBtn.disabled = false;
+          const spinner = triggerBtn.querySelector('.gen-spinner');
+          if (spinner) spinner.classList.add('hidden');
+        }
+      }
+    }
+
+    async function generateLocationSheetImage(l, locationId, triggerBtn) {
+      if (triggerBtn) {
+        triggerBtn.disabled = true;
+        const spinner = triggerBtn.querySelector('.sheet-spinner');
+        if (spinner) spinner.classList.add('hidden');
+      }
+      showToast(`Menjana multi-angle location sheet ${locationId}...`);
+      try {
+        const refImg = state.locationGeneratedImages[locationId] || state.locationImages[locationId];
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Multi-angle animated location reference board ` : `Multi-angle location reference board `;
+        const suffix = isAnim ? `animated masterpiece artwork.` : `8k.`;
+        const prompt = `${prefix}${locationId} (${l.name}): ${l.description}, time: ${l.time_of_day}, lighting: ${l.lighting}, showing wide shot, close-up corner, and top-down layout perspective, ${suffix}`;
+        
+        const imageUrl = await callNanoBananaImage(prompt, "16:9", refImg);
+        state.locationSheets[locationId] = imageUrl;
+        saveState();
+        renderFullProductionPlan(state.productionPlan);
+        showToast(`Location sheet ${locationId} berjaya dijana!`);
+      } catch (err) {
+        showToast("Ralat sheet: " + err.message);
+      } finally {
+        if (triggerBtn) {
+          triggerBtn.disabled = false;
+          const spinner = triggerBtn.querySelector('.sheet-spinner');
+          if (spinner) spinner.classList.add('hidden');
+        }
+      }
+    }
+
+    async function generatePropAIImage(p, propId, triggerBtn) {
+      if (triggerBtn) {
+        triggerBtn.disabled = true;
+        const spinner = triggerBtn.querySelector('.gen-spinner');
+        if (spinner) spinner.classList.add('hidden');
+      }
+      showToast(`Menjana imej prop untuk ${propId}...`);
+      try {
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Animated prop concept art of item ` : `Detailed studio product photography of prop item `;
+        const suffix = isAnim ? `neutral background, animated masterpiece artwork.` : `neutral background, 8k.`;
+        const prompt = `${prefix}${propId} (${p.name}): ${p.description}, ${suffix}`;
+        
+        const imageUrl = await callNanoBananaImage(prompt, "1:1");
+        state.propGeneratedImages[propId] = imageUrl;
+        saveState();
+        renderFullProductionPlan(state.productionPlan);
+        showToast(`Imej prop ${propId} berjaya dijana!`);
+      } catch (err) {
+        showToast("Ralat penjanaan imej prop: " + err.message);
+      } finally {
+        if (triggerBtn) {
+          triggerBtn.disabled = false;
+          const spinner = triggerBtn.querySelector('.gen-spinner');
+          if (spinner) spinner.classList.add('hidden');
+        }
+      }
+    }
+
+    async function generatePropSheetSheet(p, propId, triggerBtn) {
+      if (triggerBtn) {
+        triggerBtn.disabled = true;
+        const spinner = triggerBtn.querySelector('.sheet-spinner');
+        if (spinner) spinner.classList.add('hidden');
+      }
+      showToast(`Menjana multi-angle prop sheet ${propId}...`);
+      try {
+        const refImg = state.propGeneratedImages[propId] || state.propImages[propId];
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Multi-angle animated prop sheet ` : `Multi-angle prop sheet `;
+        const suffix = isAnim ? `clean background, animated masterpiece artwork.` : `studio lighting, clean background, 8k.`;
+        const prompt = `${prefix}${propId} (${p.name}): ${p.description}, showing front, side, and top views, ${suffix}`;
+        
+        const imageUrl = await callNanoBananaImage(prompt, "16:9", refImg);
+        state.propSheets[propId] = imageUrl;
+        saveState();
+        renderFullProductionPlan(state.productionPlan);
+        showToast(`Prop sheet ${propId} berjaya dijana!`);
+      } catch (err) {
+        showToast("Ralat sheet: " + err.message);
+      } finally {
+        if (triggerBtn) {
+          triggerBtn.disabled = false;
+          const spinner = triggerBtn.querySelector('.sheet-spinner');
+          if (spinner) spinner.classList.add('hidden');
+        }
+      }
+    }
+
+    async function generateSceneImageFromAllSheets(sc, sceneId, cardElement) {
+      const regenButtons = cardElement.querySelectorAll('.btn-regen-scene-img');
+      const loadingIndicator = cardElement.querySelector('.scene-loading-indicator');
+      regenButtons.forEach(b => {
+        b.disabled = true;
+      });
+      if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+      
+      showToast(`Menjana imej ${sceneId}...`);
+
+      try {
+        const referenceImages = [];
+        const sel = state.sceneSelections[sceneId] || {};
+        const activeChars = sel.chars || sc.characters || [];
+        const activeOutfits = sel.outfits || sc.outfit_ids || [];
+        const activeLoc = sel.loc || sc.location_id;
+        const activeProp = sel.prop;
+        const supportImg = state.sceneEditSupportImages[sceneId] || null;
+
+        if (supportImg) referenceImages.push(supportImg);
+
+        activeChars.forEach(charId => {
+          if (state.characterSheets[charId]) referenceImages.push(state.characterSheets[charId]);
+          else if (state.characterGeneratedImages[charId]) referenceImages.push(state.characterGeneratedImages[charId]);
+          else if (state.characterImages[charId]) referenceImages.push(state.characterImages[charId]);
+        });
+
+        activeOutfits.forEach(outfitId => {
+          if (state.outfitSheets[outfitId]) referenceImages.push(state.outfitSheets[outfitId]);
+          else if (state.outfitGeneratedImages[outfitId]) referenceImages.push(state.outfitGeneratedImages[outfitId]);
+          else if (state.outfitImages[outfitId]) referenceImages.push(state.outfitImages[outfitId]);
+        });
+
+        if (activeLoc) {
+          if (state.locationSheets[activeLoc]) referenceImages.push(state.locationSheets[activeLoc]);
+          else if (state.locationGeneratedImages[activeLoc]) referenceImages.push(state.locationGeneratedImages[activeLoc]);
+          else if (state.locationImages[activeLoc]) referenceImages.push(state.locationImages[activeLoc]);
+        }
+
+        if (activeProp) {
+          if (state.propSheets[activeProp]) referenceImages.push(state.propSheets[activeProp]);
+          else if (state.propGeneratedImages[activeProp]) referenceImages.push(state.propGeneratedImages[activeProp]);
+          else if (state.propImages[activeProp]) referenceImages.push(state.propImages[activeProp]);
+        }
+
+        let outfitDetailDesc = "";
+        if (activeOutfits.length > 0 && state.productionPlan.outfits) {
+          const matchingOutfits = state.productionPlan.outfits.filter(o => activeOutfits.includes(o.outfit_id));
+          if (matchingOutfits.length > 0) {
+            outfitDetailDesc = `STRICT OUTFIT REQUIREMENTS 100%: ${matchingOutfits.map(mo => `Outfit ${mo.outfit_id} for ${mo.character_id}: top "${mo.top}", bottom "${mo.bottom}", shoes "${mo.shoes}"`).join('; ')}.`;
+          }
+        }
+
+        let promptText = `Cinematic continuous ${sc.shot || 'medium'} shot matching this exact prompt: "${sc.video_prompt || sc.visual_prompt}".\n`;
+        promptText += `STRICT DRAMATIC EYE CONTACT & CAMERA RULES:\n`;
+        promptText += `1. NO DIRECT EYE CONTACT WITH CAMERA: Characters must NEVER look at the camera lens.\n`;
+        promptText += `2. INTERACTION EYE CONTACT: Characters must look precisely at each other when speaking or interacting, maintaining realistic conversational eye contact.\n`;
+        promptText += `3. CHARACTERS (${activeChars.join(', ')}): Strictly preserve exact facial structures and hairstyles from attached references.\n`;
+        promptText += `4. OUTFITS: ${outfitDetailDesc || 'Strictly use the exact clothing from attached OUTFIT sheets.'}\n`;
+        promptText += `5. LOCATION (${activeLoc}) & ATMOSPHERE: Strictly match background. Lighting style: ${sc.lighting || 'Cinematic'}.\n`;
+        promptText += `${state.style}, 8k resolution, master cinematic composition.`;
+
+        const primaryRefImage = referenceImages.length > 0 ? referenceImages[0] : null;
+
+        const imageUrl = await callNanoBananaImage(promptText, state.aspectRatio || "9:16", primaryRefImage);
+        state.sceneImages[sceneId] = imageUrl;
+        saveState();
+        renderFullProductionPlan(state.productionPlan);
+        showToast(`Imej ${sceneId} berjaya dijana!`);
+      } catch (err) {
+        showToast("Ralat penjanaan imej scene: " + err.message);
+      } finally {
+        regenButtons.forEach(b => {
+          b.disabled = false;
+        });
+        if (loadingIndicator) loadingIndicator.classList.add('hidden');
+      }
+    }
+
+    function downloadSceneImage(sceneId) {
+      const dataUrl = state.sceneImages[sceneId];
+      if (!dataUrl) return;
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = `scene_${sceneId}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function applyPanelFocus(focusType, scrollToCenter = true) {
+      state.focusedPanel = focusType;
+      saveState();
+
+      const btnStory = document.getElementById('btn-focus-story');
+      const btnScenes = document.getElementById('btn-focus-scenes');
+      const paneStory = document.getElementById('pane-story-container');
+      const paneScenes = document.getElementById('pane-scenes-container');
+
+      [btnStory, btnScenes].forEach(b => {
+        b.className = "flex-1 py-2.5 px-4 rounded-xl font-bold text-xs tracking-wide transition bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-indigo-500/50 flex items-center justify-center gap-2 shadow-sm";
+      });
+
+      if (focusType === 'both') {
+        paneStory.classList.remove('hidden', 'max-w-3xl', 'mx-auto', 'lg:col-span-12');
+        paneStory.classList.add('lg:col-span-5');
+        paneScenes.classList.remove('hidden', 'max-w-3xl', 'mx-auto', 'lg:col-span-12');
+        paneScenes.classList.add('lg:col-span-7');
+      } else if (focusType === 'story') {
+        paneStory.classList.remove('hidden', 'lg:col-span-5');
+        paneStory.classList.add('lg:col-span-12', 'max-w-3xl', 'mx-auto');
+        paneScenes.classList.add('hidden');
+        btnStory.className = "flex-1 py-2.5 px-4 rounded-xl font-bold text-xs tracking-wide transition bg-indigo-600/30 border border-indigo-500 text-white flex items-center justify-center gap-2 shadow-md";
+        if (scrollToCenter) paneStory.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (focusType === 'scenes') {
+        paneStory.classList.add('hidden');
+        paneScenes.classList.remove('hidden', 'lg:col-span-7');
+        paneScenes.classList.add('lg:col-span-12', 'max-w-3xl', 'mx-auto');
+        btnScenes.className = "flex-1 py-2.5 px-4 rounded-xl font-bold text-xs tracking-wide transition bg-indigo-600/30 border border-indigo-500 text-white flex items-center justify-center gap-2 shadow-md";
+        if (scrollToCenter) paneScenes.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function copyTextToClipboard(text, successMsg) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) showToast(successMsg);
+        else showToast("Gagal menyalin teks.");
+      } catch (err) {
+        showToast("Ralat menyalin teks.");
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function setLoading(isLoading) {
+      const btn = document.getElementById('btn-analyze-story');
+      btn.disabled = isLoading;
+      document.getElementById('analyze-btn-caption').textContent = isLoading ? "SEDANG MENGANALISIS..." : "ANALYZE STORY";
+      document.getElementById('analyze-spinner').classList.toggle('hidden', !isLoading);
+    }
+
+    function applyUserUI(user) {
+      document.getElementById('btn-google-login').classList.add('hidden');
+      const badge = document.getElementById('user-profile-badge');
+      badge.classList.remove('hidden');
+      document.getElementById('user-avatar').src = user.avatar;
+      document.getElementById('user-name').textContent = user.name;
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      document.getElementById('cfg-supabase-url').value = SUPABASE_URL;
+      document.getElementById('cfg-supabase-key').value = SUPABASE_ANON_KEY;
+
+      await loadState();
+
+      const storyIdeaModal = document.getElementById('modal-story-idea');
+      document.getElementById('btn-open-story-idea-modal').addEventListener('click', () => {
+        storyIdeaModal.classList.remove('hidden');
+      });
+      document.getElementById('btn-close-story-idea-modal').addEventListener('click', () => {
+        storyIdeaModal.classList.add('hidden');
+      });
+
+      const googleFlowModal = document.getElementById('modal-google-flow');
+      document.getElementById('btn-open-google-flow-modal').addEventListener('click', () => {
+        googleFlowModal.classList.remove('hidden');
+      });
+      document.getElementById('btn-close-google-flow-modal').addEventListener('click', () => {
+        googleFlowModal.classList.add('hidden');
+      });
+
+      const projectsModal = document.getElementById('modal-projects');
+      document.getElementById('btn-open-projects-modal').addEventListener('click', () => {
+        projectsModal.classList.remove('hidden');
+        fetchUserProjects();
+      });
+      document.getElementById('btn-close-projects-modal').addEventListener('click', () => {
+        projectsModal.classList.add('hidden');
+      });
+
+      document.getElementById('btn-new-project').addEventListener('click', () => {
+        if (confirm("Mula projek baru? Perubahan belum disimpan akan dikosongkan.")) {
+          state.current_project_id = null;
+          localStorage.removeItem(CURRENT_PROJ_ID_KEY);
+          state.project_name = "Projek Baru";
+          state.story_input = "";
+          state.product_image = null;
+          state.productionPlan = null;
+          state.characterImages = {};
+          state.characterGeneratedImages = {};
+          state.characterSheets = {};
+          state.outfitImages = {};
+          state.outfitGeneratedImages = {};
+          state.outfitSheets = {};
+          state.locationImages = {};
+          state.locationGeneratedImages = {};
+          state.locationSheets = {};
+          state.propImages = {};
+          state.propGeneratedImages = {};
+          state.propSheets = {};
+          state.sceneImages = {};
+          state.sceneSpecs = {};
+          state.sceneSelections = {};
+          state.sceneEditSupportImages = {};
+          
+          document.getElementById('story-text-input').value = "";
+          projectsModal.classList.add('hidden');
+          saveState();
+          window.location.reload();
+        }
+      });
+
+      document.getElementById('btn-save-project').addEventListener('click', () => {
+        saveProjectToSupabase(true);
+      });
+
+      document.getElementById('story-text-input').addEventListener('input', (e) => { 
+        state.story_input = e.target.value; 
+        updateStoryPreviewText();
+        saveState(); 
+      });
+
+      const prodImgInput = document.getElementById('product-image-input');
+      if (prodImgInput) {
+        prodImgInput.addEventListener('change', (ev) => {
+          const file = ev.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (re) => {
+            state.product_image = re.target.result;
+            const prevImg = document.getElementById('product-img-preview');
+            const ph = document.getElementById('product-img-placeholder');
+            const rmBtn = document.getElementById('btn-remove-product-img');
+            const statusEl = document.getElementById('product-img-status');
+            prevImg.src = state.product_image;
+            prevImg.classList.remove('hidden');
+            ph.classList.add('hidden');
+            rmBtn.classList.remove('hidden');
+            statusEl.textContent = "Produk dimuat naik";
+            saveState();
+            showToast("Imej produk dimuat naik untuk video UGC/jualan!");
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      const removeProdBtn = document.getElementById('btn-remove-product-img');
+      if (removeProdBtn) {
+        removeProdBtn.addEventListener('click', () => {
+          state.product_image = null;
+          const prevImg = document.getElementById('product-img-preview');
+          const ph = document.getElementById('product-img-placeholder');
+          const rmBtn = document.getElementById('btn-remove-product-img');
+          const statusEl = document.getElementById('product-img-status');
+          prevImg.src = "";
+          prevImg.classList.add('hidden');
+          ph.classList.remove('hidden');
+          rmBtn.classList.add('hidden');
+          statusEl.textContent = "Tiada produk";
+          saveState();
+          showToast("Gambar produk dibuang.");
+        });
+      }
+
+      document.getElementById('btn-analyze-story').addEventListener('click', analyzeStoryWithAI);
+
+      document.getElementById('btn-focus-story').addEventListener('click', () => {
+        const cur = state.focusedPanel;
+        applyPanelFocus(cur === 'story' ? 'both' : 'story', true);
+      });
+      document.getElementById('btn-focus-scenes').addEventListener('click', () => {
+        const cur = state.focusedPanel;
+        applyPanelFocus(cur === 'scenes' ? 'both' : 'scenes', true);
+      });
+
+      document.getElementById('btn-refresh-app').addEventListener('click', () => {
+        window.location.reload();
+      });
+
+      document.getElementById('btn-copy-negative-all').addEventListener('click', () => {
+        copyTextToClipboard(document.getElementById('view-negative-prompt').textContent, "Negative prompt disalin!");
+      });
+
+      document.getElementById('btn-copy-full-json').addEventListener('click', () => {
+        copyTextToClipboard(document.getElementById('json-output-viewer').textContent, "Full Production JSON disalin!");
+      });
+
+      document.getElementById('btn-close-image-modal').addEventListener('click', () => {
+        document.getElementById('modal-image-preview').classList.add('hidden');
+      });
+
+      document.getElementById('btn-close-analysis-modal').addEventListener('click', () => {
+        document.getElementById('modal-character-analysis').classList.add('hidden');
+      });
+
+      document.getElementById('btn-load-sample').addEventListener('click', () => {
+        const sample = "Seorang penghantar makanan menemui seekor anak kucing yang cedera ketika bekerja pada waktu malam di lorong bandar yang sunyi.";
+        document.getElementById('story-text-input').value = sample;
+        state.story_input = sample;
+        updateStoryPreviewText();
+        saveState();
+      });
+
+      document.getElementById('btn-google-login').addEventListener('click', async () => {
+        if (!supabaseClient) {
+          showToast("Sila masukkan Supabase URL & Key di Tetapan (⚙️) terlebih dahulu.");
+          document.getElementById('modal-settings').classList.remove('hidden');
+          return;
+        }
+        try {
+          const { error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google' });
+          if (error) throw error;
+        } catch (err) {
+          // Fallback demo login jika OAuth belum diset di Supabase dashboard
+          const mock = { name: "Raff Creator", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" };
+          state.user = mock;
+          applyUserUI(mock);
+          showToast("Mod demo Supabase diaktifkan.");
+        }
+      });
+
+      document.getElementById('btn-logout').addEventListener('click', async () => {
+        if (supabaseClient) {
+          await supabaseClient.auth.signOut();
+        }
+        state.user = null;
+        state.current_project_id = null;
+        localStorage.removeItem(CURRENT_PROJ_ID_KEY);
+        document.getElementById('user-profile-badge').classList.add('hidden');
+        document.getElementById('btn-google-login').classList.remove('hidden');
+        showToast("Log keluar.");
+        window.location.reload();
+      });
+
+      const settingsModal = document.getElementById('modal-settings');
+      document.getElementById('btn-open-settings').addEventListener('click', () => settingsModal.classList.remove('hidden'));
+      document.getElementById('btn-close-settings-modal').addEventListener('click', () => settingsModal.classList.add('hidden'));
+      document.getElementById('btn-save-settings-modal').addEventListener('click', () => {
+        SUPABASE_URL = document.getElementById('cfg-supabase-url').value.trim();
+        SUPABASE_ANON_KEY = document.getElementById('cfg-supabase-key').value.trim();
+        localStorage.setItem('raff_supabase_url', SUPABASE_URL);
+        localStorage.setItem('raff_supabase_key', SUPABASE_ANON_KEY);
+
+        settings.storyLang = document.getElementById('cfg-story-lang').value;
+        settings.promptLang = document.getElementById('cfg-prompt-lang').value;
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+
+        initSupabaseClient();
+        settingsModal.classList.add('hidden');
+        showToast("Tetapan Supabase & AI disimpan.");
+      });
+
+      let advImageBase64 = null;
+      let lastAdvAnalysis = null;
+      
+      const advImgInput = document.getElementById('adv-image-input');
+      const advImgPreview = document.getElementById('adv-img-preview');
+      const advImgPlaceholder = document.getElementById('adv-img-placeholder');
+      const btnRemoveAdvImg = document.getElementById('btn-remove-adv-img');
+      const btnAnalyzeAdvImg = document.getElementById('btn-analyze-adv-img');
+      const advAnalysisResult = document.getElementById('adv-analysis-result');
+      const btnApplyAdvStory = document.getElementById('btn-apply-adv-story');
+      
+      if (advImgInput) {
+        advImgInput.addEventListener('change', (ev) => {
+          const file = ev.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (re) => {
+            advImageBase64 = re.target.result;
+            advImgPreview.src = advImageBase64;
+            advImgPreview.classList.remove('hidden');
+            advImgPlaceholder.classList.add('hidden');
+            btnRemoveAdvImg.classList.remove('hidden');
+            btnAnalyzeAdvImg.disabled = false;
+            advAnalysisResult.classList.add('hidden');
+            showToast("Gambar rujukan Advance dimuat naik.");
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+      
+      if (btnRemoveAdvImg) {
+        btnRemoveAdvImg.addEventListener('click', () => {
+          advImageBase64 = null;
+          advImgPreview.src = "";
+          advImgPreview.classList.add('hidden');
+          advImgPlaceholder.classList.remove('hidden');
+          btnRemoveAdvImg.classList.add('hidden');
+          btnAnalyzeAdvImg.disabled = true;
+          advAnalysisResult.classList.add('hidden');
+        });
+      }
+      
+      if (btnAnalyzeAdvImg) {
+        btnAnalyzeAdvImg.addEventListener('click', async () => {
+          if (!advImageBase64) return;
+          
+          btnAnalyzeAdvImg.disabled = true;
+          document.getElementById('adv-analyze-text').textContent = "Menganalisis...";
+          document.getElementById('adv-analyze-spinner').classList.remove('hidden');
+          advAnalysisResult.classList.add('hidden');
+          showToast("Sedang menganalisis gambar rujukan...");
+          
+          try {
+            const base64Data = advImageBase64.split(',')[1];
+            const mimeType = advImageBase64.match(/data:([^;]+);/)?.[1] || "image/jpeg";
+            const contentsArray = [{
+              role: 'user',
+              parts: [
+                { text: `Analyze this image in detail. Return ONLY a valid JSON object with the following keys in Bahasa Melayu:\n{\n  "konsep": "Main visual concept or theme",\n  "gaya_visual": "Art style (e.g., Cinematic, 3D Pixar, Anime, Documentary, Realistic, Cartoon)",\n  "pencahayaan": "Lighting setup and mood",\n  "cadangan_cerita": "A short 2-3 sentence story idea inspired by this image"\n}` },
+                { inlineData: { mimeType, data: base64Data } }
+              ]
+            }];
+
+            const rawText = await executeTextWithFallback(contentsArray, "analysis", true);
+            let analysisObj = safeParseJSON(rawText);
+            lastAdvAnalysis = analysisObj;
+            
+            document.getElementById('res-konsep').textContent = analysisObj.konsep || "-";
+            document.getElementById('res-style').textContent = analysisObj.gaya_visual || "-";
+            document.getElementById('res-lighting').textContent = analysisObj.pencahayaan || "-";
+            document.getElementById('res-story').textContent = analysisObj.cadangan_cerita || "-";
+            
+            advAnalysisResult.classList.remove('hidden');
+            showToast("Analisis Advance selesai!");
+          } catch (err) {
+            showToast("Ralat Analisis: " + err.message);
+          } finally {
+            btnAnalyzeAdvImg.disabled = false;
+            document.getElementById('adv-analyze-text').textContent = "Analisis Gambar Ini";
+            document.getElementById('adv-analyze-spinner').classList.add('hidden');
+          }
+        });
+      }
+      
+      if (btnApplyAdvStory) {
+        btnApplyAdvStory.addEventListener('click', () => {
+          if (!lastAdvAnalysis || !lastAdvAnalysis.cadangan_cerita) return;
+          
+          const storyInput = document.getElementById('story-text-input');
+          const currentText = storyInput.value.trim();
+          
+          const promptAdd = `[Idea dari Imej]: ${lastAdvAnalysis.cadangan_cerita}\n[Konsep]: ${lastAdvAnalysis.konsep}\n[Pencahayaan]: ${lastAdvAnalysis.pencahayaan}`;
+          storyInput.value = currentText ? currentText + "\n\n" + promptAdd : promptAdd;
+          
+          state.story_input = storyInput.value;
+          updateStoryPreviewText();
+          
+          if (lastAdvAnalysis.gaya_visual) {
+            const styleSelect = document.getElementById('param-style');
+            const styleText = lastAdvAnalysis.gaya_visual.toLowerCase();
+            let matched = false;
+            Array.from(styleSelect.options).forEach(opt => {
+              if (!matched && styleText.includes(opt.value.toLowerCase())) {
+                styleSelect.value = opt.value;
+                matched = true;
+              }
+            });
+          }
+          
+          saveState();
+          showToast("Cadangan cerita berjaya diterapkan ke ruang input!");
+        });
+      }
+
+    });
+  </script>
+</body>
+</html>
