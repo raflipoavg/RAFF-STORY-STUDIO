@@ -131,10 +131,10 @@
 
   <main class="flex-1 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-    <!-- TOP ROW: Idea Cerita Button & Panel Switcher Buttons (Left) alongside Scene Cards Header (Right) -->
+    <!-- TOP ROW: Idea Cerita Button & Panel Switcher Buttons (Left) alongside Scene Cards Feed Header (Right) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       
-      <!-- LEFT COL (5 Cols): Idea Cerita Button & Panel Switcher Buttons -->
+      <!-- LEFT COL (5 Cols): Idea Cerita Button & Panel Switcher Buttons placed directly below it -->
       <div class="lg:col-span-5 space-y-3">
         <button 
           id="btn-open-story-idea-modal"
@@ -155,7 +155,7 @@
           <svg class="w-5 h-5 text-indigo-400 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </button>
 
-        <!-- Panel Switcher Buttons -->
+        <!-- Panel Switcher Buttons placed directly below idea cerita -->
         <div class="flex items-center gap-2">
           <button id="btn-focus-story" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs tracking-wide transition bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-indigo-500/50 flex items-center justify-center gap-2 shadow-sm">
             <span>Story Panel</span>
@@ -166,14 +166,18 @@
         </div>
       </div>
 
-      <!-- RIGHT COL (7 Cols): Scene Cards Header -->
+      <!-- RIGHT COL (7 Cols): Scene Cards Feed Header (Placed on the far right) -->
       <div class="lg:col-span-7 space-y-4">
         <div class="glass-card p-4 rounded-2xl border border-slate-800 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h3 class="text-base font-extrabold text-white">Scene Cards Feed</h3>
-            <p class="text-xs text-slate-400">Papan produksi scene automatik</p>
+            <p class="text-xs text-slate-400">Merujuk 100% kepada CHAR_XX, OUTFIT_XX, LOC_XX & PROP_XX (Max 10s/scene)</p>
           </div>
           <div class="flex items-center gap-2">
+            <button id="btn-open-google-flow-modal" class="px-3 py-1.5 rounded-xl bg-violet-600/20 hover:bg-violet-600/30 text-violet-300 border border-violet-500/40 font-bold text-xs flex items-center gap-1.5 transition shadow-sm" title="Google Flow Export">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              <span>Google Flow</span>
+            </button>
             <span id="tab-scenes-count" class="px-3 py-1.5 rounded-xl bg-indigo-950 text-indigo-300 border border-indigo-800 font-mono text-xs font-bold shadow-sm">0 Scenes</span>
           </div>
         </div>
@@ -467,6 +471,56 @@
     </div>
   </div>
 
+  <!-- Google Flow Popup Modal -->
+  <div id="modal-google-flow" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-4xl w-full p-6 sm:p-7 space-y-5 shadow-2xl relative flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-violet-600/20 text-violet-400 flex items-center justify-center font-bold">⚡</div>
+          <h3 class="text-base font-bold text-white">Google Flow Export Engine</h3>
+        </div>
+        <button id="btn-close-google-flow-modal" class="text-slate-400 hover:text-white text-2xl leading-none p-1">&times;</button>
+      </div>
+
+      <div class="space-y-6 overflow-y-auto pr-1 flex-1">
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-900/50 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="space-y-1 text-center sm:text-left">
+            <h4 class="text-base font-extrabold text-white">Production Plan & Prompt Google Flow</h4>
+            <p class="text-xs text-slate-300">Salin prompt JSON lengkap bagi setiap scene atau gunakan fail JSON berstruktur penuh.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btn-copy-full-json" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider transition shadow flex items-center gap-2">
+              <span>COPY JSON</span>
+            </button>
+            <a href="https://flow.google.com" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs uppercase tracking-wider transition border border-slate-700 flex items-center gap-1.5">
+              <span>GOOGLE FLOW</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="glass-card border border-slate-800 rounded-2xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Master Negative Prompt</span>
+            <button id="btn-copy-negative-all" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold py-1">Salin</button>
+          </div>
+          <p id="view-negative-prompt" class="text-xs font-mono text-slate-300 bg-[#080b14] p-3 rounded-xl border border-slate-800 leading-relaxed overflow-x-auto"></p>
+        </div>
+
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider">Scene-by-Scene Prompt Dispatch</h4>
+          <div id="flow-scenes-prompts" class="space-y-3"></div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Google Flow Valid Production JSON</span>
+          </div>
+          <pre id="json-output-viewer" class="w-full max-h-64 overflow-auto bg-[#070913] border border-slate-800 rounded-2xl p-4 text-xs font-mono text-indigo-300 select-all"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Image Popup Modal -->
   <div id="modal-image-preview" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-4xl w-full p-6 space-y-4 shadow-2xl relative flex flex-col max-h-[90vh]">
@@ -499,37 +553,22 @@
     </div>
   </div>
 
-  <!-- Settings Modal with Supabase & Gemini API Key Inputs -->
+  <!-- Settings Modal -->
   <div id="modal-settings" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-lg w-full p-7 space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div class="bg-[#0d121f] border border-slate-800 rounded-3xl max-w-md w-full p-7 space-y-5 shadow-2xl">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <div>
-          <h3 class="text-base font-bold text-white">Advanced Settings & Cloud Config</h3>
-          <p class="text-xs text-slate-400">Konfigurasi Supabase Backend & Gemini API Key</p>
+          <h3 class="text-base font-bold text-white">Advanced Settings</h3>
+          <p class="text-xs text-slate-400">Konfigurasi Enjin AI dan Papan Cerita</p>
         </div>
         <button id="btn-close-settings-modal" class="text-slate-400 hover:text-white text-xl leading-none p-1">&times;</button>
       </div>
 
       <div class="space-y-4 text-xs">
-        <div class="bg-[#080b14] p-3.5 rounded-2xl border border-slate-800 space-y-3">
-          <h4 class="font-bold text-indigo-400 uppercase tracking-wider text-[10px]">Supabase Configuration</h4>
-          <div>
-            <label class="block font-semibold text-slate-300 mb-1">Supabase URL</label>
-            <input type="text" id="cfg-supabase-url" placeholder="https://xxxx.supabase.co" class="w-full bg-[#0d121f] border border-slate-800 rounded-xl px-3 py-2 text-slate-200 font-mono text-xs">
-          </div>
-          <div>
-            <label class="block font-semibold text-slate-300 mb-1">Supabase Anon Key</label>
-            <input type="password" id="cfg-supabase-key" placeholder="eyJhbGci..." class="w-full bg-[#0d121f] border border-slate-800 rounded-xl px-3 py-2 text-slate-200 font-mono text-xs">
-          </div>
-        </div>
-
-        <div class="bg-[#080b14] p-3.5 rounded-2xl border border-slate-800 space-y-3">
-          <h4 class="font-bold text-indigo-400 uppercase tracking-wider text-[10px]">Google Gemini AI Key</h4>
-          <div>
-            <label class="block font-semibold text-slate-300 mb-1">Gemini API Key</label>
-            <input type="password" id="cfg-gemini-key" placeholder="AIzaSy..." class="w-full bg-[#0d121f] border border-slate-800 rounded-xl px-3 py-2 text-slate-200 font-mono text-xs">
-            <p class="text-[10px] text-slate-500 mt-1">Dapatkan kunci dari <a href="https://aistudio.google.com/" target="_blank" class="text-indigo-400 underline">Google AI Studio</a>.</p>
-          </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Model AI</label>
+          <input type="text" value="gemini-3.1-flash-image" disabled class="w-full bg-[#080b14] border border-slate-800 rounded-xl px-3 py-2 text-slate-400 font-mono">
+          <p class="text-[10px] text-slate-500 mt-1">Menggunakan model Nano Banana (Gemini 3.1 Flash Image) untuk generasi visual dan analisis.</p>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -559,25 +598,11 @@
     </div>
   </div>
 
-  <!-- Supabase JS SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script>
-    const SETTINGS_KEY = 'raff_story_studio_config_v63';
-
-    let settings = {
-      supabaseUrl: "",
-      supabaseKey: "",
-      geminiKey: "",
-      storyLang: "Bahasa Melayu",
-      promptLang: "English",
-      continuityLevel: "strict"
-    };
-
-    let supabaseClient = null;
+    const STORAGE_KEY = 'raff_story_studio_state_v59';
+    const SETTINGS_KEY = 'raff_story_studio_config_v59';
 
     let state = {
-      project_id: null,
       project_name: "Draf Cerita Baru",
       story_input: "",
       product_image: null,
@@ -587,7 +612,7 @@
       aspectRatio: "9:16",
       languageDialect: "Bahasa Melayu Standard",
       productionPlan: null,
-      focusedPanel: "both",
+      focusedPanel: "both", // 'both', 'story', 'scenes'
       characterImages: {},
       characterGeneratedImages: {},
       characterSheets: {},
@@ -603,8 +628,14 @@
       sceneImages: {},
       sceneSpecs: {},
       sceneSelections: {},
-      sceneEditSupportImages: {},
+      sceneEditSupportImages: {}, // Support image for scene specification edits
       user: null
+    };
+
+    let settings = {
+      storyLang: "Bahasa Melayu",
+      promptLang: "English",
+      continuityLevel: "strict"
     };
 
     let toastTimeout = null;
@@ -622,150 +653,115 @@
       toastTimeout = setTimeout(() => {
         toast.classList.remove('flex');
         toast.classList.add('hidden');
-      }, 2500);
+      }, 2000);
     }
 
-    function initSupabaseConnection() {
-      if (settings.supabaseUrl && settings.supabaseKey && window.supabase) {
-        try {
-          supabaseClient = window.supabase.createClient(settings.supabaseUrl, settings.supabaseKey);
-        } catch (e) {
-          console.warn("Gagal inisialisasi Supabase:", e);
-        }
-      }
-    }
-
-    let saveDebounceTimer = null;
     function saveState() {
-      if (state.project_id) {
-        localStorage.setItem("raff_current_project_id", state.project_id);
+      try {
+        const payload = {
+          project_name: state.project_name,
+          story_input: state.story_input,
+          product_image: state.product_image,
+          genre: state.genre,
+          style: state.style,
+          target: state.target,
+          aspectRatio: state.aspectRatio,
+          languageDialect: state.languageDialect,
+          productionPlan: state.productionPlan,
+          focusedPanel: state.focusedPanel,
+          characterImages: state.characterImages,
+          characterGeneratedImages: state.characterGeneratedImages,
+          characterSheets: state.characterSheets,
+          outfitImages: state.outfitImages,
+          outfitGeneratedImages: state.outfitGeneratedImages,
+          outfitSheets: state.outfitSheets,
+          locationImages: state.locationImages,
+          locationGeneratedImages: state.locationGeneratedImages,
+          locationSheets: state.locationSheets,
+          propImages: state.propImages,
+          propGeneratedImages: state.propGeneratedImages,
+          propSheets: state.propSheets,
+          sceneImages: state.sceneImages,
+          sceneSpecs: state.sceneSpecs,
+          sceneSelections: state.sceneSelections,
+          sceneEditSupportImages: state.sceneEditSupportImages,
+          user: state.user,
+          updated_at: new Date().toISOString()
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      } catch (e) {
+        console.warn('LocalStorage save warning:', e);
       }
-
-      if (!supabaseClient) {
-        try {
-          localStorage.setItem("raff_local_fallback_state", JSON.stringify(state));
-        } catch(e) {}
-        return;
-      }
-
-      if (saveDebounceTimer) clearTimeout(saveDebounceTimer);
-      saveDebounceTimer = setTimeout(async () => {
-        try {
-          const { data: { user } } = await supabaseClient.auth.getUser();
-          if (!user) return;
-
-          const payload = {
-            user_id: user.id,
-            project_name: state.project_name || "Projek Cerita",
-            project_data: state,
-            updated_at: new Date().toISOString()
-          };
-
-          if (state.project_id) {
-            await supabaseClient.from('projects').update(payload).eq('id', state.project_id);
-          } else {
-            const { data, error } = await supabaseClient.from('projects').insert([payload]).select().single();
-            if (data && !error) {
-              state.project_id = data.id;
-              localStorage.setItem("raff_current_project_id", data.id);
-            }
-          }
-          showToast("Project disimpan ke cloud ✓");
-        } catch (err) {
-          console.error("Gagal simpan ke Supabase:", err);
-        }
-      }, 1500);
     }
 
-    async function loadState() {
+    function loadState() {
       try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          state = { ...state, ...parsed };
+          if (!state.sceneImages) state.sceneImages = {};
+          if (!state.sceneSpecs) state.sceneSpecs = {};
+          if (!state.sceneSelections) state.sceneSelections = {};
+          if (!state.sceneEditSupportImages) state.sceneEditSupportImages = {};
+          if (!state.characterImages) state.characterImages = {};
+          if (!state.characterGeneratedImages) state.characterGeneratedImages = {};
+          if (!state.characterSheets) state.characterSheets = {};
+          if (!state.outfitImages) state.outfitImages = {};
+          if (!state.outfitGeneratedImages) state.outfitGeneratedImages = {};
+          if (!state.outfitSheets) state.outfitSheets = {};
+          if (!state.locationImages) state.locationImages = {};
+          if (!state.locationGeneratedImages) state.locationGeneratedImages = {};
+          if (!state.locationSheets) state.locationSheets = {};
+          if (!state.propImages) state.propImages = {};
+          if (!state.propGeneratedImages) state.propGeneratedImages = {};
+          if (!state.propSheets) state.propSheets = {};
+          if (!state.aspectRatio) state.aspectRatio = "9:16";
+          if (!state.languageDialect) state.languageDialect = "Bahasa Melayu Standard";
+          
+          document.getElementById('story-text-input').value = state.story_input || "";
+          document.getElementById('param-genre').value = state.genre || "Auto";
+          document.getElementById('param-style').value = state.style || "Cinematic";
+          document.getElementById('param-target').value = state.target || "Short Film";
+          document.getElementById('param-aspect').value = state.aspectRatio || "9:16";
+          
+          if (document.getElementById('param-language-dialect')) {
+            document.getElementById('param-language-dialect').value = state.languageDialect || "Bahasa Melayu Standard";
+          }
+          
+          if (state.product_image) {
+            const prevImg = document.getElementById('product-img-preview');
+            const ph = document.getElementById('product-img-placeholder');
+            const rmBtn = document.getElementById('btn-remove-product-img');
+            const statusEl = document.getElementById('product-img-status');
+            prevImg.src = state.product_image;
+            prevImg.classList.remove('hidden');
+            ph.classList.add('hidden');
+            rmBtn.classList.remove('hidden');
+            statusEl.textContent = "Produk dimuat naik";
+          }
+
+          updateStoryPreviewText();
+
+          if (state.user) applyUserUI(state.user);
+          if (state.productionPlan) {
+            (state.productionPlan.scenes || []).forEach(sc => {
+              if (Number(sc.duration) > 10) sc.duration = 8;
+            });
+            renderFullProductionPlan(state.productionPlan);
+          }
+          applyPanelFocus(state.focusedPanel || "both", false);
+        }
+
         const savedSettings = localStorage.getItem(SETTINGS_KEY);
         if (savedSettings) {
           settings = { ...settings, ...JSON.parse(savedSettings) };
-          document.getElementById('cfg-supabase-url').value = settings.supabaseUrl || "";
-          document.getElementById('cfg-supabase-key').value = settings.supabaseKey || "";
-          document.getElementById('cfg-gemini-key').value = settings.geminiKey || "";
-          document.getElementById('cfg-story-lang').value = settings.storyLang || "Bahasa Melayu";
-          document.getElementById('cfg-prompt-lang').value = settings.promptLang || "English";
-        }
-
-        initSupabaseConnection();
-
-        if (supabaseClient) {
-          const { data: { user } } = await supabaseClient.auth.getUser();
-          if (user) {
-            state.user = { name: user.email, avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" };
-            applyUserUI(state.user);
-
-            const currentProjId = localStorage.getItem("raff_current_project_id");
-            if (currentProjId) {
-              const { data, error } = await supabaseClient.from('projects').select('*').eq('id', currentProjId).single();
-              if (data && data.project_data) {
-                restoreLoadedState(data.project_data, data.id);
-                return;
-              }
-            }
-          }
-        }
-
-        const localData = localStorage.getItem("raff_local_fallback_state");
-        if (localData) {
-          restoreLoadedState(JSON.parse(localData), null);
+          document.getElementById('cfg-story-lang').value = settings.storyLang;
+          document.getElementById('cfg-prompt-lang').value = settings.promptLang;
         }
       } catch (err) {
         console.error('Error restoring state:', err);
       }
-    }
-
-    function restoreLoadedState(parsed, projId) {
-      if (projId) state.project_id = projId;
-      state = { ...state, ...parsed };
-      if (!state.sceneImages) state.sceneImages = {};
-      if (!state.sceneSpecs) state.sceneSpecs = {};
-      if (!state.sceneSelections) state.sceneSelections = {};
-      if (!state.sceneEditSupportImages) state.sceneEditSupportImages = {};
-      if (!state.characterImages) state.characterImages = {};
-      if (!state.characterGeneratedImages) state.characterGeneratedImages = {};
-      if (!state.characterSheets) state.characterSheets = {};
-      if (!state.outfitImages) state.outfitImages = {};
-      if (!state.outfitGeneratedImages) state.outfitGeneratedImages = {};
-      if (!state.outfitSheets) state.outfitSheets = {};
-      if (!state.locationImages) state.locationImages = {};
-      if (!state.locationGeneratedImages) state.locationGeneratedImages = {};
-      if (!state.locationSheets) state.locationSheets = {};
-      if (!state.propImages) state.propImages = {};
-      if (!state.propGeneratedImages) state.propGeneratedImages = {};
-      if (!state.propSheets) state.propSheets = {};
-      if (!state.aspectRatio) state.aspectRatio = "9:16";
-      if (!state.languageDialect) state.languageDialect = "Bahasa Melayu Standard";
-      
-      document.getElementById('story-text-input').value = state.story_input || "";
-      document.getElementById('param-genre').value = state.genre || "Auto";
-      document.getElementById('param-style').value = state.style || "Cinematic";
-      document.getElementById('param-target').value = state.target || "Short Film";
-      document.getElementById('param-aspect').value = state.aspectRatio || "9:16";
-      
-      if (document.getElementById('param-language-dialect')) {
-        document.getElementById('param-language-dialect').value = state.languageDialect || "Bahasa Melayu Standard";
-      }
-      
-      if (state.product_image) {
-        const prevImg = document.getElementById('product-img-preview');
-        const ph = document.getElementById('product-img-placeholder');
-        const rmBtn = document.getElementById('btn-remove-product-img');
-        const statusEl = document.getElementById('product-img-status');
-        prevImg.src = state.product_image;
-        prevImg.classList.remove('hidden');
-        ph.classList.add('hidden');
-        rmBtn.classList.remove('hidden');
-        statusEl.textContent = "Produk dimuat naik";
-      }
-
-      updateStoryPreviewText();
-      if (state.productionPlan) {
-        renderFullProductionPlan(state.productionPlan);
-      }
-      applyPanelFocus(state.focusedPanel || "both", false);
     }
 
     function updateStoryPreviewText() {
@@ -808,35 +804,52 @@
       }
     }
 
+    // --- AI MODEL FALLBACK SYSTEM ---
     async function executeTextWithFallback(contentsArray, functionType, requireJson = false) {
-      const apiKey = settings.geminiKey ? settings.geminiKey.trim() : "";
-      if (!apiKey) {
-        throw new Error("Sila masukkan Gemini API Key terlebih dahulu di Menu Advanced Settings (⚙️).");
-      }
-
-      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`;
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: contentsArray,
-          generationConfig: { responseModalities: ['TEXT'] }
-        })
-      });
+      const isAnalysis = functionType === 'analysis';
+      const models = isAnalysis ? ['Gemini', 'OpenAI Vision', 'Claude Vision'] : ['Gemini Flash', 'OpenAI', 'Claude'];
       
-      if (!response.ok) {
-        const errText = await response.text();
-        throw new Error(`HTTP Error ${response.status}: ${errText}`);
+      for (let i = 0; i < models.length; i++) {
+        const modelName = models[i];
+        try {
+          if (i > 0) showToast(`Model utama gagal. Mencuba alternatif... (${modelName})`);
+          
+          if (modelName.includes('Gemini')) {
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent`;
+            const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: contentsArray,
+                generationConfig: { responseModalities: ['TEXT'] }
+              })
+            });
+            
+            if (!response.ok) {
+              const errText = await response.text();
+              throw new Error(`HTTP Error ${response.status}: ${errText}`);
+            }
+            
+            const result = await response.json();
+            const rawText = result.candidates?.[0]?.content?.parts?.find(p => p.text)?.text;
+            if (!rawText || rawText.trim() === "") throw new Error("Respons AI kosong atau tidak sah.");
+            
+            if (requireJson) {
+              // Validasi format JSON. Jika rosak/tidak wujud, trigger error untuk fallback.
+              safeParseJSON(rawText); 
+            }
+            return rawText;
+          } else {
+            // Logik untuk skip fallback provider yang tiada API key / konfigurasi setup
+            throw new Error(`Provider ${modelName} tidak dikonfigurasi.`);
+          }
+        } catch (err) {
+          console.warn(`[AI Fallback System] ${modelName} gagal:`, err.message);
+          if (i === models.length - 1) {
+            throw new Error(`Semua model alternatif gagal. Ralat akhir: ${err.message}`);
+          }
+        }
       }
-      
-      const result = await response.json();
-      const rawText = result.candidates?.[0]?.content?.parts?.find(p => p.text)?.text;
-      if (!rawText || rawText.trim() === "") throw new Error("Respons AI kosong atau tidak sah.");
-      
-      if (requireJson) {
-        safeParseJSON(rawText); 
-      }
-      return rawText;
     }
 
     async function analyzeStoryWithAI() {
@@ -858,10 +871,10 @@ BAHASA / LOGHAT DIALOG: ${state.languageDialect}
 
 Sila jana JSON mengikut skema berikut. PENTING: 
 1. Setiap scene mestilah mempunyai tempoh (duration) antara 5 hingga 10 saat maksimum sahaja (duration <= 10).
-2. Di dalam video_prompt untuk setiap scene, pastikan watak-watak TIDAK MEMANDANG KE KAMERA, KECUALI jika ia adalah video UGC / jualan produk.
+2. Di dalam video_prompt untuk setiap scene, pastikan watak-watak TIDAK MEMANDANG KE KAMERA (no direct eye contact with camera, characters look away from camera or towards each other), KECUALI jika ia adalah video UGC / jualan produk di mana host boleh mempersembahkan produk dengan mesra dan berinteraksi secara natural tanpa kamera glare.
 3. Pastikan pandangan sesama karakter TEPAT MEMANDANG SATU SAMA LAIN bila berbual atau berinteraksi.
-${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene menampilkan produk dengan jelas.' : ''}
-5. PASTIKAN skrip atau dialog yang ditulis mematuhi penggunaan ${state.languageDialect} sepenuhnya.
+${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene menampilkan produk dengan jelas (menggunakan PROP_01 atau produk utama).' : ''}
+5. PASTIKAN skrip atau dialog yang ditulis (dalam field dialogue) mematuhi penggunaan ${state.languageDialect} sepenuhnya mengikut tatabahasa atau slanga yang tepat.
 
 {
   "overview": {
@@ -870,7 +883,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
     "theme": "Tema",
     "mood": "Mood",
     "logline": "Logline",
-    "story_summary": "Ringkasan penuh",
+    "story_summary": "Ringkasan penuh 100% tepat berdasarkan idea asal atau produk",
     "structure_type": "Standard",
     "total_duration_sec": 30
   },
@@ -881,19 +894,19 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       "role": "Main",
       "estimated_age": "25 tahun",
       "gender": "Lelaki/Wanita",
-      "personality": "Ramah",
-      "physical_description": "Fizikal",
+      "personality": "Ramah & Profesional",
+      "physical_description": "Fizikal wajah",
       "hairstyle": "Rambut",
       "skin_tone": "Kulit",
       "body_proportion": "Tubuh",
-      "continuity_notes": "Identity lock"
+      "continuity_notes": "Strict identity lock CHAR_01"
     }
   ],
   "outfits": [
     {
       "outfit_id": "OUTFIT_01",
       "character_id": "CHAR_01",
-      "description": "Pakaian kasual",
+      "description": "Pakaian kasual kemas",
       "top": "Baju",
       "bottom": "Seluar",
       "shoes": "Kasut",
@@ -901,28 +914,28 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       "color_palette": "Warna",
       "material": "Bahan",
       "style": "Kasual",
-      "continuity_notes": "Clothing continuity"
+      "continuity_notes": "Strict clothing continuity lock OUTFIT_01"
     }
   ],
   "locations": [
     {
       "location_id": "LOC_01",
-      "name": "Studio Moden",
-      "description": "Lokasi",
+      "name": "Studio / Ruang Tamu Moden",
+      "description": "Lokasi rakaman",
       "environment": "Dalaman",
       "architecture": "Moden",
       "time_of_day": "Siang",
       "weather": "Cerah",
       "lighting": "Studio",
       "important_objects": ["Meja"],
-      "continuity_notes": "Continuity lock"
+      "continuity_notes": "Strict continuity lock LOC_01"
     }
   ],
   "props": [
     {
       "prop_id": "PROP_01",
       "name": "Produk Utama",
-      "description": "Barangan jualan"
+      "description": "Barangan jualan utama"
     }
   ],
   "scenes": [
@@ -934,8 +947,8 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       "outfit_ids": ["OUTFIT_01"],
       "location_id": "LOC_01",
       "time": "Siang",
-      "action": "Aksi",
-      "dialogue": "Dialog",
+      "action": "Aksi pembukaan",
+      "dialogue": "Dialog hook",
       "expression": "Senyum",
       "camera": "50mm lens",
       "shot": "Medium Shot",
@@ -943,9 +956,9 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       "lighting": "Soft light",
       "environment": "Studio",
       "sound": "BGM",
-      "visual_prompt": "Visual prompt referencing CHAR_01",
-      "video_prompt": "Detailed English narrative paragraph for video generator referencing CHAR_01, OUTFIT_01, LOC_01, PROP_01.",
-      "negative_prompt": "camera glare, blurry"
+      "visual_prompt": "Ultra realistic visual prompt referencing CHAR_01, OUTFIT_01, LOC_01, PROP_01",
+      "video_prompt": "Detailed English narrative paragraph for video generator strictly referencing CHAR_01, OUTFIT_01, LOC_01, and PROP_01.",
+      "negative_prompt": "camera glare, no face change, inconsistent outfit, no watermark, blurry"
     }
   ]
 }
@@ -983,6 +996,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
           });
           
           parsedJson.scenes = validScenes;
+          
           const totalSeconds = parsedJson.scenes.reduce((sum, sc) => sum + (Number(sc.duration) || 8), 0);
           if (parsedJson.overview) parsedJson.overview.total_duration_sec = totalSeconds;
         }
@@ -1012,40 +1026,52 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
     }
 
     async function callNanoBananaImage(promptText, aspectRatio = "1:1", referenceImage = null) {
-      const apiKey = settings.geminiKey ? settings.geminiKey.trim() : "";
-      if (!apiKey) {
-        throw new Error("Sila masukkan Gemini API Key terlebih dahulu di Menu Advanced Settings (⚙️).");
-      }
+      const models = ['Nano Banana', 'Imagen', 'Flux'];
+      
+      for (let i = 0; i < models.length; i++) {
+        const modelName = models[i];
+        try {
+          if (i > 0) showToast(`Model utama gagal. Mencuba alternatif... (${modelName})`);
+          
+          if (modelName === 'Nano Banana') {
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent`;
+            const parts = [{ text: promptText }];
+            if (referenceImage) {
+              const base64 = referenceImage.split(',')[1];
+              const mimeType = referenceImage.match(/data:([^;]+);/)?.[1] || "image/jpeg";
+              parts.push({ inlineData: { mimeType, data: base64 } });
+            }
 
-      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`;
-      const parts = [{ text: promptText }];
-      if (referenceImage) {
-        const base64 = referenceImage.split(',')[1];
-        const mimeType = referenceImage.match(/data:([^;]+);/)?.[1] || "image/jpeg";
-        parts.push({ inlineData: { mimeType, data: base64 } });
-      }
+            const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{ role: 'user', parts: parts }],
+                generationConfig: {
+                  responseModalities: ['IMAGE'],
+                  imageConfig: { aspectRatio: aspectRatio }
+                }
+              })
+            });
 
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ role: 'user', parts: parts }],
-          generationConfig: {
-            responseModalities: ['IMAGE'],
-            imageConfig: { aspectRatio: aspectRatio }
+            if (!response.ok) {
+              const errText = await response.text();
+              throw new Error(`API error ${response.status}: ${errText}`);
+            }
+
+            const result = await response.json();
+            const part = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+            if (!part || !part.inlineData?.data) throw new Error("Gagal menghasilkan output imej sah.");
+            return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+          } else {
+             // Melompat ke model seterusnya sekiranya API tidak tersedia.
+             throw new Error(`Provider ${modelName} tidak dikonfigurasi.`);
           }
-        })
-      });
-
-      if (!response.ok) {
-        const errText = await response.text();
-        throw new Error(`API error ${response.status}: ${errText}`);
+        } catch (err) {
+          console.warn(`[Fallback Image Router] ${modelName} gagal:`, err.message);
+          if (i === models.length - 1) throw new Error(`Semua model alternatif gagal. Ralat akhir: ${err.message}`);
+        }
       }
-
-      const result = await response.json();
-      const part = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
-      if (!part || !part.inlineData?.data) throw new Error("Gagal menghasilkan output imej sah.");
-      return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
     }
 
     function renderFullProductionPlan(data) {
@@ -1058,6 +1084,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       document.getElementById('view-theme').textContent = `${ov.theme || "-"} • Struktur: ${ov.structure_type || "Dynamic"}`;
       document.getElementById('view-summary').textContent = ov.story_summary || "-";
 
+      // Characters Master Sheet
       const charContainer = document.getElementById('characters-container');
       const chars = data.characters || [];
       document.getElementById('char-total-pill').textContent = chars.length;
@@ -1079,7 +1106,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
               <h4 class="text-xs sm:text-sm font-bold text-white truncate">${c.name}</h4>
             </div>
             <div class="flex items-center gap-2">
-              <button type="button" class="btn-refresh-char px-2.5 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 font-bold text-[10px] flex items-center gap-1 transition" title="Refresh">
+              <button type="button" class="btn-refresh-char px-2.5 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 font-bold text-[10px] flex items-center gap-1 transition" title="Refresh Data & Imej Karakter">
                 <span>🔄 Refresh</span>
               </button>
               <span class="text-[11px] text-slate-400 flex-shrink-0">${c.role}</span>
@@ -1092,6 +1119,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
               ${activeImg ? `<span class="text-[9px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 font-mono font-bold">TERSEDIA</span>` : ''}
             </div>
             <div class="flex flex-col items-center gap-3">
+              <!-- Kotak Imej dengan butang upload di tengah-tengah -->
               <div class="w-full h-36 rounded-xl bg-slate-950 border-2 border-dashed ${activeImg ? 'border-indigo-500/80' : 'border-slate-700/80'} flex flex-col items-center justify-center overflow-hidden relative group">
                 ${activeImg ? `<img src="${activeImg}" alt="${c.name}" class="w-full h-full object-cover"><button type="button" class="btn-remove-char-img absolute top-2 right-2 w-5 h-5 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center shadow">&times;</button>` : ''}
                 <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs flex flex-col items-center justify-center gap-2 ${activeImg ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'} transition">
@@ -1103,6 +1131,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
                 </div>
               </div>
 
+              <!-- Baris Butang Di Bawah Imej: Jana Imej, Analisis & Jana Sheet -->
               <div class="flex flex-wrap items-center justify-center gap-2 w-full">
                 <button type="button" class="btn-generate-char text-xs px-3 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold transition flex items-center gap-1 flex-1 justify-center shadow" data-char-id="${charId}">
                   <span class="gen-spinner hidden w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
@@ -1123,13 +1152,13 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
           ${sheetImg ? `
             <div class="bg-[#0b1020] p-2.5 rounded-xl border border-indigo-500/80 space-y-1.5 relative group">
               <div class="absolute top-2 right-2 flex items-center gap-1.5 z-20 bg-slate-950/80 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-800 shadow">
-                <button type="button" class="btn-view-sheet text-slate-300 hover:text-white transition" title="Papar" data-img="${sheetImg}" data-title="Multi-Angle Sheet (${charId})">
+                <button type="button" class="btn-view-sheet text-slate-300 hover:text-white transition" title="Papar Sheet" data-img="${sheetImg}" data-title="Multi-Angle Sheet (${charId})">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                 </button>
-                <button type="button" class="btn-download-sheet text-indigo-400 hover:text-indigo-300 transition" title="Download" data-img="${sheetImg}" data-name="sheet_${charId}.png">
+                <button type="button" class="btn-download-sheet text-indigo-400 hover:text-indigo-300 transition" title="Download Sheet" data-img="${sheetImg}" data-name="sheet_${charId}.png">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 </button>
-                <button type="button" class="btn-remove-char-sheet text-rose-400 hover:text-rose-300 transition font-bold" title="Padam">&times;</button>
+                <button type="button" class="btn-remove-char-sheet text-rose-400 hover:text-rose-300 transition font-bold" title="Padam Sheet">&times;</button>
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-indigo-300 font-bold uppercase text-[10px]">Multi-Angle Sheet (${charId})</span>
@@ -1240,6 +1269,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         charContainer.appendChild(card);
       });
 
+      // Outfit System
       const outfitsContainer = document.getElementById('outfits-container');
       outfitsContainer.innerHTML = "";
       (data.outfits || []).forEach(o => {
@@ -1255,7 +1285,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
           <div class="flex items-center justify-between border-b border-slate-800 pb-2">
             <span class="font-mono font-bold text-indigo-400 bg-indigo-950 px-2.5 py-0.5 rounded">${outfitId}</span>
             <div class="flex items-center gap-2">
-              <button type="button" class="btn-refresh-outfit px-2.5 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 font-bold text-[10px] flex items-center gap-1 transition" title="Refresh">
+              <button type="button" class="btn-refresh-outfit px-2.5 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 font-bold text-[10px] flex items-center gap-1 transition" title="Refresh Pakaian">
                 <span>🔄 Refresh</span>
               </button>
               <span class="text-slate-400 truncate max-w-[130px]">Watak: <strong class="text-slate-200">${o.character_id}</strong></span>
@@ -1291,13 +1321,13 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
           ${outfitSheetImg ? `
             <div class="bg-[#0b1020] p-2.5 rounded-xl border border-indigo-500/80 space-y-1.5 relative group">
               <div class="absolute top-2 right-2 flex items-center gap-1.5 z-20 bg-slate-950/80 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-800 shadow">
-                <button type="button" class="btn-view-sheet text-slate-300 hover:text-white transition" title="Papar" data-img="${outfitSheetImg}" data-title="Multi-Angle Sheet (${outfitId})">
+                <button type="button" class="btn-view-sheet text-slate-300 hover:text-white transition" title="Papar Sheet" data-img="${outfitSheetImg}" data-title="Multi-Angle Sheet (${outfitId})">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                 </button>
-                <button type="button" class="btn-download-sheet text-indigo-400 hover:text-indigo-300 transition" title="Download" data-img="${outfitSheetImg}" data-name="sheet_${outfitId}.png">
+                <button type="button" class="btn-download-sheet text-indigo-400 hover:text-indigo-300 transition" title="Download Sheet" data-img="${outfitSheetImg}" data-name="sheet_${outfitId}.png">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 </button>
-                <button type="button" class="btn-remove-outfit-sheet text-rose-400 hover:text-rose-300 transition font-bold" title="Padam">&times;</button>
+                <button type="button" class="btn-remove-outfit-sheet text-rose-400 hover:text-rose-300 transition font-bold" title="Padam Sheet">&times;</button>
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-indigo-300 font-bold uppercase text-[10px]">Multi-Angle Sheet (${outfitId})</span>
@@ -1391,6 +1421,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         outfitsContainer.appendChild(el);
       });
 
+      // Location Master Sheet
       const locContainer = document.getElementById('locations-container');
       locContainer.innerHTML = "";
       (data.locations || []).forEach(l => {
@@ -1406,7 +1437,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
           <div class="border-b border-slate-800 pb-2 flex items-center justify-between">
             <span class="font-mono font-bold text-indigo-400">${locationId}</span>
             <div class="flex items-center gap-2">
-              <button type="button" class="btn-refresh-loc px-2.5 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 font-bold text-[10px] flex items-center gap-1 transition" title="Refresh">
+              <button type="button" class="btn-refresh-loc px-2.5 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 font-bold text-[10px] flex items-center gap-1 transition" title="Refresh Lokasi">
                 <span>🔄 Refresh</span>
               </button>
               <span class="font-bold text-white truncate max-w-[140px]">${l.name}</span>
@@ -1442,13 +1473,13 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
           ${locSheetImg ? `
             <div class="bg-[#0b1020] p-2.5 rounded-xl border border-indigo-500/80 space-y-1.5 relative group">
               <div class="absolute top-2 right-2 flex items-center gap-1.5 z-20 bg-slate-950/80 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-800 shadow">
-                <button type="button" class="btn-view-sheet text-slate-300 hover:text-white transition" title="Papar" data-img="${locSheetImg}" data-title="Multi-Angle Sheet (${locationId})">
+                <button type="button" class="btn-view-sheet text-slate-300 hover:text-white transition" title="Papar Sheet" data-img="${locSheetImg}" data-title="Multi-Angle Sheet (${locationId})">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                 </button>
-                <button type="button" class="btn-download-sheet text-indigo-400 hover:text-indigo-300 transition" title="Download" data-img="${locSheetImg}" data-name="sheet_${locationId}.png">
+                <button type="button" class="btn-download-sheet text-indigo-400 hover:text-indigo-300 transition" title="Download Sheet" data-img="${locSheetImg}" data-name="sheet_${locationId}.png">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 </button>
-                <button type="button" class="btn-remove-loc-sheet text-rose-400 hover:text-rose-300 transition font-bold" title="Padam">&times;</button>
+                <button type="button" class="btn-remove-loc-sheet text-rose-400 hover:text-rose-300 transition font-bold" title="Padam Sheet">&times;</button>
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-indigo-300 font-bold uppercase text-[10px]">Multi-Angle Sheet (${locationId})</span>
@@ -1542,6 +1573,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         locContainer.appendChild(el);
       });
 
+      // Props System
       const propsWrapper = document.getElementById('props-wrapper');
       const propsContainer = document.getElementById('props-container');
       if (data.props && data.props.length > 0) {
@@ -1562,7 +1594,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
                 <span class="font-mono font-bold text-indigo-400 bg-indigo-950 px-2.5 py-0.5 rounded flex-shrink-0">${propId}</span>
                 <strong class="text-white truncate">${p.name}</strong>
               </div>
-              <button type="button" class="btn-refresh-prop px-2.5 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 font-bold text-[10px] flex items-center gap-1 transition" title="Refresh">
+              <button type="button" class="btn-refresh-prop px-2.5 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 font-bold text-[10px] flex items-center gap-1 transition" title="Refresh Prop">
                 <span>🔄 Refresh</span>
               </button>
             </div>
@@ -1596,13 +1628,13 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
             ${propSheetImg ? `
               <div class="bg-[#0b1020] p-2.5 rounded-xl border border-indigo-500/80 space-y-1.5 relative group">
                 <div class="absolute top-2 right-2 flex items-center gap-1.5 z-20 bg-slate-950/80 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-800 shadow">
-                  <button type="button" class="btn-view-sheet text-slate-300 hover:text-white transition" title="Papar" data-img="${propSheetImg}" data-title="Multi-Angle Sheet (${propId})">
+                  <button type="button" class="btn-view-sheet text-slate-300 hover:text-white transition" title="Papar Sheet" data-img="${propSheetImg}" data-title="Multi-Angle Sheet (${propId})">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                   </button>
-                  <button type="button" class="btn-download-sheet text-indigo-400 hover:text-indigo-300 transition" title="Download" data-img="${propSheetImg}" data-name="sheet_${propId}.png">
+                  <button type="button" class="btn-download-sheet text-indigo-400 hover:text-indigo-300 transition" title="Download Sheet" data-img="${propSheetImg}" data-name="sheet_${propId}.png">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                   </button>
-                  <button type="button" class="btn-remove-prop-sheet text-rose-400 hover:text-rose-300 transition font-bold" title="Padam">&times;</button>
+                  <button type="button" class="btn-remove-prop-sheet text-rose-400 hover:text-rose-300 transition font-bold" title="Padam Sheet">&times;</button>
                 </div>
                 <div class="flex items-center justify-between">
                   <span class="text-indigo-300 font-bold uppercase text-[10px]">Multi-Angle Sheet (${propId})</span>
@@ -1699,6 +1731,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         propsWrapper.classList.add('hidden');
       }
 
+      // Scenes
       const scenesList = document.getElementById('scenes-list-container');
       const scenesCountBadge = document.getElementById('tab-scenes-count');
       const scenes = data.scenes || [];
@@ -1738,6 +1771,156 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         if (!sel.chars) sel.chars = sceneCharsList.length > 0 ? [...sceneCharsList] : [];
         if (!sel.outfits) sel.outfits = sceneOutfitsList.length > 0 ? [...sceneOutfitsList] : [];
 
+        // Structured JSON Prompt format requested by user
+        const structuredSceneJson = {
+          "raff_studio_version": "V1",
+          "project": {
+            "title": data.overview?.title || "Project",
+            "video_style": state.style || "realistic cinematic",
+            "aspect_ratio": state.aspectRatio || "9:16",
+            "language": "Bahasa Melayu"
+          },
+          "global_continuity": {
+            "story_continuity": true,
+            "previous_scene_reference": idx > 0 ? scenes[idx - 1].scene_id : "NONE",
+            "current_scene_purpose": sc.title,
+            "next_scene_connection": idx < scenes.length - 1 ? scenes[idx + 1].scene_id : "END",
+            "preserve_story_logic": true,
+            "preserve_character_consistency": true,
+            "preserve_location_consistency": true,
+            "preserve_object_consistency": true
+          },
+          "scene": {
+            "scene_id": sceneId,
+            "duration": `${sc.duration} seconds`,
+            "summary": sc.action || "",
+            "action": sc.action || "",
+            "emotion": sc.expression || "Natural, friendly and confident.",
+            "environment": sc.environment || "Studio setting"
+          },
+          "character_lock": {
+            "enabled": true,
+            "reference_id": sel.chars[0] || "CHARACTER_01",
+            "identity_lock": "ABSOLUTE",
+            "face_lock": true,
+            "preserve_face": true,
+            "preserve_eyes": true,
+            "preserve_nose": true,
+            "preserve_mouth": true,
+            "preserve_hair": true,
+            "preserve_skin_tone": true,
+            "preserve_apparent_age": true,
+            "preserve_body_proportions": true,
+            "preserve_identity_across_scenes": true,
+            "outfit_consistency": true,
+            "allow_outfit_change_only_if_story_requires": true
+          },
+          "product_lock": {
+            "enabled": true,
+            "reference_id": sel.prop || "PRODUCT_01",
+            "identity_lock": "ABSOLUTE",
+            "preserve_brand": true,
+            "preserve_logo": true,
+            "preserve_shape": true,
+            "preserve_size": true,
+            "preserve_color": true,
+            "preserve_material": true,
+            "preserve_texture": true,
+            "preserve_pattern": true,
+            "preserve_stitching": true,
+            "preserve_buttons": true,
+            "preserve_zippers": true,
+            "preserve_pockets": true,
+            "preserve_proportions": true,
+            "do_not_add_unreferenced_features": true,
+            "do_not_modify_product_design": true
+          },
+          "location_lock": {
+            "enabled": true,
+            "reference_id": sel.loc || "LOCATION_01",
+            "preserve_environment": true,
+            "preserve_layout": true,
+            "preserve_time_of_day": true,
+            "preserve_lighting_style": true
+          },
+          "camera": {
+            "shot": sc.shot || "medium shot",
+            "angle": "eye level",
+            "movement": sc.movement || "subtle handheld movement",
+            "framing": "subject clearly visible",
+            "focus": "subject and product",
+            "transition_from_previous_scene": "natural continuity"
+          },
+          "visual_direction": {
+            "style": "realistic cinematic smartphone video",
+            "lighting": sc.lighting || "natural realistic lighting",
+            "motion": "natural human movement",
+            "physics": "realistic",
+            "texture": "natural skin and material texture",
+            "avoid_ai_look": true
+          },
+          "dialogue": {
+            "enabled": !!sc.dialogue,
+            "speaker": sel.chars[0] || "CHARACTER_01",
+            "text": sc.dialogue || "",
+            "delivery": "natural conversational Bahasa Melayu",
+            "lip_sync": true,
+            "look_at": "speaking partner or relevant object, not camera unless required"
+          },
+          "scene_continuity": {
+            "match_previous_scene": true,
+            "same_character_identity": true,
+            "same_product_identity": true,
+            "same_location": true,
+            "same_outfit": true,
+            "same_props": true,
+            "same_story_timeline": true,
+            "no_unexplained_changes": true,
+            "action_must_continue_naturally": true
+          },
+          "safety_adaptation": {
+            "enabled": true,
+            "mode": "minimum_safe_adaptation",
+            "if_generation_is_blocked": {
+              "rewrite_scene": true,
+              "preserve_original_intent": true,
+              "preserve_story_purpose": true,
+              "preserve_character_identity": true,
+              "preserve_product_identity": true,
+              "preserve_location": true,
+              "preserve_camera_direction": true,
+              "preserve_emotional_context": true,
+              "change_only_problematic_elements": true,
+              "minimum_changes_only": true
+            },
+            "safety_rules": {
+              "do_not_bypass_safety_systems": true,
+              "do_not_hide_problematic_content": true,
+              "do_not_obfuscate_words_to_evade_detection": true,
+              "do_not_replace_safe_content_unnecessarily": true,
+              "use_neutral_safe_alternative_when_possible": true
+            },
+            "fallback": {
+              "if_scene_remains_blocked": "NEEDS_REVISION",
+              "request_safe_scene_revision": true
+            }
+          },
+          "negative_prompt": [
+            "different face", "different identity", "face distortion", "identity drift",
+            "different hairstyle unless specified", "different body proportions", "different outfit unless specified",
+            "different product", "altered product design", "wrong product color", "wrong product shape",
+            "wrong logo", "extra logo", "fake branding", "missing product details", "extra characters",
+            "unwanted objects", "unwanted props", "unexplained environmental changes", "inconsistent location",
+            "inconsistent lighting", "unnatural movement", "deformed hands", "extra fingers", "bad anatomy",
+            "unnatural facial expression", "incorrect lip sync", "floating objects", "warped objects",
+            "random text", "subtitles unless specified", "watermark", "AI-generated appearance", "scene discontinuity",
+            "looking at camera", "direct eye contact with lens", "camera glare"
+          ],
+          "generation_instruction": "Generate this scene exactly according to the locked references and continuity rules. Prioritize character identity, product identity, story continuity and realistic motion. Characters must look at each other, never at camera."
+        };
+
+        const sceneJsonString = JSON.stringify(structuredSceneJson, null, 2);
+
         card.innerHTML = `
           <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
             <div class="flex items-center gap-2.5">
@@ -1756,11 +1939,13 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
 
           <div class="bg-[#0b0f1a] rounded-2xl border border-indigo-950/80 p-3.5 space-y-3">
             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
-              <span class="text-[11px] font-bold text-indigo-300 uppercase tracking-wider">Rujukan Scene Dinamik</span>
+              <span class="text-[11px] font-bold text-indigo-300 uppercase tracking-wider">Rujukan Scene Dinamik (Multi-Karakter & Lokasi Sesuai Scene)</span>
             </div>
 
+            <!-- Dynamic Reference Dropdowns & Multi-Character Controls -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#070b14] p-3 rounded-xl border border-slate-800 text-[11px]">
               
+              <!-- Karakter & Pakaian -->
               <div class="space-y-2">
                 <div class="flex items-center justify-between">
                   <span class="text-[10px] font-bold text-slate-400 uppercase">Karakter Terlibat</span>
@@ -1778,6 +1963,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
                 </div>
               </div>
 
+              <!-- Pakaian Terlibat -->
               <div class="space-y-2">
                 <div class="flex items-center justify-between">
                   <span class="text-[10px] font-bold text-slate-400 uppercase">Pakaian (Outfit) Terlibat</span>
@@ -1793,6 +1979,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
                 </div>
               </div>
 
+              <!-- Lokasi Dropdown -->
               <div class="space-y-1">
                 <span class="text-[10px] font-bold text-slate-400 uppercase">Lokasi Scene</span>
                 <select class="scene-dropdown-loc w-full bg-[#0b101f] border border-slate-800 rounded-lg p-2 text-xs text-indigo-200 font-bold">
@@ -1800,6 +1987,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
                 </select>
               </div>
 
+              <!-- Prop Dropdown -->
               <div class="space-y-1">
                 <span class="text-[10px] font-bold text-slate-400 uppercase">Prop Utama</span>
                 <select class="scene-dropdown-prop w-full bg-[#0b101f] border border-slate-800 rounded-lg p-2 text-xs text-indigo-200 font-bold">
@@ -1810,6 +1998,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
 
             </div>
 
+            <!-- Panel Edit Spesifikasi Pantas dengan Sokongan Upload Imej -->
             <div class="edit-spec-panel hidden bg-[#070a13] p-3.5 rounded-xl border border-indigo-900/60 space-y-3">
               <div class="flex items-center justify-between text-xs font-bold text-indigo-300">
                 <span>Edit Spesifikasi & Muat Naik Imej Sokongan</span>
@@ -1819,31 +2008,41 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div class="space-y-1">
                   <label class="text-[10px] font-bold text-slate-400 uppercase">Angle / Shot Kamera</label>
-                  <select class="spec-shot-input w-full bg-[#0b101f] border border-slate-800 rounded-lg p-2 text-xs text-slate-200 outline-none">
+                  <select class="spec-shot-input w-full bg-[#0b101f] border border-slate-800 rounded-lg p-2 text-xs text-slate-200 outline-none focus:border-indigo-500">
                     <option value="Medium Shot" ${sc.shot === 'Medium Shot' ? 'selected' : ''}>Medium Shot</option>
                     <option value="Close Up" ${sc.shot === 'Close Up' ? 'selected' : ''}>Close Up</option>
                     <option value="Wide Shot" ${sc.shot === 'Wide Shot' ? 'selected' : ''}>Wide Shot</option>
+                    <option value="Extreme Close Up" ${sc.shot === 'Extreme Close Up' ? 'selected' : ''}>Extreme Close Up</option>
+                    <option value="Low Angle" ${sc.shot === 'Low Angle' ? 'selected' : ''}>Low Angle</option>
+                    <option value="High Angle" ${sc.shot === 'High Angle' ? 'selected' : ''}>High Angle</option>
+                    <option value="Over the Shoulder" ${sc.shot === 'Over the Shoulder' ? 'selected' : ''}>Over the Shoulder</option>
+                    <option value="Drone Shot" ${sc.shot === 'Drone Shot' ? 'selected' : ''}>Drone Shot</option>
                   </select>
                 </div>
                 <div class="space-y-1">
-                  <label class="text-[10px] font-bold text-slate-400 uppercase">Pencahayaan</label>
-                  <select class="spec-lighting-input w-full bg-[#0b101f] border border-slate-800 rounded-lg p-2 text-xs text-slate-200 outline-none">
+                  <label class="text-[10px] font-bold text-slate-400 uppercase">Pencahayaan / Konsep</label>
+                  <select class="spec-lighting-input w-full bg-[#0b101f] border border-slate-800 rounded-lg p-2 text-xs text-slate-200 outline-none focus:border-indigo-500">
                     <option value="Cinematic Lighting" ${sc.lighting === 'Cinematic Lighting' ? 'selected' : ''}>Cinematic Lighting</option>
                     <option value="Natural Daylight" ${sc.lighting === 'Natural Daylight' ? 'selected' : ''}>Natural Daylight</option>
+                    <option value="Moody / Dramatic" ${sc.lighting === 'Moody / Dramatic' ? 'selected' : ''}>Moody / Dramatic</option>
+                    <option value="Cyberpunk / Neon" ${sc.lighting === 'Cyberpunk / Neon' ? 'selected' : ''}>Cyberpunk / Neon</option>
+                    <option value="Studio Soft Light" ${sc.lighting === 'Studio Soft Light' ? 'selected' : ''}>Studio Soft Light</option>
+                    <option value="Golden Hour" ${sc.lighting === 'Golden Hour' ? 'selected' : ''}>Golden Hour</option>
                   </select>
                 </div>
               </div>
 
               <div class="space-y-1">
                 <label class="text-[10px] font-bold text-slate-400 uppercase">Edit Dialog</label>
-                <textarea class="spec-dialogue-input w-full bg-[#0b101f] border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 outline-none" rows="2">${sc.dialogue || ''}</textarea>
+                <textarea class="spec-dialogue-input w-full bg-[#0b101f] border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 outline-none focus:border-indigo-500" rows="2" placeholder="Taip dialog scene...">${sc.dialogue || ''}</textarea>
               </div>
 
               <div class="space-y-1">
-                <label class="text-[10px] font-bold text-slate-400 uppercase">Video Prompt</label>
-                <textarea class="spec-instruction-input w-full bg-[#0b101f] border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 outline-none" rows="3">${sc.video_prompt}</textarea>
+                <label class="text-[10px] font-bold text-slate-400 uppercase">Video Prompt Asal</label>
+                <textarea class="spec-instruction-input w-full bg-[#0b101f] border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 outline-none focus:border-indigo-500" rows="3" placeholder="Taip arahan perubahan prompt scene...">${sc.video_prompt}</textarea>
               </div>
               
+              <!-- Upload Sokongan Imej -->
               <div class="flex items-center justify-between bg-[#0b101f] p-2 rounded-xl border border-slate-800 text-xs">
                 <div class="flex items-center gap-2 truncate">
                   <span class="text-indigo-400">🖼️</span>
@@ -1859,31 +2058,37 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
               </div>
 
               <div class="flex justify-end gap-1.5 pt-1">
-                <button type="button" class="btn-apply-spec-regen px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold transition shadow">Simpan & Regenerate</button>
+                <button type="button" class="btn-apply-spec-regen px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold transition shadow">Simpan Prompt & Regenerate</button>
               </div>
             </div>
 
+            <!-- Scene Image Box with Transparent Overlay Icon Layer -->
             <div class="w-full rounded-xl overflow-hidden bg-[#070912] border border-slate-800/80 min-h-[180px] flex items-center justify-center relative group">
+              <!-- Loading Indicator Overlay -->
               <div class="scene-loading-indicator absolute inset-0 bg-slate-950/85 backdrop-blur-sm z-30 flex flex-col items-center justify-center gap-2.5 hidden">
                 <div class="w-8 h-8 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
                 <span class="text-[11px] font-bold text-indigo-300 tracking-wider">Menjana Imej Scene...</span>
               </div>
 
+              <!-- Floating Transparent Overlay Icon Buttons Layer -->
               <div class="absolute top-2 right-2 flex items-center gap-1.5 z-20 bg-slate-950/70 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-700/50 shadow-lg opacity-85 group-hover:opacity-100 transition">
                 ${existingSceneImg ? `
-                  <button type="button" class="btn-view-scene-img text-indigo-300 hover:text-indigo-200 p-1 transition" title="Papar">
+                  <button type="button" class="btn-view-scene-img text-indigo-300 hover:text-indigo-200 p-1 transition" title="Papar Imej (View)">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                   </button>
                 ` : ''}
-                <button type="button" class="btn-toggle-edit-spec text-slate-200 hover:text-indigo-300 p-1 transition" title="Edit Prompt">
+                <button type="button" class="btn-copy-json-prompt text-amber-300 hover:text-amber-200 p-1 transition" title="Copy JSON Prompt">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                </button>
+                <button type="button" class="btn-toggle-edit-spec text-slate-200 hover:text-indigo-300 p-1 transition" title="Edit Prompt & Upload Sokongan">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                 </button>
                 ${existingSceneImg ? `
-                  <button type="button" class="btn-download-img text-emerald-300 hover:text-emerald-200 p-1 transition" title="Download">
+                  <button type="button" class="btn-download-img text-emerald-300 hover:text-emerald-200 p-1 transition" title="Download Imej">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                   </button>
                 ` : ''}
-                <button type="button" class="btn-regen-scene-img text-violet-300 hover:text-violet-200 p-1 transition flex items-center gap-1" title="Jana Semula">
+                <button type="button" class="btn-regen-scene-img text-violet-300 hover:text-violet-200 p-1 transition flex items-center gap-1" title="Jana Semula (Regenerate)">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                 </button>
               </div>
@@ -1896,6 +2101,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
                   </div>
                   <p class="text-xs text-slate-300 font-semibold">Imej scene belum dijana</p>
+                  <p class="text-[10px] text-slate-500 max-w-xs mx-auto">Klik ikon regenerate atau di sini untuk jana imej.</p>
                 </div>
               `}
             </div>
@@ -1982,6 +2188,13 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
           });
         }
 
+        const copyJsonPromptBtn = card.querySelector('.btn-copy-json-prompt');
+        if (copyJsonPromptBtn) {
+          copyJsonPromptBtn.addEventListener('click', () => {
+            copyTextToClipboard(sceneJsonString, `JSON Prompt ${sceneId} disalin!`);
+          });
+        }
+
         const toggleEditSpecBtn = card.querySelector('.btn-toggle-edit-spec');
         const editSpecPanel = card.querySelector('.edit-spec-panel');
         const closeEditSpecBtn = card.querySelector('.btn-close-edit-spec');
@@ -2014,7 +2227,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
               state.sceneEditSupportImages[sceneId] = re.target.result;
               saveState();
               renderFullProductionPlan(state.productionPlan);
-              showToast(`Imej sokongan dimuat naik.`);
+              showToast(`Imej sokongan dimuat naik untuk ${sceneId}.`);
             };
             reader.readAsDataURL(file);
           });
@@ -2061,6 +2274,69 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
 
         scenesList.appendChild(card);
       });
+
+      const masterNegative = scenes[0]?.negative_prompt || "looking at camera, direct eye contact with lens, camera glare, no face change, inconsistent outfit, no watermark, blurry";
+      document.getElementById('view-negative-prompt').textContent = masterNegative;
+
+      const flowContainer = document.getElementById('flow-scenes-prompts');
+      flowContainer.innerHTML = "";
+      scenes.forEach(sc => {
+        const sel = state.sceneSelections[sc.scene_id] || {};
+        const sceneJsonPromptObj = {
+          scene_id: sc.scene_id,
+          title: sc.title,
+          duration: sc.duration,
+          characters: sel.chars || sc.characters,
+          outfit_ids: sel.outfits || sc.outfit_ids,
+          location_id: sel.loc || sc.location_id,
+          dialogue: sc.dialogue || "",
+          camera_shot: sc.shot || "Medium Shot",
+          lighting: sc.lighting || "Cinematic Lighting",
+          video_prompt: sc.video_prompt + ". Characters looking directly at each other, never looking into camera lens.",
+          negative_prompt: sc.negative_prompt || masterNegative
+        };
+        const sceneJsonString = JSON.stringify(sceneJsonPromptObj, null, 2);
+
+        const item = document.createElement('div');
+        item.className = "p-4 rounded-2xl bg-[#090d16]/80 border border-slate-800 space-y-2 text-xs";
+        item.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-mono font-bold text-indigo-400">${sc.scene_id} (${sc.duration}s) - JSON Prompt</span>
+            <button class="text-xs text-indigo-400 hover:text-white px-3 py-1 rounded bg-slate-800 copy-flow-btn">Salin JSON Scene</button>
+          </div>
+          <pre class="font-mono text-xs text-slate-300 bg-[#070a13] p-3.5 rounded-xl border border-slate-800 select-all leading-relaxed overflow-x-auto max-h-48">${sceneJsonString}</pre>
+        `;
+        item.querySelector('.copy-flow-btn').addEventListener('click', () => {
+          copyTextToClipboard(sceneJsonString, `JSON Prompt ${sc.scene_id} disalin!`);
+        });
+        flowContainer.appendChild(item);
+      });
+
+      document.getElementById('json-output-viewer').textContent = JSON.stringify(data, null, 2);
+    }
+
+    function openImageModal(title, dataUrl) {
+      document.getElementById('preview-modal-title').textContent = title;
+      document.getElementById('preview-modal-img').src = dataUrl;
+      const downloadBtn = document.getElementById('btn-modal-download');
+      downloadBtn.onclick = () => downloadSingleImage(dataUrl, `${title.toLowerCase().replace(/[^a-z0-9]/g, '_')}.png`);
+      document.getElementById('modal-image-preview').classList.remove('hidden');
+    }
+
+    function downloadSingleImage(dataUrl, filename) {
+      if (!dataUrl) return;
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Imej berjaya dimuat turun!");
+    }
+
+    function isAnimationStyle() {
+      const animStyles = ["Animation", "Anime", "Cartoon", "3D Pixar Style", "3D Dreamworks", "3D Low Poly", "Studio Ghibli", "90s Retro Anime", "Modern Anime", "Western Cartoon", "Flat Vector Art"];
+      return animStyles.includes(state.style);
     }
 
     async function generateCharacterAIImage(c, charId, triggerBtn) {
@@ -2071,7 +2347,11 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       }
       showToast(`Menjana rujukan wajah untuk ${charId}...`);
       try {
-        const prompt = `Professional cinematic character face portrait photography of ${charId} (${c.name}): ${c.physical_description}, hairstyle: ${c.hairstyle}, skin tone: ${c.skin_tone}, looking slightly away from camera profile view, studio lighting, 8k.`;
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Animated character design of ` : `Professional cinematic character face portrait photography of `;
+        const suffix = isAnim ? `beautiful animated lighting, animated masterpiece artwork.` : `studio lighting, 8k.`;
+        const prompt = `${prefix}${charId} (${c.name}): ${c.physical_description}, hairstyle: ${c.hairstyle}, skin tone: ${c.skin_tone}, looking slightly away from camera profile view, ${suffix}`;
+        
         const imageUrl = await callNanoBananaImage(prompt, "1:1");
         state.characterGeneratedImages[charId] = imageUrl;
         saveState();
@@ -2099,7 +2379,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         const spinner = triggerBtn.querySelector('.analyze-spinner');
         if (spinner) spinner.classList.remove('hidden');
       }
-      showToast(`Menganalisis watak ${charId}...`);
+      showToast(`Menganalisis watak ${charId} & mengemas kini butiran...`);
       try {
         const base64Data = activeImg.split(',')[1];
         const mimeType = activeImg.match(/data:([^;]+);/)?.[1] || "image/jpeg";
@@ -2112,7 +2392,13 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         }];
 
         const rawText = await executeTextWithFallback(contentsArray, "analysis", true);
-        let analysisObj = safeParseJSON(rawText);
+        
+        let analysisObj = {};
+        try {
+          analysisObj = safeParseJSON(rawText);
+        } catch(e) {
+          analysisObj = { analysis_summary: rawText };
+        }
 
         if (analysisObj.physical_description) c.physical_description = analysisObj.physical_description;
         if (analysisObj.hairstyle) c.hairstyle = analysisObj.hairstyle;
@@ -2123,11 +2409,11 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
 
         document.getElementById('analysis-modal-title').textContent = `Analisis AI: ${c.name} (${charId})`;
         document.getElementById('analysis-modal-content').innerHTML = `
-          <p class="font-bold text-indigo-300">Butiran watak telah dikemas kini secara automatik!</p>
+          <p class="font-bold text-indigo-300">Butiran watak telah dikemas kini secara automatik berdasarkan analisis visual!</p>
           <p class="whitespace-pre-line text-slate-300 mt-2">${analysisObj.analysis_summary || rawText}</p>
         `;
         document.getElementById('modal-character-analysis').classList.remove('hidden');
-        showToast("Analisis selesai!");
+        showToast("Analisis watak selesai & butiran dikemas kini!");
       } catch (err) {
         showToast("Ralat analisis: " + err.message);
       } finally {
@@ -2148,7 +2434,11 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       showToast(`Menjana multi-angle sheet untuk ${charId}...`);
       try {
         const refImg = state.characterGeneratedImages[charId] || state.characterImages[charId];
-        const prompt = `Multi-angle character model sheet of ${charId} (${c.name}): ${c.physical_description}, showing front view, side view, and 3/4 view, studio lighting, clean white or neutral background, 8k.`;
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Multi-angle animated character model sheet of ` : `Multi-angle character model sheet of `;
+        const suffix = isAnim ? `clean neutral background, animated masterpiece artwork.` : `studio lighting, clean white or neutral background, 8k.`;
+        const prompt = `${prefix}${charId} (${c.name}): ${c.physical_description}, showing front view, side view, and 3/4 view, consistent facial features and attire, ${suffix}`;
+        
         const imageUrl = await callNanoBananaImage(prompt, "16:9", refImg);
         state.characterSheets[charId] = imageUrl;
         saveState();
@@ -2173,14 +2463,18 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       }
       showToast(`Menjana rujukan pakaian ${outfitId}...`);
       try {
-        const prompt = `Professional fashion design reference photography of outfit ${outfitId}: ${o.description}, top: ${o.top}, bottom: ${o.bottom}, shoes: ${o.shoes}, studio lighting, displayed cleanly on mannequin with neutral background, 8k.`;
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Animated fashion design concept art of outfit ` : `Professional fashion design reference photography of outfit `;
+        const suffix = isAnim ? `beautiful animated lighting, displayed cleanly, animated masterpiece artwork.` : `studio lighting, displayed cleanly on mannequin or hanger with neutral background, 8k.`;
+        const prompt = `${prefix}${outfitId}: ${o.description}, top: ${o.top}, bottom: ${o.bottom}, shoes: ${o.shoes}, style: ${o.style}, color palette: ${o.color_palette}, material: ${o.material}, ${suffix}`;
+        
         const imageUrl = await callNanoBananaImage(prompt, "1:1");
         state.outfitGeneratedImages[outfitId] = imageUrl;
         saveState();
         renderFullProductionPlan(state.productionPlan);
         showToast(`Imej pakaian ${outfitId} berjaya dijana!`);
       } catch (err) {
-        showToast("Ralat: " + err.message);
+        showToast("Ralat penjanaan imej pakaian: " + err.message);
       } finally {
         if (triggerBtn) {
           triggerBtn.disabled = false;
@@ -2196,17 +2490,21 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         const spinner = triggerBtn.querySelector('.sheet-spinner');
         if (spinner) spinner.classList.add('hidden');
       }
-      showToast(`Menjana outfit sheet ${outfitId}...`);
+      showToast(`Menjana multi-angle outfit sheet ${outfitId}...`);
       try {
         const refImg = state.outfitGeneratedImages[outfitId] || state.outfitImages[outfitId];
-        const prompt = `Multi-angle outfit reference sheet ${outfitId}: ${o.description}, showing front, back, and detail close-up views of the clothing fabric and design, studio lighting, 8k.`;
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Multi-angle animated outfit reference sheet ` : `Multi-angle outfit reference sheet `;
+        const suffix = isAnim ? `clean background, animated masterpiece artwork.` : `studio lighting, clean background, 8k.`;
+        const prompt = `${prefix}${outfitId}: ${o.description}, top: ${o.top}, bottom: ${o.bottom}, shoes: ${o.shoes}, showing front, back, and detail close-up views of the clothing fabric and design, ${suffix}`;
+        
         const imageUrl = await callNanoBananaImage(prompt, "16:9", refImg);
         state.outfitSheets[outfitId] = imageUrl;
         saveState();
         renderFullProductionPlan(state.productionPlan);
         showToast(`Outfit sheet ${outfitId} berjaya dijana!`);
       } catch (err) {
-        showToast("Ralat: " + err.message);
+        showToast("Ralat sheet: " + err.message);
       } finally {
         if (triggerBtn) {
           triggerBtn.disabled = false;
@@ -2222,16 +2520,20 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         const spinner = triggerBtn.querySelector('.gen-spinner');
         if (spinner) spinner.classList.add('hidden');
       }
-      showToast(`Menjana lokasi ${locationId}...`);
+      showToast(`Menjana imej lokasi untuk ${locationId}...`);
       try {
-        const prompt = `Cinematic wide angle set design photography of location ${locationId} (${l.name}): ${l.description}, time of day: ${l.time_of_day}, lighting: ${l.lighting}, 8k.`;
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Beautiful animated background environment art of location ` : `Cinematic wide angle set design photography of location `;
+        const suffix = isAnim ? `animated masterpiece artwork.` : `8k.`;
+        const prompt = `${prefix}${locationId} (${l.name}): ${l.description}, time of day: ${l.time_of_day}, lighting: ${l.lighting}, ${suffix}`;
+        
         const imageUrl = await callNanoBananaImage(prompt, "16:9");
         state.locationGeneratedImages[locationId] = imageUrl;
         saveState();
         renderFullProductionPlan(state.productionPlan);
-        showToast(`Lokasi ${locationId} berjaya dijana!`);
+        showToast(`Imej lokasi ${locationId} berjaya dijana!`);
       } catch (err) {
-        showToast("Ralat: " + err.message);
+        showToast("Ralat penjanaan imej lokasi: " + err.message);
       } finally {
         if (triggerBtn) {
           triggerBtn.disabled = false;
@@ -2247,17 +2549,21 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         const spinner = triggerBtn.querySelector('.sheet-spinner');
         if (spinner) spinner.classList.add('hidden');
       }
-      showToast(`Menjana location sheet ${locationId}...`);
+      showToast(`Menjana multi-angle location sheet ${locationId}...`);
       try {
         const refImg = state.locationGeneratedImages[locationId] || state.locationImages[locationId];
-        const prompt = `Multi-angle location reference board ${locationId} (${l.name}): ${l.description}, showing wide shot, close-up corner, and layout perspective, 8k.`;
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Multi-angle animated location reference board ` : `Multi-angle location reference board `;
+        const suffix = isAnim ? `animated masterpiece artwork.` : `8k.`;
+        const prompt = `${prefix}${locationId} (${l.name}): ${l.description}, time: ${l.time_of_day}, lighting: ${l.lighting}, showing wide shot, close-up corner, and top-down layout perspective, ${suffix}`;
+        
         const imageUrl = await callNanoBananaImage(prompt, "16:9", refImg);
         state.locationSheets[locationId] = imageUrl;
         saveState();
         renderFullProductionPlan(state.productionPlan);
         showToast(`Location sheet ${locationId} berjaya dijana!`);
       } catch (err) {
-        showToast("Ralat: " + err.message);
+        showToast("Ralat sheet: " + err.message);
       } finally {
         if (triggerBtn) {
           triggerBtn.disabled = false;
@@ -2273,16 +2579,20 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         const spinner = triggerBtn.querySelector('.gen-spinner');
         if (spinner) spinner.classList.add('hidden');
       }
-      showToast(`Menjana prop ${propId}...`);
+      showToast(`Menjana imej prop untuk ${propId}...`);
       try {
-        const prompt = `Detailed studio product photography of prop item ${propId} (${p.name}): ${p.description}, neutral background, 8k.`;
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Animated prop concept art of item ` : `Detailed studio product photography of prop item `;
+        const suffix = isAnim ? `neutral background, animated masterpiece artwork.` : `neutral background, 8k.`;
+        const prompt = `${prefix}${propId} (${p.name}): ${p.description}, ${suffix}`;
+        
         const imageUrl = await callNanoBananaImage(prompt, "1:1");
         state.propGeneratedImages[propId] = imageUrl;
         saveState();
         renderFullProductionPlan(state.productionPlan);
-        showToast(`Prop ${propId} berjaya dijana!`);
+        showToast(`Imej prop ${propId} berjaya dijana!`);
       } catch (err) {
-        showToast("Ralat: " + err.message);
+        showToast("Ralat penjanaan imej prop: " + err.message);
       } finally {
         if (triggerBtn) {
           triggerBtn.disabled = false;
@@ -2298,17 +2608,21 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         const spinner = triggerBtn.querySelector('.sheet-spinner');
         if (spinner) spinner.classList.add('hidden');
       }
-      showToast(`Menjana prop sheet ${propId}...`);
+      showToast(`Menjana multi-angle prop sheet ${propId}...`);
       try {
         const refImg = state.propGeneratedImages[propId] || state.propImages[propId];
-        const prompt = `Multi-angle prop sheet ${propId} (${p.name}): ${p.description}, showing front, side, and top views, studio lighting, 8k.`;
+        const isAnim = isAnimationStyle();
+        const prefix = isAnim ? `100% pure ${state.style} animated style art, NOT realistic, NO photography. Multi-angle animated prop sheet ` : `Multi-angle prop sheet `;
+        const suffix = isAnim ? `clean background, animated masterpiece artwork.` : `studio lighting, clean background, 8k.`;
+        const prompt = `${prefix}${propId} (${p.name}): ${p.description}, showing front, side, and top views, ${suffix}`;
+        
         const imageUrl = await callNanoBananaImage(prompt, "16:9", refImg);
         state.propSheets[propId] = imageUrl;
         saveState();
         renderFullProductionPlan(state.productionPlan);
         showToast(`Prop sheet ${propId} berjaya dijana!`);
       } catch (err) {
-        showToast("Ralat: " + err.message);
+        showToast("Ralat sheet: " + err.message);
       } finally {
         if (triggerBtn) {
           triggerBtn.disabled = false;
@@ -2321,7 +2635,9 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
     async function generateSceneImageFromAllSheets(sc, sceneId, cardElement) {
       const regenButtons = cardElement.querySelectorAll('.btn-regen-scene-img');
       const loadingIndicator = cardElement.querySelector('.scene-loading-indicator');
-      regenButtons.forEach(b => { b.disabled = true; });
+      regenButtons.forEach(b => {
+        b.disabled = true;
+      });
       if (loadingIndicator) loadingIndicator.classList.remove('hidden');
       
       showToast(`Menjana imej ${sceneId}...`);
@@ -2361,13 +2677,26 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
           else if (state.propImages[activeProp]) referenceImages.push(state.propImages[activeProp]);
         }
 
+        let outfitDetailDesc = "";
+        if (activeOutfits.length > 0 && state.productionPlan.outfits) {
+          const matchingOutfits = state.productionPlan.outfits.filter(o => activeOutfits.includes(o.outfit_id));
+          if (matchingOutfits.length > 0) {
+            outfitDetailDesc = `STRICT OUTFIT REQUIREMENTS 100%: ${matchingOutfits.map(mo => `Outfit ${mo.outfit_id} for ${mo.character_id}: top "${mo.top}", bottom "${mo.bottom}", shoes "${mo.shoes}"`).join('; ')}.`;
+          }
+        }
+
         let promptText = `Cinematic continuous ${sc.shot || 'medium'} shot matching this exact prompt: "${sc.video_prompt || sc.visual_prompt}".\n`;
-        promptText += `STRICT EYE CONTACT RULES: Characters must NEVER look at the camera lens, they must look at each other.\n`;
-        promptText += `${state.style}, 8k resolution, master composition.`;
+        promptText += `STRICT DRAMATIC EYE CONTACT & CAMERA RULES:\n`;
+        promptText += `1. NO DIRECT EYE CONTACT WITH CAMERA: Characters must NEVER look at the camera lens.\n`;
+        promptText += `2. INTERACTION EYE CONTACT: Characters must look precisely at each other when speaking or interacting, maintaining realistic conversational eye contact.\n`;
+        promptText += `3. CHARACTERS (${activeChars.join(', ')}): Strictly preserve exact facial structures and hairstyles from attached references.\n`;
+        promptText += `4. OUTFITS: ${outfitDetailDesc || 'Strictly use the exact clothing from attached OUTFIT sheets.'}\n`;
+        promptText += `5. LOCATION (${activeLoc}) & ATMOSPHERE: Strictly match background. Lighting style: ${sc.lighting || 'Cinematic'}.\n`;
+        promptText += `${state.style}, 8k resolution, master cinematic composition.`;
 
         const primaryRefImage = referenceImages.length > 0 ? referenceImages[0] : null;
+
         const imageUrl = await callNanoBananaImage(promptText, state.aspectRatio || "9:16", primaryRefImage);
-        
         state.sceneImages[sceneId] = imageUrl;
         saveState();
         renderFullProductionPlan(state.productionPlan);
@@ -2375,34 +2704,22 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       } catch (err) {
         showToast("Ralat penjanaan imej scene: " + err.message);
       } finally {
-        regenButtons.forEach(b => { b.disabled = false; });
+        regenButtons.forEach(b => {
+          b.disabled = false;
+        });
         if (loadingIndicator) loadingIndicator.classList.add('hidden');
       }
-    }
-
-    function openImageModal(title, dataUrl) {
-      document.getElementById('preview-modal-title').textContent = title;
-      document.getElementById('preview-modal-img').src = dataUrl;
-      const downloadBtn = document.getElementById('btn-modal-download');
-      downloadBtn.onclick = () => downloadSingleImage(dataUrl, `${title.toLowerCase().replace(/[^a-z0-9]/g, '_')}.png`);
-      document.getElementById('modal-image-preview').classList.remove('hidden');
-    }
-
-    function downloadSingleImage(dataUrl, filename) {
-      if (!dataUrl) return;
-      const link = document.createElement('a');
-      link.href = dataUrl;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      showToast("Imej dimuat turun!");
     }
 
     function downloadSceneImage(sceneId) {
       const dataUrl = state.sceneImages[sceneId];
       if (!dataUrl) return;
-      downloadSingleImage(dataUrl, `scene_${sceneId}.png`);
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = `scene_${sceneId}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
     function applyPanelFocus(focusType, scrollToCenter = true) {
@@ -2438,6 +2755,23 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       }
     }
 
+    function copyTextToClipboard(text, successMsg) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) showToast(successMsg);
+        else showToast("Gagal menyalin teks.");
+      } catch (err) {
+        showToast("Ralat menyalin teks.");
+      }
+      document.body.removeChild(textArea);
+    }
+
     function setLoading(isLoading) {
       const btn = document.getElementById('btn-analyze-story');
       btn.disabled = isLoading;
@@ -2464,6 +2798,14 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         storyIdeaModal.classList.add('hidden');
       });
 
+      const googleFlowModal = document.getElementById('modal-google-flow');
+      document.getElementById('btn-open-google-flow-modal').addEventListener('click', () => {
+        googleFlowModal.classList.remove('hidden');
+      });
+      document.getElementById('btn-close-google-flow-modal').addEventListener('click', () => {
+        googleFlowModal.classList.add('hidden');
+      });
+
       document.getElementById('story-text-input').addEventListener('input', (e) => { 
         state.story_input = e.target.value; 
         updateStoryPreviewText();
@@ -2488,7 +2830,7 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
             rmBtn.classList.remove('hidden');
             statusEl.textContent = "Produk dimuat naik";
             saveState();
-            showToast("Imej produk dimuat naik!");
+            showToast("Imej produk dimuat naik untuk video UGC/jualan!");
           };
           reader.readAsDataURL(file);
         });
@@ -2524,9 +2866,16 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       });
 
       document.getElementById('btn-refresh-app').addEventListener('click', () => {
-        localStorage.removeItem("raff_current_project_id");
-        localStorage.removeItem("raff_local_fallback_state");
+        localStorage.removeItem(STORAGE_KEY);
         window.location.reload();
+      });
+
+      document.getElementById('btn-copy-negative-all').addEventListener('click', () => {
+        copyTextToClipboard(document.getElementById('view-negative-prompt').textContent, "Negative prompt disalin!");
+      });
+
+      document.getElementById('btn-copy-full-json').addEventListener('click', () => {
+        copyTextToClipboard(document.getElementById('json-output-viewer').textContent, "Full Production JSON disalin!");
       });
 
       document.getElementById('btn-close-image-modal').addEventListener('click', () => {
@@ -2545,23 +2894,15 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
         saveState();
       });
 
-      document.getElementById('btn-google-login').addEventListener('click', async () => {
-        if (!supabaseClient) {
-          showToast("Sila tetapkan Supabase URL & Anon Key di menu Settings (⚙️) terlebih dahulu.");
-          return;
-        }
-        try {
-          const { error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google' });
-          if (error) throw error;
-        } catch (e) {
-          showToast("Ralat login: " + e.message);
-        }
+      document.getElementById('btn-google-login').addEventListener('click', () => {
+        const mock = { name: "Raff Creator", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" };
+        state.user = mock;
+        applyUserUI(mock);
+        saveState();
+        showToast("Log masuk berjaya.");
       });
 
-      document.getElementById('btn-logout').addEventListener('click', async () => {
-        if (supabaseClient) {
-          await supabaseClient.auth.signOut();
-        }
+      document.getElementById('btn-logout').addEventListener('click', () => {
         state.user = null;
         document.getElementById('user-profile-badge').classList.add('hidden');
         document.getElementById('btn-google-login').classList.remove('hidden');
@@ -2572,19 +2913,130 @@ ${hasProduct ? '4. Ini adalah video UGC Jualan Produk, pastikan setiap scene men
       const settingsModal = document.getElementById('modal-settings');
       document.getElementById('btn-open-settings').addEventListener('click', () => settingsModal.classList.remove('hidden'));
       document.getElementById('btn-close-settings-modal').addEventListener('click', () => settingsModal.classList.add('hidden'));
-      
       document.getElementById('btn-save-settings-modal').addEventListener('click', () => {
-        settings.supabaseUrl = document.getElementById('cfg-supabase-url').value.trim();
-        settings.supabaseKey = document.getElementById('cfg-supabase-key').value.trim();
-        settings.geminiKey = document.getElementById('cfg-gemini-key').value.trim();
         settings.storyLang = document.getElementById('cfg-story-lang').value;
         settings.promptLang = document.getElementById('cfg-prompt-lang').value;
-        
         localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-        initSupabaseConnection();
         settingsModal.classList.add('hidden');
-        showToast("Tetapan berjaya disimpan!");
+        showToast("Tetapan disimpan.");
       });
+
+      // Setup Advanced Image Analysis Tool
+      let advImageBase64 = null;
+      let lastAdvAnalysis = null;
+      
+      const advImgInput = document.getElementById('adv-image-input');
+      const advImgPreview = document.getElementById('adv-img-preview');
+      const advImgPlaceholder = document.getElementById('adv-img-placeholder');
+      const btnRemoveAdvImg = document.getElementById('btn-remove-adv-img');
+      const btnAnalyzeAdvImg = document.getElementById('btn-analyze-adv-img');
+      const advAnalysisResult = document.getElementById('adv-analysis-result');
+      const btnApplyAdvStory = document.getElementById('btn-apply-adv-story');
+      
+      if (advImgInput) {
+        advImgInput.addEventListener('change', (ev) => {
+          const file = ev.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (re) => {
+            advImageBase64 = re.target.result;
+            advImgPreview.src = advImageBase64;
+            advImgPreview.classList.remove('hidden');
+            advImgPlaceholder.classList.add('hidden');
+            btnRemoveAdvImg.classList.remove('hidden');
+            btnAnalyzeAdvImg.disabled = false;
+            advAnalysisResult.classList.add('hidden');
+            showToast("Gambar rujukan Advance dimuat naik.");
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+      
+      if (btnRemoveAdvImg) {
+        btnRemoveAdvImg.addEventListener('click', () => {
+          advImageBase64 = null;
+          advImgPreview.src = "";
+          advImgPreview.classList.add('hidden');
+          advImgPlaceholder.classList.remove('hidden');
+          btnRemoveAdvImg.classList.add('hidden');
+          btnAnalyzeAdvImg.disabled = true;
+          advAnalysisResult.classList.add('hidden');
+        });
+      }
+      
+      if (btnAnalyzeAdvImg) {
+        btnAnalyzeAdvImg.addEventListener('click', async () => {
+          if (!advImageBase64) return;
+          
+          btnAnalyzeAdvImg.disabled = true;
+          document.getElementById('adv-analyze-text').textContent = "Menganalisis...";
+          document.getElementById('adv-analyze-spinner').classList.remove('hidden');
+          advAnalysisResult.classList.add('hidden');
+          showToast("Sedang menganalisis gambar rujukan...");
+          
+          try {
+            const base64Data = advImageBase64.split(',')[1];
+            const mimeType = advImageBase64.match(/data:([^;]+);/)?.[1] || "image/jpeg";
+            const contentsArray = [{
+              role: 'user',
+              parts: [
+                { text: `Analyze this image in detail. Return ONLY a valid JSON object with the following keys in Bahasa Melayu:\n{\n  "konsep": "Main visual concept or theme",\n  "gaya_visual": "Art style (e.g., Cinematic, 3D Pixar, Anime, Documentary, Realistic, Cartoon)",\n  "pencahayaan": "Lighting setup and mood",\n  "cadangan_cerita": "A short 2-3 sentence story idea inspired by this image"\n}` },
+                { inlineData: { mimeType, data: base64Data } }
+              ]
+            }];
+
+            const rawText = await executeTextWithFallback(contentsArray, "analysis", true);
+            
+            let analysisObj = safeParseJSON(rawText);
+            lastAdvAnalysis = analysisObj;
+            
+            document.getElementById('res-konsep').textContent = analysisObj.konsep || "-";
+            document.getElementById('res-style').textContent = analysisObj.gaya_visual || "-";
+            document.getElementById('res-lighting').textContent = analysisObj.pencahayaan || "-";
+            document.getElementById('res-story').textContent = analysisObj.cadangan_cerita || "-";
+            
+            advAnalysisResult.classList.remove('hidden');
+            showToast("Analisis Advance selesai!");
+          } catch (err) {
+            showToast("Ralat Analisis: " + err.message);
+          } finally {
+            btnAnalyzeAdvImg.disabled = false;
+            document.getElementById('adv-analyze-text').textContent = "Analisis Gambar Ini";
+            document.getElementById('adv-analyze-spinner').classList.add('hidden');
+          }
+        });
+      }
+      
+      if (btnApplyAdvStory) {
+        btnApplyAdvStory.addEventListener('click', () => {
+          if (!lastAdvAnalysis || !lastAdvAnalysis.cadangan_cerita) return;
+          
+          const storyInput = document.getElementById('story-text-input');
+          const currentText = storyInput.value.trim();
+          
+          const promptAdd = `[Idea dari Imej]: ${lastAdvAnalysis.cadangan_cerita}\n[Konsep]: ${lastAdvAnalysis.konsep}\n[Pencahayaan]: ${lastAdvAnalysis.pencahayaan}`;
+          storyInput.value = currentText ? currentText + "\n\n" + promptAdd : promptAdd;
+          
+          state.story_input = storyInput.value;
+          updateStoryPreviewText();
+          
+          if (lastAdvAnalysis.gaya_visual) {
+            const styleSelect = document.getElementById('param-style');
+            const styleText = lastAdvAnalysis.gaya_visual.toLowerCase();
+            let matched = false;
+            Array.from(styleSelect.options).forEach(opt => {
+              if (!matched && styleText.includes(opt.value.toLowerCase())) {
+                styleSelect.value = opt.value;
+                matched = true;
+              }
+            });
+          }
+          
+          saveState();
+          showToast("Cadangan cerita berjaya diterapkan ke ruang input!");
+        });
+      }
+
     });
   </script>
 </body>
