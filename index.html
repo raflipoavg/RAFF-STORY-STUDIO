@@ -789,45 +789,36 @@
     }
 
     async function executeTextWithFallback(contentsArray, functionType, requireJson = false) {
-      const isAnalysis = functionType === 'analysis';
-      const models = isAnalysis ? ['Gemini', 'OpenAI Vision', 'Claude Vision'] : ['Gemini Flash', 'OpenAI', 'Claude'];
-      
-      for (let i = 0; i < models.length; i++) {
-        const modelName = models[i];
-        try {
-          if (i > 0) showToast(`Model utama gagal. Mencuba alternatif... (${modelName})`);
-          
-          if (modelName.includes('Gemini')) {
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${GEMINI_API_KEY}`;
-            const response = await fetch(apiUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                contents: contentsArray,
-                generationConfig: { responseModalities: ['TEXT'] }
-              })
-            });
-            
-            if (!response.ok) {
-              const errText = await response.text();
-              throw new Error(`HTTP Error ${response.status}: ${errText}`);
-            }
-            
-            const result = await response.json();
-            const rawText = result.candidates?.[0]?.content?.parts?.find(p => p.text)?.text;
-            if (!rawText || rawText.trim() === "") throw new Error("Respons AI kosong atau tidak sah.");
-            
-            if (requireJson) {
-              safeParseJSON(rawText); 
-            }
-            return rawText;
-          } else {
-            throw new Error(`Provider ${modelName} tidak dikonfigurasi.`);
-          }
-        } catch (err) {
-          console.warn(`[AI Fallback System] ${modelName} gagal:`, err.message);
-          if (i === models.length - 1) {
-            throw new Error(`Semua model alternatif gagal. Ralat akhir: ${err.message}`);
+  try {
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${GEMINI_API_KEY}`;
+    
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: contentsArray,
+        generationConfig: { responseModalities: ['TEXT'] }
+      })
+    });
+    
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`HTTP Error ${response.status}: ${errText}`);
+    }
+    
+    const result = await response.json();
+    const rawText = result.candidates?.[0]?.content?.parts?.find(p => p.text)?.text;
+    if (!rawText || rawText.trim() === "") throw new Error("Respons AI kosong atau tidak sah.");
+    
+    if (requireJson) {
+      safeParseJSON(rawText); 
+    }
+    return rawText;
+  } catch (err) {
+    console.error("[AI Execution Error]:", err.message);
+    throw new Error(`Gagal memproses AI: ${err.message}`);
+  }
+}
           }
         }
       }
